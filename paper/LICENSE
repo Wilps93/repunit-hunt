@@ -1,0 +1,61 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Timofei Dokuchaev
+
+Настоящая лицензия распространяется на содержимое каталога `paper/`:
+текст статьи (`paper.tex`, `paper.pdf`), рисунки (`figs/`), скрипты анализа
+и проверки, а также производные файлы данных (`results.txt`, `verify/`,
+`verify_10k_backup/`).
+
+Вы можете свободно:
+
+  * делиться — копировать и распространять материал на любом носителе и
+    в любом формате;
+  * адаптировать — ремиксовать, видоизменять и создавать новое, опираясь
+    на этот материал, в том числе в коммерческих целях.
+
+При соблюдении условия:
+
+  * Указание авторства — вы должны обеспечить соответствующее указание
+    авторства, привести ссылку на лицензию и обозначить изменения, если
+    таковые были сделаны.
+
+Полный текст лицензии:
+  https://creativecommons.org/licenses/by/4.0/legalcode.ru
+  https://creativecommons.org/licenses/by/4.0/legalcode
+
+Краткая сводка (не заменяет лицензию):
+  https://creativecommons.org/licenses/by/4.0/deed.ru
+
+--------------------------------------------------------------------------
+
+Оговорка об исходных данных.
+
+Файлы `paper/data/*.txt` — это b-файлы, загруженные из The On-Line
+Encyclopedia of Integer Sequences (https://oeis.org). Они включены в
+репозиторий для воспроизводимости анализа без обращения к сети и
+распространяются на условиях OEIS (CC BY-NC-SA 4.0,
+https://oeis.org/wiki/The_OEIS_End-User_License_Agreement), а не на
+условиях настоящей лицензии. Скрипты `fetch_data.sh` и `fetch_extra.sh`
+позволяют загрузить их заново из первоисточника.
+
+Показатели простых Мерсенна получены из открытого отчёта PrimeNet проекта
+Great Internet Mersenne Prime Search (https://www.mersenne.org/).
+
+Исходный код искателя (каталоги `src/`, `native/`, `benches/`, `build.rs`)
+лицензирован отдельно — MIT OR Apache-2.0, см. LICENSE-MIT и LICENSE-APACHE
+в корне репозитория.
+
+--------------------------------------------------------------------------
+
+English summary.
+
+The contents of the `paper/` directory — the article text, figures, analysis
+and verification scripts, and derived data files — are licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+
+Exception: `paper/data/*.txt` are b-files retrieved from the OEIS and remain
+subject to the OEIS End-User License Agreement (CC BY-NC-SA 4.0). The searcher
+source code is licensed under MIT OR Apache-2.0; see LICENSE-MIT and
+LICENSE-APACHE in the repository root.

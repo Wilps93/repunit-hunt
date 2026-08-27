@@ -1,0 +1,7 @@
+# A127999 (b-file synthesized from sequence entry)
+1 7
+2 43
+3 347
+4 12421
+5 12473
+6 26717

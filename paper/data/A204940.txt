@@ -1,0 +1,7 @@
+# A204940 (b-file synthesized from sequence entry)
+1 5
+2 3181
+3 61441
+4 91943
+5 121949
+6 221411

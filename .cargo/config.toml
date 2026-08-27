@@ -1,0 +1,18 @@
+[build]
+rustflags = ["-C", "target-cpu=native"]
+
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "target-cpu=native", "-C", "link-arg=-fuse-ld=lld"]
+
+# Значения по умолчанию для сборки нативных слоёв.
+# force не задан => любая переменная, выставленная в окружении, побеждает,
+# поэтому для сборки под кластер достаточно указать свой RH_CUDA_ARCHS.
+[env]
+# Карта этой машины — GeForce GTX 1650 (Turing, sm_75).
+# Полный список из build.rs (70,75,80,86,89,90) собирается кратно дольше.
+RH_CUDA_ARCHS = "75"
+# libecm установлен системно (пакет libecm-dev) => включаем стадию P-1.
+RH_ECM_SYSTEM = "1"
+# Prime95 SDK: распакован и собран (`cd gwnum && make -f make64`).
+# Без него фича gwnum просто предупредит и отключится.
+GWNUM_DIR = "/opt/gwnum-src/extracted"
