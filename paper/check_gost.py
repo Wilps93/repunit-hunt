@@ -62,8 +62,19 @@ for i, a in enumerate(ab):
     check("4.10", "объём аннотации %s ≤ 250 слов" % ("(рус.)" if i == 0 else "(англ.)"),
           n <= 250, "%d слов" % n)
 
+# Заголовок «Аннотация»/«Abstract» печатает само окружение abstract, babel
+# подставляет его по языку. Проверять литерал «Abstract.» в исходнике нельзя:
+# такая строка означала бы, что слово набрано вручную ВТОРЫМ, поверх заголовка
+# окружения, — именно так и было, пока дубль не убрали. Правильный признак —
+# два окружения abstract: русское в основном тексте и английское внутри
+# otherlanguage{english}.
+en_block = re.search(r"\\begin\{otherlanguage\}\{english\}(.*?)"
+                     r"\\end\{otherlanguage\}", TEX, re.S)
 check("4.10", "перед аннотацией приведено слово «Аннотация»/«Abstract»",
-      "\\begin{abstract}" in TEX and "Abstract." in TEX)
+      len(ab) == 2 and en_block is not None
+      and "\\begin{abstract}" in en_block.group(1))
+check("4.10", "слово «Abstract» не набрано вторично поверх заголовка окружения",
+      "\\textbf{Abstract.}" not in TEX)
 
 # ── п. 4.11: 3..15 ключевых слов, после них точку не ставят ─────────────────
 for lang, pat in (("рус.", r"\\textbf\{Ключевые слова:\}(.*?)\n\n"),
@@ -124,9 +135,10 @@ check("4.14.4", "нумерация References совпадает с основ�
 for what, needle in (("заглавие", "The observation scheme in the statistics"),
                      ("имя автора", "Timofei"),
                      ("аффилиация", "Independent researcher, Irkutsk, Russia"),
-                     ("аннотация", "Abstract."),
                      ("ключевые слова", "Keywords:")):
     check("4.1.6", "англоязычный блок: %s" % what, needle in TEX)
+check("4.1.6", "англоязычный блок: аннотация",
+      en_block is not None and "\\begin{abstract}" in en_block.group(1))
 
 # ── п. 4.9: формат основных сведений об авторе ─────────────────────────────
 check("4.9", "раздел «Информация об авторе» присутствует",
