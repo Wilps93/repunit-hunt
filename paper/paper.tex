@@ -581,6 +581,27 @@ $(t_0,\ln L_b]$ целиком, и найденными оказались вс�
 находок $N_b$ --- случайная величина, а фиксирован фронт $L_b$. Назовём это
 \emph{схемой~B}.
 
+\begin{remark}[Что здесь классика, а что нет]\label{rem:priority}
+Само различие схем классическое и восходит к теории надёжности, где схема~A
+называется \emph{failure-truncated}, а схема~B --- \emph{time-truncated}
+испытанием на долговечность~\cite{epstein1954trunc,epsteinsobel1954}. Оценка
+$(N-1)/D$, несмещённая при схеме~A (следствие~\ref{cor:kappa}), там
+учебниковая, и мы не претендуем на неё. Более того, при схеме~B точно
+несмещённой оценки среднего \emph{не существует}~\cite{bartholomew1963,basu1964}:
+экспоненциально малый остаток в~\eqref{eq:EBd} не небрежность, а лучшее, что
+здесь достижимо в принципе.
+
+Новым мы считаем другое. В классической постановке момент прекращения
+испытания \emph{известен}: время $T$ назначает экспериментатор. Здесь фронт
+$L_b$ не документирован ни для одного основания, кроме $b=2$, поэтому полную
+экспозицию приходится не брать из протокола, а восстанавливать --- через
+отсутствие последействия, из самих находок. Отсюда и берётся поправка
+\emph{на каждое основание}, а не на выборку в целом: неизвестных фронтов
+столько же, сколько оснований. Обзор смещений, порождаемых краем окна
+наблюдения, но в непараметрической постановке и для формы распределения
+интервалов, а не для интенсивности, дан в~\cite{kivela2015}.
+\end{remark}
+
 Различие не косметическое. При схеме~B, условно на $N_b=n$, положения событий суть
 $n$ независимых равномерных величин на $(t_0,\ln L_b]$, поэтому условное распределение
 $D_b$ зависит от $L_b$ и \emph{не} зависит от $\lambda_b$: при фиксированном $N_b$
@@ -1402,6 +1423,26 @@ Search (GIMPS). Программное обеспечение Prime95/MPrime, в
 URL: \url{https://www.mersenne.org/} (дата обращения: 27.08.2026;
 отчёт \emph{Milestones} считан 27.08.2026 04:30~UTC).
 
+\bibitem{epstein1954trunc} Epstein B. Truncated life tests in the exponential
+case~// The Annals of Mathematical Statistics. 1954. Vol.~25, №~3. P.~555--564.
+DOI: 10.1214/aoms/1177728723.
+
+\bibitem{epsteinsobel1954} Epstein B., Sobel M. Some theorems relevant to life
+testing from an exponential distribution~// The Annals of Mathematical
+Statistics. 1954. Vol.~25, №~2. P.~373--381. DOI: 10.1214/aoms/1177728793.
+
+\bibitem{bartholomew1963} Bartholomew D.~J. The sampling distribution of an
+estimate arising in life testing~// Technometrics. 1963. Vol.~5, №~3.
+P.~361--374.
+
+\bibitem{basu1964} Basu A.~P. Estimates of reliability for some distributions
+useful in life testing~// Technometrics. 1964. Vol.~6, №~2. P.~215--219.
+
+\bibitem{kivela2015} Kivel\"{a} M., Porter M.~A. Estimating interevent time
+distributions from finite observation periods in communication networks~//
+Physical Review~E. 2015. Vol.~92, №~5. Article~052813.
+DOI: 10.1103/PhysRevE.92.052813.
+
 \end{thebibliography}
 
 % ── Романизированный список для международных баз цитирования ──────────────
@@ -1451,6 +1492,25 @@ at: \url{https://arxiv.org/abs/2603.08994} (accessed 27.08.2026).
 \item Great Internet Mersenne Prime Search (GIMPS). \emph{PrimeNet}.
 Prime95/MPrime software, version 30.8. Available at:
 \url{https://www.mersenne.org/} (accessed 27.08.2026).
+
+\item Epstein B. Truncated life tests in the exponential case.
+\emph{The Annals of Mathematical Statistics}, 1954, vol.~25, no.~3,
+pp.~555--564. DOI: 10.1214/aoms/1177728723
+
+\item Epstein B., Sobel M. Some theorems relevant to life testing from an
+exponential distribution. \emph{The Annals of Mathematical Statistics}, 1954,
+vol.~25, no.~2, pp.~373--381. DOI: 10.1214/aoms/1177728793
+
+\item Bartholomew D.~J. The sampling distribution of an estimate arising in
+life testing. \emph{Technometrics}, 1963, vol.~5, no.~3, pp.~361--374.
+
+\item Basu A.~P. Estimates of reliability for some distributions useful in
+life testing. \emph{Technometrics}, 1964, vol.~6, no.~2, pp.~215--219.
+
+\item Kivel\"{a} M., Porter M.~A. Estimating interevent time distributions
+from finite observation periods in communication networks.
+\emph{Physical Review E}, 2015, vol.~92, no.~5, article~052813.
+DOI: 10.1103/PhysRevE.92.052813
 \end{enumerate}
 \end{otherlanguage}
 
