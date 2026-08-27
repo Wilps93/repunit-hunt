@@ -606,6 +606,21 @@ def section53(bases, reps):
 # --------------------------------------------------------------------------
 # §5.4 -- устойчивость
 # --------------------------------------------------------------------------
+def monotone_note(vals, cuts):
+    """Проверяет монотонность ряда и называет места отступления.
+
+    Раньше здесь стояла строка «оценка растёт монотонно», написанная от руки и
+    ничего не проверявшая. Ряд схемы A монотонным не является: при n > 10^2 он
+    отступает. Утверждение о тренде должно вычисляться по самим числам.
+    """
+    drops = [i for i in range(len(vals) - 1) if vals[i] > vals[i + 1]]
+    if not drops:
+        return "монотонно"
+    where = ", ".join("%s (%.4f -> %.4f)" % (cuts[i + 1][0], vals[i], vals[i + 1])
+                      for i in drops)
+    return "не монотонно, отступает при %s" % where
+
+
 def table6(seqs):
     rule("[Табл. 6] Устойчивость к нижнему усечению")
     say("  Правило выбытия основания указывается явно: min_events -- наименьшее")
@@ -617,20 +632,28 @@ def table6(seqs):
         say("  -- min_events = %d --" % me)
         say("  %10s %4s %5s %12s %12s %12s %s" %
             ("усечение", "B", "M", "(M-1)/S", "(M-B)/S", "p (схема A)", "выбыли"))
-        kbs = []
+        kas, kbs = [], []
         for label, tr in cuts:
             bs = build(seqs, truncate=tr, min_events=me)
             M, S, B = pooled(bs)
             x = KAPPA_LPW * S
             p = 2 * min(stats.gamma.cdf(x, M), 1 - stats.gamma.cdf(x, M))
             gone = sorted(set(seqs) - {bd.b for bd in bs})
+            kas.append((M - 1) / S)
             kbs.append((M - B) / S)
             say("  %10s %4d %5d %12.4f %12.4f %12.3f %s" %
                 (label, B, M, (M - 1) / S, (M - B) / S, p,
                  ",".join(str(g) for g in gone) if gone else "-"))
+        say("  схема A растёт на %+.1f%%, %s" % (
+            100 * (kas[-1] / kas[0] - 1), monotone_note(kas, cuts)))
         say("  схема B колеблется в пределах %.3f-%.3f" % (min(kbs), max(kbs)))
+        trend = (kas, kbs)
     say("")
-    say("  тренд схемы A: оценка растёт монотонно; схема B тренда не показывает")
+    kas, kbs = trend
+    say("  тренд схемы A: рост %+.1f%%, %s; схема B тренда не показывает "
+        "(разброс %.3f-%.3f вокруг e^gamma = %.4f)" % (
+            100 * (kas[-1] / kas[0] - 1), monotone_note(kas, cuts),
+            min(kbs), max(kbs), KAPPA_LPW))
 
 
 def section54(seqs, bases, reps):

@@ -1,7 +1,7 @@
 {
   "base": 3,
   "k_min": 2,
-  "k_max": 20000,
+  "k_max": 10000,
   "prp_exponents": [
     3,
     7,
