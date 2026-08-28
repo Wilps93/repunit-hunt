@@ -253,11 +253,18 @@ def table5(bases):
         % (med_spr, max(spr)))
     say("  [§3.4] макс. расхождение форм / медиана отклонений = %.2f" %
         (max(spr) / med_dev))
-    n_over = sum(1 for bd in bases
-                 if abs(bd.G_ols - bd.G_end) / bd.G_end
-                 > abs(bd.G_end - G_LPW) / G_LPW)
+    # Печатаем не только счётчик, но и сами основания: в первой редакции
+    # статьи здесь стояли b=18 и b=13, тогда как критерию отвечают b=18 и
+    # b=20. С одним счётчиком такая ошибка проходит сверку check_numbers.py.
+    over = [bd for bd in bases
+            if abs(bd.G_ols - bd.G_end) / bd.G_end
+            > abs(bd.G_end - G_LPW) / G_LPW]
     say("  [§3.4] оснований, где выбор формы весит больше собственного "
-        "отклонения от ЛПВ: %d из %d" % (n_over, len(bases)))
+        "отклонения от ЛПВ: %d из %d" % (len(over), len(bases)))
+    say("  [§3.4] это основания: %s" % ", ".join(
+        "b=%d (%.1f%% против %.1f%%)"
+        % (bd.b, 100 * abs(bd.G_ols - bd.G_end) / bd.G_end,
+           100 * abs(bd.G_end - G_LPW) / G_LPW) for bd in over))
 
     below = sum(1 for bd in bases if bd.G_end < G_LPW)
     below_ols = sum(1 for bd in bases if bd.G_ols < G_LPW)

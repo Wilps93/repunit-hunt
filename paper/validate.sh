@@ -143,14 +143,24 @@ grep -E "величин вне коридора|ВЫШЛА|РАСХОЖДЕНИ�
 # ── Прогон 4: живые источники ───────────────────────────────────────────────
 hdr "Прогон 4. Живые источники: не сдвинулись ли внешние данные"
 step "b-файлы OEIS совпадают с data/"
-tmp=$(mktemp -d); rc=0
+tmp=$(mktemp -d); rc=0; ndrift=0; nfail=0
 for s in A000043 A028491 A004061 A004062 A004063 A004023 A005808 A004064 \
          A016054 A006032 A006033 A006034 A133857 A006035 A127995 \
          A127996 A127997 A204940 A127998 A127999; do
-  curl -s -m 60 "https://oeis.org/$s/b${s#A}.txt" -o "$tmp/$s.txt"
+  # Одна повторная попытка: сеть подводит чаще, чем OEIS меняет данные.
+  for try in 1 2; do
+    curl -sfS -m 120 --retry 2 --retry-delay 2 \
+         "https://oeis.org/$s/b${s#A}.txt" -o "$tmp/$s.txt" 2>/dev/null && break
+  done
+  # Загрузка и расхождение -- разные события, и путать их нельзя: несостоявшийся
+  # запрос ничего не говорит о данных.
+  if [ ! -s "$tmp/$s.txt" ]; then
+    echo; echo "      НЕ СКАЧАЛСЯ: $s (сеть, не данные)"; nfail=$((nfail+1)); continue
+  fi
   if ! diff -q <(grep '^[0-9]' "data/$s.txt") <(grep '^[0-9]' "$tmp/$s.txt") >/dev/null 2>&1
-  then echo; echo "      РАСХОЖДЕНИЕ: $s"; rc=1; fi
+  then echo; echo "      РАСХОЖДЕНИЕ: $s"; ndrift=$((ndrift+1)); rc=1; fi
 done
+[ $nfail -gt 0 ] && echo -n "(не скачалось: $nfail из 20) "
 [ $rc = 0 ] && ok || bad "oeis-drift"
 rm -rf "$tmp"
 
