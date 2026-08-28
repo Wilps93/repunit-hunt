@@ -3,7 +3,7 @@
 """Сверка ключевых чисел статьи с выводом analysis.py.
 
 Каждое утверждение задано парой (что искать в results.txt, что должно стоять
-в paper.tex). Скрипт возвращает 1, если хоть одно расходится, — годится для CI.
+в paper_ru.tex). Скрипт возвращает 1, если хоть одно расходится, — годится для CI.
 
 Запуск:  python3 check_numbers.py
 """
@@ -12,7 +12,12 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TEX = (HERE / "paper.tex").read_text(encoding="utf-8")
+# Обе версии статьи сверяются с одним и тем же выводом analysis.py. Русская
+# пишет дробную часть через запятую (1{,}9648), английская — через точку
+# (1.9648); в остальном числа обязаны совпадать.
+TEX_RU = (HERE / "paper_ru.tex").read_text(encoding="utf-8")
+TEX_EN = (HERE / "paper_en.tex").read_text(encoding="utf-8")
+VERSIONS = (("ru", TEX_RU, "{,}"), ("en", TEX_EN, "."))
 RES = (HERE / "results.txt").read_text(encoding="utf-8")
 
 
@@ -24,30 +29,38 @@ def res_num(pattern, group=1, flags=0):
     return float(m.group(group))
 
 
-def tex_has(s):
-    return s in TEX
-
-
-def rus(x, digits):
-    """Число в том виде, в каком оно записано в TeX: 1{,}8381."""
-    return ("%.*f" % (digits, x)).replace(".", "{,}")
-
-
 CHECKS = []
 
 
-def check(name, value, digits, context=None):
-    """Проверить, что значение присутствует в paper.tex в русской записи."""
+def both(name, ru, en):
+    """Проверка по строке-контексту: своя формулировка в каждой версии."""
+    miss = [tag for tag, tex, _ in VERSIONS if (ru if tag == "ru" else en) not in tex]
+    return miss
+
+
+def literal(x, digits, sep):
+    """Число в том виде, в каком оно записано в TeX: 1{,}8381 или 1.8381."""
+    return ("%.*f" % (digits, x)).replace(".", sep)
+
+
+def check(name, value, digits):
+    """Проверить, что значение присутствует в обеих версиях статьи."""
     if value is None:
         CHECKS.append((name, "НЕ НАЙДЕНО в results.txt", False))
         return
-    lit = rus(value, digits)
-    # Число должно стоять как самостоятельная величина: не быть частью более
-    # длинного числа и не примыкать к другой десятичной запятой.
-    ok = bool(re.search(r"(?<![\d])" + re.escape(lit) + r"(?![\d]|\{,\})", TEX))
-    if context:
-        ok = ok and tex_has(context)
-    CHECKS.append((name, lit, ok))
+    miss = []
+    shown = None
+    for tag, tex, sep in VERSIONS:
+        lit = literal(value, digits, sep)
+        if shown is None:
+            shown = lit
+        # Число должно стоять как самостоятельная величина: не быть частью
+        # более длинного числа и не примыкать к другому десятичному разделителю.
+        tail = r"(?![\d]|\{,\})" if sep == "{,}" else r"(?![\d])"
+        if not re.search(r"(?<![\d])" + re.escape(lit) + tail, tex):
+            miss.append(tag)
+    CHECKS.append((name + (" [нет в %s]" % ",".join(miss) if miss else ""),
+                   shown, not miss))
 
 
 # ── основные величины ────────────────────────────────────────────────
@@ -65,9 +78,11 @@ check("p схемы B", res_num(r"kappa\^_B = .*p = ([\d.]+)"), 3)
 err1 = res_num(r"B, сдвиг 0\.0\s+([\d.]+)")
 check("ошибка I рода при схеме B", err1, 4)
 if err1 is not None:
-    pct = ("%.1f" % (100 * err1)).replace(".", "{,}")
-    CHECKS.append(("ошибка I рода в тексте (%s\\%%)" % pct,
-                   pct, ("$" + pct + "\\%$") in TEX))
+    raw = "%.1f" % (100 * err1)
+    miss = both("", "$" + raw.replace(".", "{,}") + "\\%$", "$" + raw + "\\%$")
+    CHECKS.append(("ошибка I рода в тексте (%s\\%%)" % raw
+                   + (" [нет в %s]" % ",".join(miss) if miss else ""),
+                   raw, not miss))
 
 # ── таблица 5 / §3.4 ─────────────────────────────────────────────────
 check("G_end для b=18", res_num(r"b=18: G_end=([\d.]+)"), 4)
@@ -75,9 +90,11 @@ check("G_OLS для b=18", res_num(r"b=18: G_end=[\d.]+ \(ранг \d+ из \d+\
 rank_end = res_num(r"b=18: G_end=[\d.]+ \(ранг (\d+) из", 1)
 rank_ols = res_num(r"b=18: .*G_OLS=[\d.]+ \(ранг (\d+) из", 1)
 CHECKS.append(("ранг b=18 по концевой форме = 3", "3",
-               rank_end == 3 and "третье по величине" in TEX))
+               rank_end == 3
+               and not both("", "третье по величине", "the third largest")))
 CHECKS.append(("ранг b=18 по МНК = 10", "10",
-               rank_ols == 10 and "десятое место" in TEX))
+               rank_ols == 10
+               and not both("", "десятое место", "tenth of fifteen")))
 
 # ── §5.3 ─────────────────────────────────────────────────────────────
 check("Lambda однородности", res_num(r"Lambda = ([\d.]+) при 14"), 2)
@@ -120,7 +137,9 @@ if (ver / "b2.json").exists():
     for f in sorted(ver.glob("b*.json")):
         tot += len(json.loads(f.read_text())["prp_exponents"])
     CHECKS.append(("подтверждённых членов при пересчёте = %d" % tot,
-                   str(tot), ("$%d$ члена подтверждены" % tot) in TEX))
+                   str(tot),
+                   not both("", "$%d$ члена подтверждены" % tot,
+                            "$%d$ terms confirmed" % tot)))
 
 
 def main():

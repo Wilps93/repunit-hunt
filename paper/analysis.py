@@ -1146,73 +1146,49 @@ def figures(seqs, bases, kB, ciB):
     import matplotlib.pyplot as plt
 
     FIGS.mkdir(exist_ok=True)
+    (FIGS / "en").mkdir(exist_ok=True)
     M0, S0, B0 = pooled(bases)
 
-    # Рис. 1 -- оценки по основаниям
-    fig, ax = plt.subplots(figsize=(7.2, 4.4))
-    xs = np.arange(len(bases))
-    for i, bd in enumerate(bases):
-        lo, hi = bd.ci()
-        ax.plot([i, i], [lo, hi], color="0.4", lw=1.0, zorder=1)
-        ax.scatter([i], [bd.kappa_tilde], s=8 + 3.0 * bd.N, color="black", zorder=2)
-    ax.axhline(KAPPA_LPW, ls="--", color="k", lw=1.0, label=r"$e^\gamma$")
-    # Начертания различны, чтобы рисунок читался и при чёрно-белой печати.
-    ax.axhline((M0 - 1) / S0, color="tab:blue", lw=1.2, ls="-.",
-               label=r"схема A: $(M-1)/S$")
-    ax.axhspan(ciB[0], ciB[1], color="tab:green", alpha=0.15, hatch="///",
-               edgecolor="tab:green", lw=0)
-    ax.axhline(kB, color="tab:green", lw=1.6, ls="-",
-               label=r"схема B: $(M-B)/S$")
-    ax.set_xticks(xs)
-    ax.set_xticklabels([str(bd.b) for bd in bases])
-    ax.set_xlabel("основание $b$")
-    ax.set_ylabel(r"$\tilde\kappa_b$")
-    ax.legend(fontsize=8, loc="upper left")
-    fig.tight_layout()
-    fig.savefig(FIGS / "fig_kappa.pdf")
-    plt.close(fig)
+    # Рисунки строятся дважды: paper_ru.tex берёт их из figs/, paper_en.tex --
+    # из figs/en/. Данные считаются один раз, различается только текст на осях
+    # и в легендах.
+    TXT = {
+        "ru": dict(base="основание $b$",
+                   schemeA=r"схема A: $(M-1)/S$",
+                   schemeB=r"схема B: $(M-B)/S$",
+                   trA=r"$(M-1)/S$ (схема A)",
+                   trB=r"$(M-B)/S$ (схема B)",
+                   trunc="нижнее усечение по $n$", trnone="нет",
+                   mers="только Мерсенн ($M=%d$)",
+                   pool="объединение ($M=%d$)",
+                   power="мощность", band="5-95% симуляций", med="медиана"),
+        "en": dict(base="base $b$",
+                   schemeA=r"scheme A: $(M-1)/S$",
+                   schemeB=r"scheme B: $(M-B)/S$",
+                   trA=r"$(M-1)/S$ (scheme A)",
+                   trB=r"$(M-B)/S$ (scheme B)",
+                   trunc="lower truncation in $n$", trnone="none",
+                   mers="Mersenne only ($M=%d$)",
+                   pool="pooled ($M=%d$)",
+                   power="power", band="5-95% of simulations", med="median"),
+    }
 
-    # Рис. 2 -- усечение
-    fig, ax = plt.subplots(figsize=(6.6, 4.0))
+    # ── данные рис. 2: усечение ────────────────────────────────────────────
     trs = [None, 10, 100, 1000, 10000]
-    labels = ["нет", "$>10$", "$>10^2$", "$>10^3$", "$>10^4$"]
     ka, kb = [], []
     for tr in trs:
         bs = build(seqs, truncate=tr)
         M, S, B = pooled(bs)
         ka.append((M - 1) / S)
         kb.append((M - B) / S)
-    ax.plot(range(len(trs)), ka, "o-.", color="tab:blue",
-            label=r"$(M-1)/S$ (схема A)")
-    ax.plot(range(len(trs)), kb, "s-", color="tab:green",
-            label=r"$(M-B)/S$ (схема B)")
-    ax.axhline(KAPPA_LPW, ls="--", color="k", lw=1.0, label=r"$e^\gamma$")
-    ax.set_xticks(range(len(trs)))
-    ax.set_xticklabels(labels)
-    ax.set_xlabel("нижнее усечение по $n$")
-    ax.set_ylabel(r"$\hat\kappa$")
-    ax.legend(fontsize=8)
-    fig.tight_layout()
-    fig.savefig(FIGS / "fig_truncation.pdf")
-    plt.close(fig)
 
-    # Рис. 3 -- мощность
-    fig, ax = plt.subplots(figsize=(6.6, 4.0))
+    # ── данные рис. 3: мощность ────────────────────────────────────────────
     rs = np.linspace(1.0, 1.8, 200)
     Mm = [bd for bd in bases if bd.b == 2][0].N
-    ax.plot(rs, [power_gamma(Mm, r) for r in rs], ls="--", color="tab:blue",
-            label="только Мерсенн ($M=%d$)" % Mm)
-    ax.plot(rs, [power_gamma(M0, r) for r in rs], ls="-", color="tab:green",
-            label="объединение ($M=%d$)" % M0)
-    ax.axhline(0.8, ls=":", color="k", lw=1.0)
-    ax.set_xlabel(r"$\kappa/e^\gamma$")
-    ax.set_ylabel("мощность")
-    ax.legend(fontsize=8)
-    fig.tight_layout()
-    fig.savefig(FIGS / "fig_power.pdf")
-    plt.close(fig)
+    pw_mers = [power_gamma(Mm, x) for x in rs]
+    pw_pool = [power_gamma(M0, x) for x in rs]
 
-    # Рис. 4 -- остаточный процесс для b = 2
+    # ── данные рис. 4: остаточный процесс для b = 2 ────────────────────────
     exps = np.array(sorted(seqs[2]), dtype=float)
     exps = exps[exps < GIMPS_XVER]
     N = len(exps)
@@ -1229,21 +1205,78 @@ def figures(seqs, bases, kB, ciB):
         lam_i = (N - 1) / (tt[-1] - t0)
         rr = np.arange(N) - lam_i * (tt - t0)
         sims[i] = np.interp(grid, tt, rr)
-    fig, ax = plt.subplots(figsize=(6.8, 4.0))
-    ax.fill_between(grid, np.percentile(sims, 5, axis=0),
-                    np.percentile(sims, 95, axis=0), color="0.85",
-                    label="5-95% симуляций")
-    ax.plot(grid, np.median(sims, axis=0), color="0.5", lw=1.0, label="медиана")
-    ax.step(t, r, where="post", color="black", lw=1.2, label="$b=2$")
-    ax.axhline(0, color="k", lw=0.6)
-    ax.set_xlabel(r"$t=\ln n$")
-    ax.set_ylabel(r"$r(t)$")
-    ax.legend(fontsize=8)
-    fig.tight_layout()
-    fig.savefig(FIGS / "fig_resid_bridge.pdf")
-    plt.close(fig)
+    band_lo = np.percentile(sims, 5, axis=0)
+    band_hi = np.percentile(sims, 95, axis=0)
+    band_md = np.median(sims, axis=0)
+
+    for lang, out in (("ru", FIGS), ("en", FIGS / "en")):
+        T = TXT[lang]
+
+        # Рис. 1 -- оценки по основаниям
+        fig, ax = plt.subplots(figsize=(7.2, 4.4))
+        for i, bd in enumerate(bases):
+            lo, hi = bd.ci()
+            ax.plot([i, i], [lo, hi], color="0.4", lw=1.0, zorder=1)
+            ax.scatter([i], [bd.kappa_tilde], s=8 + 3.0 * bd.N,
+                       color="black", zorder=2)
+        ax.axhline(KAPPA_LPW, ls="--", color="k", lw=1.0, label=r"$e^\gamma$")
+        # Начертания различны, чтобы рисунок читался и при чёрно-белой печати.
+        ax.axhline((M0 - 1) / S0, color="tab:blue", lw=1.2, ls="-.",
+                   label=T["schemeA"])
+        ax.axhspan(ciB[0], ciB[1], color="tab:green", alpha=0.15, hatch="///",
+                   edgecolor="tab:green", lw=0)
+        ax.axhline(kB, color="tab:green", lw=1.6, ls="-", label=T["schemeB"])
+        ax.set_xticks(np.arange(len(bases)))
+        ax.set_xticklabels([str(bd.b) for bd in bases])
+        ax.set_xlabel(T["base"])
+        ax.set_ylabel(r"$\tilde\kappa_b$")
+        ax.legend(fontsize=8, loc="upper left")
+        fig.tight_layout()
+        fig.savefig(out / "fig_kappa.pdf")
+        plt.close(fig)
+
+        # Рис. 2 -- усечение
+        fig, ax = plt.subplots(figsize=(6.6, 4.0))
+        labels = [T["trnone"], "$>10$", "$>10^2$", "$>10^3$", "$>10^4$"]
+        ax.plot(range(len(trs)), ka, "o-.", color="tab:blue", label=T["trA"])
+        ax.plot(range(len(trs)), kb, "s-", color="tab:green", label=T["trB"])
+        ax.axhline(KAPPA_LPW, ls="--", color="k", lw=1.0, label=r"$e^\gamma$")
+        ax.set_xticks(range(len(trs)))
+        ax.set_xticklabels(labels)
+        ax.set_xlabel(T["trunc"])
+        ax.set_ylabel(r"$\hat\kappa$")
+        ax.legend(fontsize=8)
+        fig.tight_layout()
+        fig.savefig(out / "fig_truncation.pdf")
+        plt.close(fig)
+
+        # Рис. 3 -- мощность
+        fig, ax = plt.subplots(figsize=(6.6, 4.0))
+        ax.plot(rs, pw_mers, ls="--", color="tab:blue", label=T["mers"] % Mm)
+        ax.plot(rs, pw_pool, ls="-", color="tab:green", label=T["pool"] % M0)
+        ax.axhline(0.8, ls=":", color="k", lw=1.0)
+        ax.set_xlabel(r"$\kappa/e^\gamma$")
+        ax.set_ylabel(T["power"])
+        ax.legend(fontsize=8)
+        fig.tight_layout()
+        fig.savefig(out / "fig_power.pdf")
+        plt.close(fig)
+
+        # Рис. 4 -- остаточный процесс для b = 2
+        fig, ax = plt.subplots(figsize=(6.8, 4.0))
+        ax.fill_between(grid, band_lo, band_hi, color="0.85", label=T["band"])
+        ax.plot(grid, band_md, color="0.5", lw=1.0, label=T["med"])
+        ax.step(t, r, where="post", color="black", lw=1.2, label="$b=2$")
+        ax.axhline(0, color="k", lw=0.6)
+        ax.set_xlabel(r"$t=\ln n$")
+        ax.set_ylabel(r"$r(t)$")
+        ax.legend(fontsize=8)
+        fig.tight_layout()
+        fig.savefig(out / "fig_resid_bridge.pdf")
+        plt.close(fig)
+
     say("")
-    say("  рисунки записаны в %s" % FIGS)
+    say("  рисунки записаны в %s и %s" % (FIGS, FIGS / "en"))
 
 
 # --------------------------------------------------------------------------

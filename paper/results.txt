@@ -272,4 +272,4 @@ kappa/e^g        только Мерсенн (M=51)      объединение 
   kappa^ = 2.049, c1^ = +0.108, c2^ = -0.826
   LR = 3.53 при 2 степенях свободы, p = 0.171
 
-  рисунки записаны в /mnt/c/Users/Dokuchaev_ts/Downloads/repunit-hunt/paper/figs
+  рисунки записаны в /mnt/c/Users/Dokuchaev_ts/Downloads/repunit-hunt/paper/figs и /mnt/c/Users/Dokuchaev_ts/Downloads/repunit-hunt/paper/figs/en

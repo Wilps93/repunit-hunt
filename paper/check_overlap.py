@@ -38,10 +38,10 @@ def shingles(words, k=K):
 
 
 def main():
-    me = HERE / "paper.tex"
+    me = HERE / "paper_ru.tex"
     my_words = plain(me)
     my_sh = shingles(my_words)
-    print("paper.tex: %d слов, %d шинглов по %d слов\n"
+    print("paper_ru.tex: %d слов, %d шинглов по %d слов\n"
           % (len(my_words), len(my_sh), K))
 
     cands = sorted(p for p in DOWNLOADS.glob("*.tex") if p.resolve() != me.resolve())

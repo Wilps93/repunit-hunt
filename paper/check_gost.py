@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Проверка paper.tex на соответствие ГОСТ Р 7.0.7-2021.
+"""Проверка paper_ru.tex на соответствие ГОСТ Р 7.0.7-2021.
 
 ГОСТ Р 7.0.7-2021 «СИБИД. Статьи в журналах и сборниках. Издательское
 оформление» — утв. приказом Росстандарта от 18.08.2021 № 728-ст, введён в
@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TEX = (HERE / "paper.tex").read_text(encoding="utf-8")
+TEX = (HERE / "paper_ru.tex").read_text(encoding="utf-8")
 
 RESULTS = []
 
@@ -154,7 +154,8 @@ i_conf = TEX.find("Автор заявляет об отсутствии кон�
 check("4.20.3", "конфликт интересов указан после «Информации об авторе»",
       i_conf > i_auth > 0)
 check("4.20.3", "конфликт интересов продублирован на английском",
-      "The author declares no conflicts of interests" in TEX)
+      re.search(r"The author declares no (conflict of interest|"
+                r"competing interests)", TEX) is not None)
 
 # ── п. 4.1.5: подписи к иллюстративному материалу — на языке статьи и,
 #    «как правило», на английском. Формально рекомендация; проверяем как
