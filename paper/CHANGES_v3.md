@@ -2,19 +2,31 @@
 
 Файлы:
 
-- `paper_ru_v3.tex` — исходник версии 3 (pdflatex, ГОСТ Р 7.0.7-2021).
-- `paper_ru_v3_preview.pdf` — предварительная сборка. Она сделана XeTeX'ом (Tectonic) со шрифтами CMU, а не штатным `build_paper.sh`. Рисунки в ней взяты из `figs/` версии 1.
-- `paper_ru.tex` и `paper_en.tex` (версия 1) не тронуты: на них завязаны `check_numbers.py` и `validate.sh`.
+- `paper_ru_v3.tex` и `paper_ru_v3.pdf` — русская версия 3 (ГОСТ Р 7.0.7-2021).
+- `paper_en_v3.tex` и `paper_en_v3.pdf` — английская версия 3.
+- `figs_v2/` и `figs_v2/en/` — рисунки версии 3. Их строит `analysis_v2.py`.
+- `paper_ru.tex`, `paper_en.tex`, `figs/` и `results.txt` (версия 1) не тронуты: на них завязаны `check_numbers.py` и `validate.sh`.
 
-Новые скрипты:
+Скрипты версии 3:
 
 | Скрипт | Теги | Что считает |
 |---|---|---|
+| `analysis_v2.py` | [S0]–[S12] | Все числа точного условного вывода: таблицы 1–8, §§ 2–8, рисунки. Вывод в `results_v2.txt`, зерно 20260914 |
 | `stopping_rules.py` | [S13] | Схема B при правилах остановки, нарушающих (A1): остановка на находке и остановка после «засухи» |
 | `lpw_second_order.py` | [S14]–[S17] | Член второго порядка эвристики ЛПВ, модель exp(c₁/t + c₂/t²) и критерий однородности при B = 20 |
 | `frontiers.py` | [S18] | Документированные фронты: проверка (A1) и гибридная оценка |
+| `check_numbers_v3.py` | — | Сверка ключевых чисел обеих версий статьи с `results_v2.txt` и `results_v3.txt`. Код возврата 1 при расхождении |
 
-Вывод всех трёх скриптов сохранён в `results_v3.txt`. Зёрна фиксированы, числа воспроизводятся.
+Воспроизведение:
+
+```
+python analysis_v2.py        # results_v2.txt, figs_v2/  (около минуты)
+python lpw_second_order.py; python frontiers.py; python stopping_rules.py 20000   # -> results_v3.txt
+python check_numbers_v3.py
+bash build_paper.sh paper_ru_v3 paper_en_v3
+```
+
+Детерминированные числа `analysis_v2.py` (всё, что получено точной инверсией пуассоновского распределения) совпадают с версией 2 статьи до последнего знака. Величины Монте-Карло пересчитаны заново: исходный скрипт версии 2 не сохранился. Они обновлены в тексте и отличаются от версии 2 в пределах указанной там точности. Исключение — порог экспозиции в § 6 (S ≈ 469 вместо 462): теперь берётся точка, после которой пилообразная функция мощности уже не опускается ниже 80 %.
 
 ## Исправления по существу
 
@@ -66,8 +78,6 @@ K | D ~ Poisson(κ·S(c)), где S(c) = Σ_b [D_b + c_b·ln(t_last/t_0)] / ln b
 - M. Rodenkirch, mersenneforum, 2024: «I don't know the max n that most of these bases were searched to».
 - N. Luhn, 2024: «I have not found any reliable limits for small bases».
 
-## Что осталось сделать автору
+## Что осталось
 
-- Выложить `analysis_v2.py` и `results_v2.txt`: статья ссылается на теги [S0]–[S12] из них.
-- Перестроить рисунки новой версией анализа и собрать PDF штатным `build_paper.sh`.
-- Перенести изменения в `paper_en.tex`.
+Ничего обязательного. По желанию можно заменить версию 1 (`paper_ru.tex`, `paper_en.tex`) версией 3 и перевести `validate.sh` на `analysis_v2.py` и `check_numbers_v3.py`.
