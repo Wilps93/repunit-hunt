@@ -1,0 +1,71 @@
+# results_v3.txt — вывод lpw_second_order.py, frontiers.py и stopping_rules.py (версия 3 статьи)
+# python lpw_second_order.py; python frontiers.py; python stopping_rules.py 20000
+
+[S14] Wagstaff-type <ln a_b> over primes p in [1e5, 2e5]
+  b= 2  <ln a> = 1.2422  (a_eff = 3.463)
+  b= 3  <ln a> = 1.4994  (a_eff = 4.479)
+  b= 5  <ln a> = 1.4882  (a_eff = 4.429)
+  b= 6  <ln a> = 1.5264  (a_eff = 4.602)
+  b= 7  <ln a> = 1.3271  (a_eff = 3.770)
+  b=10  <ln a> = 1.3815  (a_eff = 3.981)
+  b=11  <ln a> = 1.2629  (a_eff = 3.536)
+  b=12  <ln a> = 1.4994  (a_eff = 4.479)
+  b=13  <ln a> = 1.2977  (a_eff = 3.661)
+  b=14  <ln a> = 1.3126  (a_eff = 3.716)
+  b=15  <ln a> = 1.7362  (a_eff = 5.676)
+  b=17  <ln a> = 1.2592  (a_eff = 3.523)
+  b=18  <ln a> = 1.6461  (a_eff = 5.187)
+  b=19  <ln a> = 1.2305  (a_eff = 3.423)
+  b=20  <ln a> = 1.4882  (a_eff = 4.429)
+
+[S15] exact conditional inference, all data (B=15, K=203)
+  c = 0 (constant rate)          S= 110.4423  kappa=1.8381  95% [1.5939; 2.1091]  p=0.672  kappa/e^g=1.0320
+  c = ln 2 (q = 1 mod 2p)        S= 124.9366  kappa=1.6248  95% [1.4090; 1.8644]  p=0.200  kappa/e^g=0.9123
+  c = <ln a_b> (Wagstaff-type)   S= 139.7477  kappa=1.4526  95% [1.2597; 1.6668]  p=0.003  kappa/e^g=0.8156
+  free c: c_hat=-0.402  95% profile CI [-0.693; 0.443]  kappa(c_hat)=1.9893  95% [1.7251; 2.2826]
+  LR test c=0: 1.132 (p=0.287);  LR test c=ln2: 5.683 (p=0.017)
+
+[S16] lower truncation (origin = first surviving index, N_b >= 2)
+  trunc      B    K  k(c=0)    k(ln2)    k(W)       p(0)   p(ln2)
+  none      15  203  1.8381    1.6248    1.4526     0.672  0.200
+  >10       15  177  1.8712    1.7118    1.5781     0.531  0.630
+  >100      15  141  1.8299    1.7040    1.5950     0.771  0.636
+  >1000     15  110  1.8231    1.7152    1.6201     0.832  0.738
+  >10000    14   75  1.7889    1.6953    1.6118     1.000  0.723
+  free c per truncation level (profile likelihood):
+  none     c_hat=-0.402  CI [-0.693;  0.443]  kappa(c_hat)=1.9893 [1.725; 2.283]  LR(c=0) p=0.287  LR(c=ln2) p=0.017  p(kappa=e^g | c=W)=0.003
+  >10      c_hat=-0.298  CI [-1.682;  2.479]  kappa(c_hat)=1.9491 [1.673; 2.258]  LR(c=0) p=0.769  LR(c=ln2) p=0.380  p(kappa=e^g | c=W)=0.111
+  >100     c_hat=-1.537  CI [-3.656;  4.159]  kappa(c_hat)=2.1883 [1.842; 2.581]  LR(c=0) p=0.435  LR(c=ln2) p=0.295  p(kappa=e^g | c=W)=0.201
+  >1000    c_hat=-1.491  CI [-5.295; 20.441]  kappa(c_hat)=2.1082 [1.733; 2.541]  LR(c=0) p=0.704  LR(c=ln2) p=0.601  p(kappa=e^g | c=W)=0.344
+  >10000   c_hat=-1.141  CI [-7.142;   inf]  kappa(c_hat)=1.9676 [1.548; 2.466]  LR(c=0) p=0.875  LR(c=ln2) p=0.810  p(kappa=e^g | c=W)=0.421
+
+[S17] model lambda = (kappa/ln b) exp(c1/t + c2/t^2), conditional likelihood
+  null: kappa=1.8381 lnL=-174.541 | full: kappa=1.7484 c1=0.750 c2=-1.438 lnL=-173.528 | LR=2.026 p=0.363
+  B=20: M=253  (M-1)/S=1.9776  (M-B)/S=1.8285  Lambda=10.236  exact p=0.953  (chi2 p=0.947)
+
+[S18] documented frontiers: lambda_b * delta_b (Exp(1) under A1)
+  b= 2  n_max=  77232917  L=  81648221  (verified)  lambda*delta=0.143  Pr(Exp(1)<=x)=0.133
+  b=10  n_max=   8177207  L=  10800000  (searched)  lambda*delta=0.215  Pr(Exp(1)<=x)=0.194
+  b=22  n_max=     27823  L=    100000  (no other terms)  lambda*delta=0.737  Pr(Exp(1)<=x)=0.522
+  b=26  n_max=     26717  L=    100000  (no other terms)  lambda*delta=0.722  Pr(Exp(1)<=x)=0.514
+  b=2 frontier = verified   : sum=1.817 over k=4; mean=0.454; Pr(Gamma(k,1) <= sum)=0.111
+  b= 2  n_max= 136279841  L= 141308443  (tested once)  lambda*delta=0.093  Pr(Exp(1)<=x)=0.089
+  b=10  n_max=   8177207  L=  10800000  (searched)  lambda*delta=0.215  Pr(Exp(1)<=x)=0.194
+  b=22  n_max=     27823  L=    100000  (no other terms)  lambda*delta=0.737  Pr(Exp(1)<=x)=0.522
+  b=26  n_max=     26717  L=    100000  (no other terms)  lambda*delta=0.722  Pr(Exp(1)<=x)=0.514
+  b=2 frontier = tested once: sum=1.767 over k=4; mean=0.442; Pr(Gamma(k,1) <= sum)=0.103
+
+[S18] hybrid estimator, main set (full likelihood for b=2 [tested once], b=10)
+  K=205 S=110.6154 kappa=1.8533 95% [1.6082; 2.1251] p=0.588
+
+[S18] base 5 with the 2024 PRPs 4939471, 5154509 (range above 3300593 NOT certified)
+  K=205 S=110.7193 kappa=1.8515 95% [1.6067; 2.1231] p=0.597  (sensitivity only)
+
+[S13] R=20000, seed=20260924
+rule             (M-1)/S   (M-B)/S   EM/kES    size
+A1-fixed          1.0688    0.9999   1.0737  0.0455
+A1-random         1.0551    1.0000   1.0582  0.0426
+stop-at-find      0.9963    0.9362   1.0003  0.1653
+drought-0.5       1.0762    1.0074   1.0811  0.0503
+drought-1         1.0923    1.0250   1.0973  0.0633
+drought-2         1.1227    1.0667   1.1277  0.1784
