@@ -404,18 +404,23 @@ def s8(bases):
            100 * (first_crossing(lambda r: power(S, r), g) - 1),
            100 * (first_crossing(lambda r: power(S, r, True), g) - 1)))
     dK = KAPPA * math.log(2) * sum(1 / bd.lnb for bd in bases)
+    dS = math.log(2) * sum(1 / bd.lnb for bd in bases)   # exposure added by one doubling
     for tgt in (0.10, 0.05):
-        Sreq = first_crossing(lambda x: min(power(x, 1 + tgt), power(x * 1.002, 1 + tgt),
-                                            power(x * 1.004, 1 + tgt)),
-                              np.arange(100, 4000, 0.5))
+        # The power of a discrete test is saw-toothed in S. Take the smallest S after
+        # which it never drops below 0.8 again: coarse scan, then refine the last dip.
+        grid = np.arange(100, 4000, 1.0)
+        pw = np.array([power(x, 1 + tgt) for x in grid])
+        first = float(grid[int(np.argmax(pw >= 0.8))])
+        fine = np.arange(first - 2, first + 80, 0.01)       # continuous scan of the saw-tooth
+        pf = np.array([power(x, 1 + tgt) for x in fine])
+        Sreq = float(fine[int(np.max(np.nonzero(pf < 0.8)[0])) + 1])
         Kreq = KAPPA * Sreq
-        need = Kreq - K
-        dbl = need / dK
-        say("  отклонение %.0f%%: S ~ %.0f, K ~ %.0f при kappa = e^gamma (%.0f при kappa = %.2f e^gamma), "
-            "M ~ %.0f; недостаёт %.0f событий = %.1f удвоений, рост фронтов 2^%.1f = %.1e"
-            % (100 * tgt, Sreq, Kreq, Kreq * (1 + tgt), 1 + tgt, Kreq + len(bases), need, dbl, dbl,
-               2.0 ** dbl))
-    say("  удвоение всех фронтов даёт %.2f события" % dK)
+        dbl = (Sreq - S) / dS
+        say("  отклонение %.0f%%: S ~ %.1f, K ~ %.0f при kappa = e^gamma (%.0f при kappa = %.2f e^gamma), "
+            "M ~ %.0f; недостаёт экспозиции %.1f = %.1f удвоений всех фронтов, рост 2^%.1f = %.1e"
+            % (100 * tgt, Sreq, Kreq, Kreq * (1 + tgt), 1 + tgt, Kreq + len(bases), Sreq - S, dbl,
+               dbl, 2.0 ** dbl))
+    say("  удвоение всех фронтов даёт %.2f события (экспозиция %.3f)" % (dK, dS))
 
 
 # --------------------------------------------------------------------------

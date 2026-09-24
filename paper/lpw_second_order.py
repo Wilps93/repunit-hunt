@@ -41,6 +41,10 @@ SEQ = {2: "A000043", 3: "A028491", 5: "A004061", 6: "A004062", 7: "A004063",
        15: "A006033", 17: "A006034", 18: "A133857", 19: "A006035", 20: "A127995"}
 SEQ_EXTRA = {21: "A127996", 22: "A127997", 23: "A204940", 24: "A127998", 26: "A127999"}
 A000043_EXTRA = [82589933, 136279841]
+# Measured second-order constants c_b, cb_empirical.py [S19], column Y = 1000 p
+# (standard error about 0.05; stable across Y = 100 p ... 3000 p).
+CB_EMP = {2: 0.959, 3: 0.443, 5: 1.063, 6: 0.587, 7: 0.487, 10: 0.554, 11: 0.473, 12: 0.428,
+          13: 0.667, 14: 0.533, 15: 0.537, 17: 0.755, 18: 0.861, 19: 0.538, 20: 1.106}
 
 
 def load(table):
@@ -234,6 +238,37 @@ def main():
               % ("none" if tr is None else ">%d" % tr, chat, clo,
                  "%6.3f" % chi if np.isfinite(chi) else "  inf", kc, lo, hi,
                  stats.chi2.sf(lr0, 1), stats.chi2.sf(lr2, 1), pw))
+
+    print("\n[S20] exact conditional inference with the MEASURED c_b of cb_empirical.py [S19]")
+    print("  c_b (Y = 1000 p): " + ", ".join("%d:%.3f" % (b, CB_EMP[b]) for b in sorted(CB_EMP)))
+    print("  mean c_b = %.3f; Wagstaff-type <ln a_b> mean = %.3f"
+          % (np.mean(list(CB_EMP.values())), np.mean(list(lna.values()))))
+    for tr in [None, 10, 100, 1000, 10000]:
+        bs = build(seqs, truncate=tr)
+        ce = [CB_EMP[bd.b] for bd in bs]
+        k, lo, hi, p = exact(bs, ce)
+        k0, _, _, _ = exact(bs, 0.0)
+        print("  %-8s kappa=%.4f  95%% [%.4f; %.4f]  p=%.3f  shift vs c=0: %+.1f%%"
+              % ("none" if tr is None else ">%d" % tr, k, lo, hi, p, 100 * (k / k0 - 1)))
+
+    # [S21] intercept that the second-order term would put into the regression of the
+    # Mersenne counting function on t (section 7.3): fit a line in t to
+    # (e^gamma/ln 2) c_2 ln t at the 50 double-checked exponents.
+    t50 = np.log(np.array(sorted(seqs[2]))[:50])
+    y = KAPPA / math.log(2) * CB_EMP[2] * np.log(t50)
+    icpt = np.linalg.lstsq(np.column_stack([np.ones_like(t50), t50]), y, rcond=None)[0][0]
+    print("\n[S21] section 7.3: intercept implied by c_2 ln ln x (c_2 = %.3f): %+.2f" % (CB_EMP[2], icpt))
+    # [S22] constant term of pi_2(x) = sum_{p<=x} e^g ln(a p)/(p ln 2) by both Mertens
+    # theorems: sum ln p / p = ln x + E, sum 1/p = ln ln x + M (checked by direct
+    # summation to 1e8: -2.743, -2.778, -2.780 at x = 1e4, 1e6, 1e8).
+    E_MERT, M_MERT = -1.332582275733221, 0.2614972128476428
+    c0 = KAPPA / math.log(2) * (E_MERT + CB_EMP[2] * M_MERT)
+    print("[S22] constant term C0 = (e^g/ln2)(E + c_2 M) = %.3f; predicted regression intercept "
+          "C0 - 1 (numbering from 0) + %.2f (linear fit of c_2 ln ln x) = %.2f; observed -2.963"
+          % (c0, icpt, c0 - 1 + icpt))
+    b2 = [bd for bd in bases if bd.b == 2][0]
+    print("[S22] section 9 (folklore): for b=2 <1/t> over the exposure = ln(t_N/t_0)/(t_N-t_0) = %.3f; "
+          "1/t_N = %.3f" % (b2.L / b2.D, 1 / b2.tl))
 
     print("\n[S17] model lambda = (kappa/ln b) exp(c1/t + c2/t^2), conditional likelihood")
     f = lambda th: -ll_exp_model(bases, th)

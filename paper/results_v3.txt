@@ -1,5 +1,5 @@
-# results_v3.txt — вывод lpw_second_order.py, frontiers.py и stopping_rules.py (версия 3 статьи)
-# python lpw_second_order.py; python frontiers.py; python stopping_rules.py 20000
+# results_v3.txt — вывод lpw_second_order.py, cb_empirical.py, frontiers.py и stopping_rules.py (версия 3 статьи)
+# python lpw_second_order.py; python cb_empirical.py; python frontiers.py; python stopping_rules.py 20000
 
 [S14] Wagstaff-type <ln a_b> over primes p in [1e5, 2e5]
   b= 2  <ln a> = 1.2422  (a_eff = 3.463)
@@ -39,9 +39,40 @@
   >1000    c_hat=-1.491  CI [-5.295; 20.441]  kappa(c_hat)=2.1082 [1.733; 2.541]  LR(c=0) p=0.704  LR(c=ln2) p=0.601  p(kappa=e^g | c=W)=0.344
   >10000   c_hat=-1.141  CI [-7.142;   inf]  kappa(c_hat)=1.9676 [1.548; 2.466]  LR(c=0) p=0.875  LR(c=ln2) p=0.810  p(kappa=e^g | c=W)=0.421
 
+[S20] exact conditional inference with the MEASURED c_b of cb_empirical.py [S19]
+  c_b (Y = 1000 p): 2:0.959, 3:0.443, 5:1.063, 6:0.587, 7:0.487, 10:0.554, 11:0.473, 12:0.428, 13:0.667, 14:0.533, 15:0.537, 17:0.755, 18:0.861, 19:0.538, 20:1.106
+  mean c_b = 0.666; Wagstaff-type <ln a_b> mean = 1.413
+  none     kappa=1.6200  95% [1.4048; 1.8589]  p=0.185  shift vs c=0: -11.9%
+  >10      kappa=1.7096  95% [1.4671; 1.9809]  p=0.618  shift vs c=0: -8.6%
+  >100     kappa=1.7032  95% [1.4337; 2.0086]  p=0.632  shift vs c=0: -6.9%
+  >1000    kappa=1.7133  95% [1.4081; 2.0650]  p=0.729  shift vs c=0: -6.0%
+  >10000   kappa=1.6900  95% [1.3293; 2.1185]  p=0.702  shift vs c=0: -5.5%
+
+[S21] section 7.3: intercept implied by c_2 ln ln x (c_2 = 0.959): +1.80
+[S22] constant term C0 = (e^g/ln2)(E + c_2 M) = -2.780; predicted regression intercept C0 - 1 (numbering from 0) + 1.80 (linear fit of c_2 ln ln x) = -1.98; observed -2.963
+[S22] section 9 (folklore): for b=2 <1/t> over the exposure = ln(t_N/t_0)/(t_N-t_0) = 0.183; 1/t_N = 0.053
+
 [S17] model lambda = (kappa/ln b) exp(c1/t + c2/t^2), conditional likelihood
   null: kappa=1.8381 lnL=-174.541 | full: kappa=1.7484 c1=0.750 c2=-1.438 lnL=-173.528 | LR=2.026 p=0.363
   B=20: M=253  (M-1)/S=1.9776  (M-B)/S=1.8285  Lambda=10.236  exact p=0.953  (chi2 p=0.947)
+
+[S19] empirical c_b(Y) = <F_b(p,Y) ln Y - ln p>, primes p in [20000, 400000): 31598 primes
+    b    Y=100  p (+-se)   Y=1000 p (+-se)   Y=3000 p (+-se)
+    2     0.900 (0.039)       0.959 (0.049)       0.895 (0.054)   
+    3     0.474 (0.040)       0.443 (0.050)       0.423 (0.055)   
+    5     1.045 (0.038)       1.063 (0.049)       1.070 (0.054)   
+    6     0.543 (0.040)       0.587 (0.050)       0.597 (0.054)   
+    7     0.498 (0.040)       0.487 (0.050)       0.506 (0.055)   
+   10     0.542 (0.040)       0.554 (0.050)       0.524 (0.054)   
+   11     0.508 (0.040)       0.473 (0.050)       0.462 (0.055)   
+   12     0.466 (0.040)       0.428 (0.050)       0.445 (0.055)   
+   13     0.703 (0.040)       0.667 (0.050)       0.681 (0.054)   
+   14     0.525 (0.040)       0.533 (0.050)       0.512 (0.055)   
+   15     0.558 (0.040)       0.537 (0.050)       0.526 (0.054)   
+   17     0.724 (0.040)       0.755 (0.050)       0.732 (0.054)   
+   18     0.869 (0.039)       0.861 (0.050)       0.838 (0.054)   
+   19     0.517 (0.040)       0.538 (0.050)       0.520 (0.054)   
+   20     1.099 (0.038)       1.106 (0.049)       1.096 (0.054)   
 
 [S18] documented frontiers: lambda_b * delta_b (Exp(1) under A1)
   b= 2  n_max=  77232917  L=  81648221  (verified)  lambda*delta=0.143  Pr(Exp(1)<=x)=0.133

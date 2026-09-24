@@ -39,12 +39,14 @@ one event per base). The correct pooled estimator is (M−B)/S, not (M−1)/S:
     κ̂ = 1.838   exact 95% CI [1.594, 2.109]   p = 0.672 against e^γ
 
 The LPW heuristic itself predicts a finite-n intensity (κ/ln b)(1 + c_b/t).
-With this second-order term LPW fits the data and the truncation trend of the
-estimate disappears (Section 9 of the paper).
+The constant c_b is calibrated from the actual divisibility of R_b(p) (mean
+0.67). With it, for n > 10 the estimate is 1.69–1.71 at every truncation and LPW
+is not rejected (p = 0.62–0.73) — Section 9 of the paper.
 
 The numbers and figures of version 3 are reproduced by `paper/analysis_v2.py`,
-`lpw_second_order.py`, `frontiers.py` and `stopping_rules.py` with fixed seeds,
-and cross-checked by `check_numbers_v3.py`. Version 1
+`lpw_second_order.py`, `cb_empirical.py`, `frontiers.py` and `stopping_rules.py`
+with fixed seeds; every decimal number of the paper is cross-checked against
+their output by `check_numbers_v3.py` and `check_all_numbers_v3.py`. Version 1
 ([`paper_en.pdf`](paper/paper_en.pdf), [`paper_ru.pdf`](paper/paper_ru.pdf),
 `analysis.py`, `validate.sh`) is kept unchanged; for details see
 [`paper/README.en.md`](paper/README.en.md).
