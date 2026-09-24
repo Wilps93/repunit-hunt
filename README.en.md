@@ -750,6 +750,8 @@ The Mersenne prime exponents come from the open PrimeNet report of the
 
 ## Citation
 
-    Dokuchaev T. The observation scheme in the statistics of generalized
-    repunit primes: calibrating the pooled test of the Lenstra–Pomerance–
-    Wagstaff constant. 2026. ORCID: 0009-0006-0510-5225
+    Dokuchaev T. S. The observation scheme in the statistics of generalized
+    repunit primes: an exact conditional test of the Lenstra–Pomerance–
+    Wagstaff constant. Version 3. 2026. Preprint arXivorg.ru AX-135915.
+    https://github.com/Wilps93/repunit-hunt/releases/tag/paper-v3
+    ORCID: 0009-0006-0510-5225
