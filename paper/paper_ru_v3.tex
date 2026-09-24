@@ -116,64 +116,37 @@
 
 \begin{abstract}
 Эвристика Ленстры --- Померанса --- Вагстаффа (ЛПВ) предсказывает, что
-$\#\{n\le x:\Rb(n)\ \text{просто}\}\sim(\eg/\ln b)\ln x$. С 1993~года эту
-универсальность проверяют через <<нормированную частоту встречаемости>>,
-получаемую регрессией $\ln n_k$ на~$k$.
+$\#\{n\le x:\Rb(n)\ \text{просто}\}\sim(\eg/\ln b)\ln x$. С 1993~года её проверяют
+по <<нормированной частоте встречаемости>>. Показано, что подозрение о смещении
+этой частоты цензурированием неверно: концевая форма и наклон МНК несмещены точно
+или с экспоненциально малой погрешностью (предложение~\ref{prop:unbiased}).
+Настоящий дефект иной: формы оценки расходятся до $29{,}5\%$.
 
-Во-первых, подозрение о смещении этой частоты правым цензурированием
-\emph{неверно}: и концевая форма, и наклон МНК несмещены точно при схеме
-<<до $N$-го события>> и с точностью до экспоненциально малого по $\mu$ члена
-при фиксированном фронте (не более $0{,}73\%$ для концевой формы и $2{,}3\%$ для
-МНК при $\mu\ge7$; предложение~\ref{prop:unbiased}); смещена лишь обратная
-величина --- неравенство Йенсена. Дефект иной: варианты оценки расходятся до
-$29{,}5\%$ --- в $1{,}7$ раза больше медианного отклонения от $\emg$, --- и
-ярлык <<удачливости>> основания переворачивается от смены формы.
+Главный результат относится к объединению $B=15$ оснований ($M=218$ событий).
+Поиск ведётся до фронта, который не записан. Неизвестные фронты --- мешающие
+параметры Неймана --- Скотта, и профильная оценка $M/S$ несостоятельна. Положение
+последней находки $D_b$ достаточно для фронта, и условно на нём
+$N_b-1\sim\Pois(\lambda_bD_b)$ точно (предложение~\ref{prop:cond}). Отсюда точное
+условное правдоподобие: оценка $(M-B)/S$ вместо $(M-1)/S$ и интервалы в замкнутой
+форме. Получено $\hat\kappa=1{,}838$, точный $95\%$ интервал $[1{,}59;\,2{,}11]$,
+$p=0{,}67$ против $\eg\approx1{,}781$. Сообщавшееся десятипроцентное превышение
+над ЛПВ --- артефакт схемы наблюдения, а старый критерий отвергает верную гипотезу
+в $11$--$17\%$ случаев.
 
-Во-вторых, объединение $B=15$ оснований даёт $M=218$ событий против $51$ у
-одних простых Мерсенна, но употребительный пивот $\kappa S\sim\Gam(M,1)$ точен
-лишь при наблюдении <<до $N$-го события>>, а данные получены при фиксированном
-фронте со случайным числом находок, причём сам фронт не записан. Неизвестные
-фронты --- мешающие параметры, по одному на основание, и профильная оценка
-$M/S$ несостоятельна по Нейману --- Скотту. Главный результат --- точное
-условное правдоподобие схемы B (предложение~\ref{prop:cond}): положение
-последнего события $D_b$ достаточно для фронта, и условно на нём величина
-$N_b-1$ распределена как $\Pois(\lambda_bD_b)$ \emph{точно} и \emph{независимо от
-положения фронта}. Отсюда $M-B\mid D\sim\Pois(\kappa S)$: правильным пивотом
-схемы~B является пуассоновский, а не гамма, правильной объединённой оценкой ---
-$(M-B)/S$, а не $(M-1)/S$ (обусловливание стоит одного события \emph{на каждое
-основание}, как одна степень свободы на группу в задаче Неймана --- Скотта), и
-доверительные интервалы получаются в замкнутой
-форме без симуляции. При номинальном $5\%$ уровне старый критерий отвергает
-верную гипотезу в $11$--$16\%$ случаев в зависимости от положения фронта. Новый
-вывод: $\hat\kappa=1{,}838$, точный $95\%$ интервал $[1{,}59;\,2{,}11]$,
-$p=0{,}67$ против $\eg\approx1{,}781$; сообщавшееся десятипроцентное превышение
-над ЛПВ есть артефакт схемы наблюдения.
-
-В-третьих, вывод опирается на одно допущение: фронт выбирался без оглядки на
-находки. При его нарушении оценки расходятся на $6{,}9\%$ и больше, и данные
-этого не различают. Без допущения строго держится лишь верхняя граница (тождество
-Вальда), а правило <<остановиться после долгой полосы без находок>> смещает и
-$(M-B)/S$ вверх. Четыре документированных фронта впервые позволяют проверить
-допущение по данным: они лежат ближе к последним находкам, чем оно предсказывает,
-то есть опасного направления нет. Отсюда требование публиковать фронты $L_b$. Наконец,
-условный мультиномиальный критерий однородности ($\Lambda=7{,}13$, точное
-$p=0{,}935$) различает лишь разброс $\kappa_b$ свыше $\pm37\%$, а объединённая
-выборка --- отклонения от $\eg$ свыше $21\%$.
-
-В-четвёртых, сама эвристика ЛПВ предсказывает при конечных $n$ интенсивность
-$(\kappa/\ln b)(1+c_b/t)$ с $c_b\in[\ln2;\,1{,}74]$, поскольку делители $\Rb(p)$ не
-меньше $2p+1$. Точный условный вывод переносится на эту модель. Член $c_b$ данными не
-определяется, но сдвигает оценку $\kappa$ на $8$--$16\%$ --- сильнее, чем выбор схемы
-наблюдения. С ним ЛПВ согласуется с данными ($p=0{,}63$--$0{,}74$ при $c=\ln2$,
-$n>10$), исчезает тренд при усечении и объясняется фольклорная <<медленная
-сходимость снизу>>.
+Вывод опирается на допущение, что фронт выбирался без оглядки на находки. Без него
+строго сохраняется лишь верхняя граница, а четыре документированных фронта опасного
+нарушения не показывают. Сама эвристика при конечных $n$ даёт интенсивность
+$(\kappa/\ln b)(1+c_b/t)$. Член $c_b$ данными не определяется, но сдвигает
+$\hat\kappa$ на $8$--$16\%$; с ним ЛПВ согласуется с данными и объясняется
+<<медленная сходимость снизу>>. Критерий однородности ($p=0{,}935$) различает лишь
+разброс $\kappa_b$ свыше $\pm37\%$.
 
 \medskip
 \noindent\textbf{Ключевые слова:} репьюнит-простые, обобщённые репьюниты,
 числа Мерсенна, гипотеза Ленстры --- Померанса --- Вагстаффа, постоянная
-Эйлера --- Маскерони, схема наблюдения, цензурирование типа~I, обратная
-выборка, пуассоновский точечный процесс, условное правдоподобие, мешающие
-параметры, задача Неймана --- Скотта, достаточная
+Эйлера --- Маскерони, схема наблюдения, цензурирование типа~I, пуассоновский
+точечный процесс, условное правдоподобие, мешающие параметры, задача
+Неймана --- Скотта, достаточная
 статистика, смещение оценки, мощность критерия, вычислительная теория чисел
 
 \medskip
@@ -216,64 +189,36 @@ Lenstra--Pomerance--Wagstaff constant}
 \end{center}
 
 \begin{abstract}
-\noindent The Lenstra--Pomerance--Wagstaff (LPW) heuristic
-predicts $\#\{n\le x: (b^n-1)/(b-1)\ \text{prime}\}\sim(e^{\gamma}/\ln b)\ln x$.
-Since 1993 it has been tested via a ``normalised occurrence frequency'' from
-regressing $\ln n_k$ on $k$.
+\noindent The Lenstra--Pomerance--Wagstaff (LPW) heuristic predicts
+$\#\{n\le x: (b^n-1)/(b-1)\ \text{prime}\}\sim(e^{\gamma}/\ln b)\ln x$ and has been
+tested since 1993 through a ``normalized occurrence frequency''. Right-censoring
+does not bias this frequency: the endpoint form and the OLS slope are unbiased
+exactly or up to an exponentially small term (Proposition~\ref{prop:unbiased}).
+Instead, forms of the estimator disagree by up to $29.5\%$.
 
-First, the suspicion that right-censoring biases this frequency downwards is
-\emph{false}: both the endpoint form and the OLS slope are exactly unbiased
-under inverse sampling, and unbiased up to a term exponentially small in $\mu$
-under a fixed frontier (at most $0.73\%$ for the endpoint form and $2.3\%$ for
-OLS when $\mu\ge7$); only the reciprocal is biased --- Jensen's inequality. The
-genuine defect is that competing forms of the estimator disagree by up to
-$29.5\%$ on identical data, and the ``lucky base'' label flips between them.
+The main result concerns pooling $B=15$ bases ($M=218$ events). The search
+frontiers are not recorded; they are Neyman--Scott nuisance parameters, and the
+profile estimator $M/S$ is inconsistent. The position $D_b$ of the last find is
+sufficient for the frontier, and conditionally on it
+$N_b-1\sim\Pois(\lambda_bD_b)$ exactly (Proposition~\ref{prop:cond}). The exact
+conditional likelihood gives the estimator $(M-B)/S$ instead of $(M-1)/S$ and
+closed-form intervals: $\hat\kappa=1.838$, exact $95\%$ interval $[1.59,\,2.11]$,
+$p=0.67$ against $e^{\gamma}\approx1.781$. The reported ten-percent excess is an
+artifact of the scheme; the old test rejects a true hypothesis in $11$--$17\%$ of
+cases.
 
-Second, pooling $B=15$ bases yields $M=218$ events against $51$ for Mersenne
-primes alone, but the customary pivot $\kappa S\sim\Gam(M,1)$ is exact only
-under inverse sampling, whereas the data arise from a fixed frontier with a
-random number of finds, and the frontier itself is not recorded. The unknown
-frontiers are nuisance parameters, one per base, and the profile estimator $M/S$
-is inconsistent in the sense of Neyman and Scott. Our main result is an exact
-conditional likelihood for the latter scheme (Proposition~\ref{prop:cond}): the
-position $D_b$ of the last event is sufficient for the frontier, and
-conditionally on it $N_b-1$ is \emph{exactly} $\Pois(\lambda_bD_b)$, a law that
-does not involve the frontier at all. Hence
-$M-B\mid D\sim\Pois(\kappa S)$: the correct pivot under a fixed frontier is
-Poisson rather than Gamma, the correct pooled estimator is $(M-B)/S$ rather
-than $(M-1)/S$ --- conditioning costs one event \emph{per base}, as one degree
-of freedom per group in the Neyman--Scott problem ---
-and confidence intervals are available in closed form without simulation.
-At the nominal $5\%$ level the old test rejects a true hypothesis in
-$11$--$16\%$ of cases depending on the frontier. The revised conclusion is
-$\hat\kappa=1.838$, exact $95\%$ interval $[1.59,\,2.11]$, $p=0.67$ against
-$e^{\gamma}\approx1.781$; the reported ten-percent excess is an artefact of the
-scheme.
-
-Third, the inference rests on a single assumption: the frontier was chosen
-without regard to the finds. If it fails, the estimators differ by $6.9\%$ or
-more, and the data cannot tell which is right. Without the assumption only an
-upper bound holds rigorously (Wald's identity), and a rule such as ``stop after
-a long stretch without finds'' biases even $(M-B)/S$ upwards. Four documented
-frontiers allow the first empirical check of the assumption: they lie closer to the
-last finds than it predicts, so the dangerous direction is not supported. Hence our
-call to publish the frontiers $L_b$. Finally, the exact
-conditional multinomial homogeneity test ($\Lambda=7.13$, $p=0.935$) detects
-only a spread of $\kappa_b$ above $\pm37\%$, the pooled sample only deviations
-above $21\%$.
-
-Fourth, the LPW heuristic itself predicts a finite-$n$ intensity
-$(\kappa/\ln b)(1+c_b/t)$ with $c_b\in[\ln2,\,1.74]$, because the divisors of $R_b(p)$
-are at least $2p+1$, and the exact conditional inference carries over to this model.
-The data do not determine $c_b$, yet it moves the estimate of $\kappa$ by
-$8$--$16\%$ --- more than the choice of observation scheme. With it, LPW fits the
-data ($p=0.63$--$0.74$ for $c=\ln2$, $n>10$), the truncation trend disappears, and
-the folklore ``slow convergence from below'' is explained.
+This rests on the frontier being chosen without regard to the finds; otherwise
+only an upper bound survives, and four documented frontiers show no violation in
+the dangerous direction. The heuristic itself gives a finite-$n$ intensity
+$(\kappa/\ln b)(1+c_b/t)$; $c_b$ is not determined by the data but moves
+$\hat\kappa$ by $8$--$16\%$, and with it LPW fits the data and the ``slow
+convergence from below'' is explained. The homogeneity test ($p=0.935$) detects
+only a spread of $\kappa_b$ above $\pm37\%$.
 
 \medskip
 \noindent\textbf{Keywords:} repunit primes, generalized repunits, Mersenne
 primes, Lenstra--Pomerance--Wagstaff conjecture, Euler--Mascheroni constant,
-observation scheme, Type-I censoring, inverse sampling, Poisson point process,
+observation scheme, Type-I censoring, Poisson point process,
 conditional likelihood, nuisance parameters, Neyman--Scott problem, sufficient
 statistic, estimator bias, statistical power, computational number theory
 
@@ -375,7 +320,7 @@ $\Pois(\lambda_bD_b)$, причём \emph{ширина окна $W_b$ в это 
 \item\textbf{Численное следствие.} Точный условный вывод даёт
 $\hat\kappa=1{,}838$ при $95\%$ интервале $[1{,}594;\,2{,}109]$ и $p=0{,}672$:
 превышение над ЛПВ исчезает. Старый гамма-пивот при схеме~B отвергает верную
-гипотезу в $11$--$16\%$ случаев (\S\ref{sec:calib}); разброс зависит от того, как
+гипотезу в $11$--$17\%$ случаев (\S\ref{sec:calib}); разброс зависит от того, как
 далеко ушёл фронт, и именно поэтому приводится диапазоном.
 
 \item\textbf{Единственное допущение и его цена.} Весь вывод держится на
@@ -504,11 +449,14 @@ $X_{\mathrm{ver}}$ не зависит: достаточно того, что о
 $M_{50}=77\,232\,917$ и $M_{51}=82\,589\,933$, а это верно для всех значений отчёта
 за 2026~год.
 
-\paragraph{Статус записи A000043.} Раздел DATA этой записи содержит $50$ членов и
-обрывается на $77\,232\,917$: порядок следующих показателей OEIS считает недоказанным
-до завершения двойной проверки. Показатели $82\,589\,933$ и $136\,279\,841$ известны и
-документированы GIMPS (и упомянуты в комментариях к A000043), но формально не входят в
-DATA. Мы включаем их, поскольку статистика~\eqref{eq:pivotB} использует лишь положение
+\paragraph{Статус записи A000043.} На дату считывания (27.08.2026) раздел DATA этой
+записи содержал $50$ членов и обрывался на $77\,232\,917$: порядок следующих
+показателей OEIS считает недоказанным до завершения двойной проверки. Показатели
+$82\,589\,933$ и $136\,279\,841$ известны и документированы GIMPS (и упомянуты в
+комментариях к A000043), но формально в DATA не входили. После завершения двойной
+проверки ниже $82\,589\,933$ (отчёт GIMPS от 4.09.2026) этот показатель внесён в
+DATA как $51$-й член (проверено 24.09.2026); на расчёты это не влияет, поскольку он
+и так учтён. Мы включаем оба показателя, поскольку статистика~\eqref{eq:pivotB} использует лишь положение
 последнего события, а не его порядковый номер; в~\S\ref{sec:robust} проверено, что
 ограничение основания~2 пятьюдесятью дважды проверенными показателями вывода не меняет.
 
@@ -1213,7 +1161,7 @@ A (контроль) & 0{,}0492 & --- & ---\\
 \end{table}
 
 Три вывода из таблицы~\ref{tab:calib}. Во-первых, номинальный $5\%$ критерий при
-схеме~B отвергает верную гипотезу в $11$--$16\%$ случаев: заявленная точность
+схеме~B отвергает верную гипотезу в $11$--$17\%$ случаев: заявленная точность
 интервалов завышена вдвое-втрое, причём тем сильнее, чем ближе фронт к последней
 находке. Во-вторых, оценка $(M-1)/S$ смещена вверх на $4$--$7\%$ при всех правилах,
 тогда как $(M-B)/S$ несмещена с точностью до шума Монте-Карло при всех правилах ---
@@ -1956,7 +1904,7 @@ $\Gam(M,1)$, правильной объединённой оценкой --- $(
 \item Это даёт $\kappa=1{,}838$ при точном $95\%$ интервале $[1{,}594;\,2{,}109]$ и
 $p=0{,}672$ против $\eg$. Сообщавшееся десятипроцентное превышение над ЛПВ, включая
 наше собственное в более ранней редакции этой работы, есть артефакт схемы наблюдения.
-Старый гамма-пивот при схеме~B отвергает верную гипотезу в $11$--$16\%$ случаев.
+Старый гамма-пивот при схеме~B отвергает верную гипотезу в $11$--$17\%$ случаев.
 Переход к схеме~B независимо устраняет и систематический тренд объединённой оценки
 при усечении по $n_{\min}$.
 

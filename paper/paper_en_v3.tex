@@ -69,65 +69,37 @@ E-mail: \texttt{timofei93@yandex.ru}. ORCID:
 \maketitle
 
 \begin{abstract}
-\noindent The Lenstra--Pomerance--Wagstaff (LPW) heuristic
-predicts $\#\{n\le x: (b^n-1)/(b-1)\ \text{prime}\}\sim(e^{\gamma}/\ln b)\ln x$.
-Since 1993 it has been tested via a ``normalized occurrence frequency'' from
-regressing $\ln n_k$ on $k$.
+\noindent The Lenstra--Pomerance--Wagstaff (LPW) heuristic predicts
+$\#\{n\le x: (b^n-1)/(b-1)\ \text{prime}\}\sim(e^{\gamma}/\ln b)\ln x$ and has been
+tested since 1993 through a ``normalized occurrence frequency''. Right-censoring
+does not bias this frequency: the endpoint form and the OLS slope are unbiased
+exactly or up to an exponentially small term (Proposition~\ref{prop:unbiased}).
+Instead, forms of the estimator disagree by up to $29.5\%$.
 
-First, the suspicion that right-censoring biases this frequency downwards is
-\emph{false}: both the endpoint form and the OLS slope are exactly unbiased
-under inverse sampling, and unbiased up to a term exponentially small in $\mu$
-under a fixed frontier (at most $0.73\%$ for the endpoint form and $2.3\%$ for
-OLS when $\mu\ge7$); only the reciprocal is biased---Jensen's inequality. The
-genuine defect is that competing forms of the estimator disagree by up to
-$29.5\%$ on identical data, and the ``lucky base'' label flips between them.
+The main result concerns pooling $B=15$ bases ($M=218$ events). The search
+frontiers are not recorded; they are Neyman--Scott nuisance parameters, and the
+profile estimator $M/S$ is inconsistent. The position $D_b$ of the last find is
+sufficient for the frontier, and conditionally on it
+$N_b-1\sim\Pois(\lambda_bD_b)$ exactly (Proposition~\ref{prop:cond}). The exact
+conditional likelihood gives the estimator $(M-B)/S$ instead of $(M-1)/S$ and
+closed-form intervals: $\hat\kappa=1.838$, exact $95\%$ interval $[1.59,\,2.11]$,
+$p=0.67$ against $e^{\gamma}\approx1.781$. The reported ten-percent excess is an
+artifact of the scheme; the old test rejects a true hypothesis in $11$--$17\%$ of
+cases.
 
-Second, pooling $B=15$ bases yields $M=218$ events against $51$ for Mersenne
-primes alone, but the customary pivot $\kappa S\sim\Gam(M,1)$ is exact only
-under inverse sampling, whereas the data arise from a fixed frontier with a
-random number of finds, and the frontier itself is not recorded. The unknown
-frontiers are nuisance parameters, one per base, and the profile estimator $M/S$
-is inconsistent in the sense of Neyman and Scott. Our main result is an exact
-conditional likelihood for the latter scheme (Proposition~\ref{prop:cond}): the
-position $D_b$ of the last event is sufficient for the frontier, and
-conditionally on it $N_b-1$ is \emph{exactly} $\Pois(\lambda_bD_b)$, a law that
-does not involve the frontier at all. Hence
-$M-B\mid D\sim\Pois(\kappa S)$: the correct pivot under a fixed frontier is
-Poisson rather than Gamma, the correct pooled estimator is $(M-B)/S$ rather
-than $(M-1)/S$---conditioning costs one event \emph{per base}, as one degree
-of freedom per group in the Neyman--Scott problem---and confidence intervals
-are available in closed form without simulation.
-At the nominal $5\%$ level the old test rejects a true hypothesis in
-$11$--$16\%$ of cases depending on the frontier. The revised conclusion is
-$\hat\kappa=1.838$, exact $95\%$ interval $[1.59,\,2.11]$, $p=0.67$ against
-$e^{\gamma}\approx1.781$; the reported ten-percent excess is an artifact of the
-scheme.
-
-Third, the inference rests on a single assumption: the frontier was chosen
-without regard to the finds. If it fails, the estimators differ by $6.9\%$ or
-more, and the data cannot tell which is right. Without the assumption only an
-upper bound holds rigorously (Wald's identity), and a rule such as ``stop after
-a long stretch without finds'' biases even $(M-B)/S$ upwards. Four documented
-frontiers allow the first empirical check of the assumption: they lie closer to
-the last finds than it predicts, so the dangerous direction is not supported.
-Hence our call to publish the frontiers $L_b$. Finally, the exact
-conditional multinomial homogeneity test ($\Lambda=7.13$, $p=0.935$) detects
-only a spread of $\kappa_b$ above $\pm37\%$, the pooled sample only deviations
-above $21\%$.
-
-Fourth, the LPW heuristic itself predicts a finite-$n$ intensity
-$(\kappa/\ln b)(1+c_b/t)$ with $c_b\in[\ln2,\,1.74]$, because the divisors of
-$R_b(p)$ are at least $2p+1$, and the exact conditional inference carries over
-to this model. The data do not determine $c_b$, yet it moves the estimate of
-$\kappa$ by $8$--$16\%$---more than the choice of observation scheme. With it,
-LPW fits the data ($p=0.63$--$0.74$ for $c=\ln2$, $n>10$), the truncation trend
-disappears, and the folklore ``slow convergence from below'' is explained.
+This rests on the frontier being chosen without regard to the finds; otherwise
+only an upper bound survives, and four documented frontiers show no violation in
+the dangerous direction. The heuristic itself gives a finite-$n$ intensity
+$(\kappa/\ln b)(1+c_b/t)$; $c_b$ is not determined by the data but moves
+$\hat\kappa$ by $8$--$16\%$, and with it LPW fits the data and the ``slow
+convergence from below'' is explained. The homogeneity test ($p=0.935$) detects
+only a spread of $\kappa_b$ above $\pm37\%$.
 \end{abstract}
 
 \medskip
 \noindent\textbf{Keywords:} repunit primes, generalized repunits, Mersenne
 primes, Lenstra--Pomerance--Wagstaff conjecture, Euler--Mascheroni constant,
-observation scheme, Type-I censoring, inverse sampling, Poisson point process,
+observation scheme, Type-I censoring, Poisson point process,
 conditional likelihood, nuisance parameters, Neyman--Scott problem, sufficient
 statistic, estimator bias, statistical power, computational number theory
 
@@ -224,7 +196,7 @@ turns out to be proportional to the number of bases
 \item\textbf{Numerical consequence.} The exact conditional inference gives
 $\hat\kappa=1.838$ with a $95\%$ interval $[1.594,\,2.109]$ and $p=0.672$: the
 excess over LPW disappears. Under scheme~B the old Gamma pivot rejects a true
-hypothesis in $11$--$16\%$ of cases (\S\ref{sec:calib}); the spread depends on
+hypothesis in $11$--$17\%$ of cases (\S\ref{sec:calib}); the spread depends on
 how far the frontier has advanced, which is precisely why it is reported as a
 range.
 
@@ -361,12 +333,16 @@ value of $X_{\mathrm{ver}}$: it suffices that it lies between
 $M_{50}=77\,232\,917$ and $M_{51}=82\,589\,933$, and this holds for every value
 the report has taken during 2026.
 
-\paragraph{The status of entry A000043.} The DATA section of that entry contains
-$50$ terms and stops at $77\,232\,917$: OEIS regards the order of the subsequent
-exponents as unproven until double-checking is complete. The exponents
-$82\,589\,933$ and $136\,279\,841$ are known and documented by GIMPS (and are
-mentioned in the comments to A000043), but formally they are not part of DATA.
-We include them, because the statistic~\eqref{eq:pivotB} uses only the position
+\paragraph{The status of entry A000043.} At the retrieval date (27 Aug.\ 2026)
+the DATA section of that entry contained $50$ terms and stopped at
+$77\,232\,917$: OEIS regards the order of the subsequent exponents as unproven
+until double-checking is complete. The exponents $82\,589\,933$ and
+$136\,279\,841$ are known and documented by GIMPS (and are mentioned in the
+comments to A000043), but formally they were not part of DATA. After
+double-checking below $82\,589\,933$ was completed (GIMPS report of 4 Sep.\ 2026),
+that exponent was added to DATA as the $51$st term (checked 24 Sep.\ 2026); this
+does not affect the computations, since it is already included. We include both
+exponents, because the statistic~\eqref{eq:pivotB} uses only the position
 of the last event and not its ordinal number; \S\ref{sec:robust} verifies that
 restricting base~2 to the fifty double-checked exponents does not change the
 conclusion.
@@ -1070,7 +1046,7 @@ A (control) & 0.0492 & --- & ---\\
 \end{table}
 
 Three conclusions follow from Table~\ref{tab:calib}. First, under scheme~B a
-nominal $5\%$ test rejects a true hypothesis in $11$--$16\%$ of cases: the
+nominal $5\%$ test rejects a true hypothesis in $11$--$17\%$ of cases: the
 claimed precision of the intervals is overstated two- to threefold, and the more
 so the closer the frontier is to the last find. Second, the estimator $(M-1)/S$
 is biased upwards by $4$--$7\%$ under all rules, whereas $(M-B)/S$ is unbiased
@@ -1810,7 +1786,7 @@ has to be reconstructed from the finds (Remark~\ref{rem:priority}).
 $[1.594,\,2.109]$ and $p=0.672$ against $\eg$. The reported ten-percent excess
 over LPW---including our own in an earlier version of this work---is an artifact
 of the observation scheme. Under scheme~B the old Gamma pivot rejects a true
-hypothesis in $11$--$16\%$ of cases. Moving to scheme~B also independently
+hypothesis in $11$--$17\%$ of cases. Moving to scheme~B also independently
 removes the systematic trend of the pooled estimate under truncation in
 $n_{\min}$.
 

@@ -725,8 +725,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--fast", action="store_true")
     ap.add_argument("--no-figs", action="store_true")
+    ap.add_argument("--seed", type=int, default=None,
+                    help="другое зерно: вывод в results_v2_seed<N>.txt, рисунки не строятся")
     args = ap.parse_args()
     f = 10 if args.fast else 1
+    global SEED
+    if args.seed is not None:
+        SEED = args.seed
+        args.no_figs = True
 
     seqs = v1.load_sequences()
     bases = v1.build(seqs)
@@ -746,8 +752,9 @@ def main():
     if not args.no_figs:
         figures(seqs, bases, rows, kB, ciB, trunc, sameerr)
     if not args.fast:
-        (HERE / "results_v2.txt").write_text("\n".join(OUT) + "\n", encoding="utf-8")
-        print("\n[записано results_v2.txt]")
+        name = "results_v2.txt" if args.seed is None else "results_v2_seed%d.txt" % args.seed
+        (HERE / name).write_text("\n".join(OUT) + "\n", encoding="utf-8")
+        print("\n[записано %s]" % name)
 
 
 if __name__ == "__main__":

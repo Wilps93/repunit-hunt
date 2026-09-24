@@ -24,7 +24,9 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TEX = (HERE / "paper_ru.tex").read_text(encoding="utf-8")
+# Необязательный аргумент -- имя файла (по умолчанию paper_ru.tex):
+#   python check_gost.py paper_ru_v3.tex
+TEX = (HERE / (sys.argv[1] if len(sys.argv) > 1 else "paper_ru.tex")).read_text(encoding="utf-8")
 
 RESULTS = []
 
