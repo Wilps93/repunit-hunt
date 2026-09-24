@@ -1,5 +1,7 @@
 *[Русская версия](METHOD.md) · English*
 
+> This note refers to **version 1** of the paper (`paper_en_v1.tex`, `analysis.py`). The method of version 3 is described in the paper itself and in [`CHANGES_v3.md`](CHANGES_v3.md).
+
 # Methodology: how to estimate the LPW constant from generalized repunit primes
 
 Extracted from `analysis.py` — not a retelling of it, but a description of what

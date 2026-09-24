@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Полная сверка: КАЖДОЕ десятичное число в тексте paper_ru_v3.tex и paper_en_v3.tex
+"""Полная сверка: КАЖДОЕ десятичное число в тексте paper_ru.tex и paper_en.tex (версия 3)
 (кроме комментариев и списка литературы) должно найтись в выводе скриптов
 (results_v2.txt, results_v3.txt) с точностью до округления, в том числе в виде
 процента или отклонения от единицы. Исключения перечислены явно с обоснованием.
@@ -44,7 +44,7 @@ def pool():
 def main():
     P = pool()
     bad = 0
-    for name in ("paper_ru_v3.tex", "paper_en_v3.tex"):
+    for name in ("paper_ru.tex", "paper_en.tex"):
         path = HERE / name
         if not path.exists():
             continue

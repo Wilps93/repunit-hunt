@@ -1,95 +1,103 @@
-*[Русская версия](README.md) · English*
+*[Русский](README.md) · English*
 
 # Materials for the paper on the Lenstra–Pomerance–Wagstaff constant
 
-Reproducible analysis accompanying the work "The observation scheme in the
-statistics of generalized repunit primes: calibrating the pooled test of the
-Lenstra–Pomerance–Wagstaff constant".
+Reproducible analysis for the paper "The observation scheme in the statistics of
+generalized repunit primes: an exact conditional test of the
+Lenstra–Pomerance–Wagstaff constant". The current version of the paper is 3; the
+changes since version 1 are listed in [`CHANGES_v3.md`](CHANGES_v3.md) (in Russian).
 
-The paper exists in two editions with the same content and the same numbers:
+The paper exists in two language editions with the same content and the same
+numbers:
 
-* `paper_ru.tex` — Russian, laid out per GOST R 7.0.7-2021 (article type, UDC
-  index, bilingual captions, romanized reference list, author information);
-* `paper_en.tex` — English, in international format: single-language captions,
-  a Declarations block, one reference list with DOIs.
+* `paper_ru.tex` — Russian, laid out per GOST R 7.0.7-2021;
+* `paper_en.tex` — English, international format.
 
-The numbers of both editions are checked against the output of `analysis.py` by
-one and the same script, `check_numbers.py`; the GOST conformance check applies
-to the Russian edition only.
+Every decimal number in both editions is checked against the script output
+(`check_all_numbers_v3.py`); GOST is checked for the Russian edition.
 
 ## Quick start
 
 ```bash
 # 1. Data (already in data/; this step is only needed to refresh it)
 bash fetch_data.sh          # OEIS b-files, main set b <= 20
-bash fetch_extra.sh         # b = 21..26, the check of the selection limit
+bash fetch_extra.sh         # b = 21..26, robustness of the selection bound
 
-# 2. Every number in the paper + the figures  (a few minutes)
-python3 analysis.py         # -> results.txt, figs/*.pdf
-python3 analysis.py --fast  # abbreviated Monte Carlo, for a smoke test
+# 2. Every number in the paper + the figures
+python3 analysis_v2.py      # [S0]-[S12] -> results_v2.txt, figs_v2/  (about a minute)
+bash make_results_v3.sh     # [S13]-[S25] -> results_v3.txt  (about 5 minutes;
+                            #   --full recomputes the c_b calibration, 10 more minutes)
 
 # 3. The paper
 bash build_paper.sh            # -> paper_ru.pdf and paper_en.pdf
-bash build_paper.sh paper_en   # the English edition only
+bash build_paper.sh paper_en   # English only
 ```
 
 ## Full validation
 
-One run instead of ten commands:
-
 ```bash
-bash validate.sh          # runs 1-4, about a minute
-bash validate.sh --full   # plus the independent recomputation, about ten minutes
+bash validate.sh          # runs 1-4
+bash validate.sh --full   # plus recomputing the c_b calibration and the sequences n < 10^4
 ```
 
 | Run | What it checks |
 |---|---|
-| 1. Clean room | everything derived is rebuilt from scratch out of `data/` and the two `paper_*.tex` |
-| 2. Cross-check | numbers, GOST, data, self-overlap, typography, spelling, PDF |
-| 3. Seed robustness | the conclusions under five generator seeds |
-| 4. Live sources | the OEIS b-files and the GIMPS frontier have not moved |
-| 5. Independent recomputation | `repunit-hunt` recomputes all n < 10⁴ from scratch (`--full`) |
+| 1. Clean room | everything derived is rebuilt from `data/` and `paper_*.tex` |
+| 2. Cross-checks | every number in the paper, key numbers, GOST, data, self-overlap, typography, PDF |
+| 3. Seed robustness | conclusions under three generator seeds |
+| 4. Live sources | OEIS b-files and the GIMPS frontier today (known drift is printed but does not fail the run) |
+| 5. Independent recomputation | `repunit-hunt` recomputes every n < 10⁴ (`--full`) |
 
-Exit code 0 only if everything passed. The individual checks can also be
-invoked one at a time:
+Exit code 0 only if everything passes. Individual checks:
 
 ```bash
-python3 check_numbers.py    # 37 numbers of BOTH editions against the output of analysis.py
-python3 check_gost.py       # 31 checks of paper_ru.tex against GOST R 7.0.7-2021
-python3 check_method.py     # 33 numbers of METHOD.md against the output of analysis.py
-python3 check_stability.py  # seed robustness
-python3 check_overlap.py    # self-overlap with earlier drafts
-python3 compare_verify.py   # the recomputation against OEIS
+python3 check_all_numbers_v3.py   # EVERY decimal number of both editions against the script output
+python3 check_numbers_v3.py       # key numbers of both editions
+python3 check_gost.py             # 32 checks of paper_ru.tex against GOST R 7.0.7-2021
+python3 check_stability_v3.py     # seed robustness
+python3 check_overlap.py          # self-overlap with earlier drafts
+python3 compare_verify.py         # recomputation n < 10^4 against OEIS
+python3 compare_verify_ext.py     # extended recomputation against OEIS
 ```
 
-Dependencies of the analysis: `numpy`, `scipy`, `matplotlib`.
-Building the paper: `texlive-latex-recommended`, `texlive-lang-cyrillic`,
-`texlive-latex-extra`.
+Dependencies of the analysis: `numpy`, `scipy`, `matplotlib`. Building the paper:
+`texlive-latex-recommended`, `texlive-lang-cyrillic`, `texlive-latex-extra` (on
+Windows, TinyTeX with `babel-russian`, `cyrillic`, `lh`, `cm-super`,
+`hyphen-russian` is enough).
 
 ## What is where
 
 | File | Purpose |
 |---|---|
-| `paper_ru.tex`, `paper_ru.pdf` | the paper, Russian edition (GOST R 7.0.7-2021) |
-| `paper_en.tex`, `paper_en.pdf` | the paper, English edition (international format) |
-| `METHOD.md`, `METHOD.en.md` | the methodology in executable form: extracted from `analysis.py`, the numbers checked by `check_method.py` |
-| `analysis.py` | reproduction of **every** number; each one tagged `[Табл. N]` / `[§N.N]` in the output |
-| `results.txt` | the output of `analysis.py` |
-| `check_numbers.py` | checks 37 key quantities against `results.txt` in both editions (Russian notation `1{,}9648`, English `1.9648`); exit code 1 on a disagreement |
-| `check_gost.py` | 31 checks of `paper_ru.tex` against GOST R 7.0.7-2021 (in force since 01.10.2021); exit code 1 on a violation |
-| `check_stability.py` | runs the analysis under five seeds; the deterministic quantities must match exactly, the Monte Carlo ones must stay within their corridors |
-| `check_overlap.py` | self-overlap with earlier drafts (8-word shingles) |
-| `validate.sh` | the orchestrator: all the checks in five runs |
-| `figs/`, `figs/en/` | four figures in two language sets, generated by `analysis.py` |
-| `data/` | OEIS b-files, 20 sequences |
-| `FINDINGS.md`, `FINDINGS.en.md` | the report: what reproduced, what was corrected |
-| `verify_sequences.sh` | independent exhaustive recomputation of the sequences with the searcher |
-| `compare_verify.py` | comparison of the recomputation against OEIS, exit code 1 on a disagreement |
-| `verify/` | the results of the recomputation and the run log: homogeneous up to n < 10⁴, 153 terms — these are the numbers in the appendix |
-| `verify_32k/` | a later run up to k_max = 32000, not homogeneous across bases (169 terms); not used in the paper |
+| `paper_ru.tex`, `paper_ru.pdf` | the paper, version 3, Russian (GOST R 7.0.7-2021) |
+| `paper_en.tex`, `paper_en.pdf` | the paper, version 3, English |
+| `CHANGES_v3.md` | what changed in version 3 and which checks were run |
+| `analysis_v2.py` → `results_v2.txt`, `figs_v2/` | exact conditional inference: tags [S0]–[S12], figures |
+| `stopping_rules.py` | [S13] stopping rules that violate (A1) |
+| `lpw_second_order.py` | [S14]–[S17], [S20]–[S22] second-order term, model exp(c₁/t+c₂/t²), B = 20, §7.3 |
+| `frontiers.py` | [S18] documented frontiers: check of (A1), hybrid estimate |
+| `cb_empirical.py` → `results_S19.txt` | [S19] calibration of c_b from the divisibility of R_b(p) |
+| `cb_theory.py` | [S23] first-principles prediction of c_b and paired comparison |
+| `sim_second_order.py` | [S24]–[S25] uncertainty of c_b, simulation check of the method |
+| `make_results_v3.sh` → `results_v3.txt` | assembles the output [S13]–[S25] |
+| `check_all_numbers_v3.py`, `check_numbers_v3.py` | numbers of the paper against the output, exit code 1 on a disagreement |
+| `check_stability_v3.py` | seed robustness |
+| `check_gost.py` | GOST R 7.0.7-2021 (argument: file name, default `paper_ru.tex`) |
+| `check_overlap.py` | self-overlap with earlier drafts |
+| `validate.sh` | the orchestrator of all version-3 checks |
+| `data/` | OEIS b-files, 20 sequences (snapshot of 27 Aug. 2026) |
+| `verify_sequences.sh`, `compare_verify.py`, `verify/` | exhaustive recomputation n < 10⁴ (153 terms), the basis of the appendix |
+| `verify_range.sh`, `verify_plan.py`, `compare_verify_ext.py`, `verify_ext/` | extended recomputation n ≥ 10⁴, see [`VERIFY_EXTENDED.md`](VERIFY_EXTENDED.md) (in Russian) |
+| `verify_32k/` | a later run up to k_max = 32000, not used in the paper |
 
-The random number generator is initialized with a fixed seed (`SEED` in
-`analysis.py`), so the Monte Carlo quantities reproduce bit for bit.
+**Version 1 archive** (kept so that the history stays checkable):
+`paper_ru_v1.tex`, `paper_en_v1.tex` and their PDFs, `analysis.py` →
+`results.txt`, `figs/`, `check_numbers.py`, `check_method.py`,
+`check_stability.py`, `METHOD.md`, `FINDINGS.md`, `validate_v1.sh`.
+`analysis.py` also serves as the shared data loader for `analysis_v2.py`.
+
+All random number generators are initialized with fixed seeds, so the Monte Carlo
+quantities reproduce bit for bit.
 
 ## Independent recomputation of the sequences
 
@@ -111,3 +119,6 @@ GWNUM path was found, described in `FINDINGS.md`, §4.
 
 Current result: **153 terms confirmed, 0 spurious, 0 missing** across all
 twenty bases.
+
+The continuation beyond n >= 10^4 (in resumable ranges) is described in
+[`VERIFY_EXTENDED.md`](VERIFY_EXTENDED.md) (in Russian).

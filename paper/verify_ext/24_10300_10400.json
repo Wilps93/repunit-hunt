@@ -1,0 +1,21 @@
+{
+  "base": 24,
+  "k_min": 10300,
+  "k_max": 10400,
+  "prp_exponents": [
+    10343
+  ],
+  "note": "PRP, не доказательство простоты — требуется ECPP/Primo",
+  "complete": true,
+  "chunks": 1,
+  "primes_checked": 12,
+  "prp_tests": 5,
+  "prp_secs_sum": 4.8,
+  "wall_secs": 54.0,
+  "double_check_ratio": 1.0,
+  "double_checked": 4,
+  "double_check_mismatches": 0,
+  "gpu_false_positives": 0,
+  "searcher": "repunit-hunt 2.0.0",
+  "finished": "2026-09-24 17:42:08"
+}

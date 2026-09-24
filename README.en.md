@@ -23,8 +23,8 @@ statistics of generalized repunit primes: an exact conditional test of the
 Lenstra–Pomerance–Wagstaff constant".
 
 **The current version is 3:**
-- English: [`paper_en_v3.pdf`](paper/paper_en_v3.pdf);
-- Russian: [`paper_ru_v3.pdf`](paper/paper_ru_v3.pdf), laid out per GOST R 7.0.7-2021.
+- English: [`paper_en.pdf`](paper/paper_en.pdf);
+- Russian: [`paper_ru.pdf`](paper/paper_ru.pdf), laid out per GOST R 7.0.7-2021.
 
 Changes since version 1 are listed in [`paper/CHANGES_v3.md`](paper/CHANGES_v3.md) (in Russian).
 
@@ -44,11 +44,12 @@ The constant c_b is calibrated from the actual divisibility of R_b(p) (mean
 is not rejected (p = 0.62–0.73) — Section 9 of the paper.
 
 The numbers and figures of version 3 are reproduced by `paper/analysis_v2.py`,
-`lpw_second_order.py`, `cb_empirical.py`, `frontiers.py` and `stopping_rules.py`
+`make_results_v3.sh` (`lpw_second_order.py`, `cb_empirical.py`, `cb_theory.py`,
+`sim_second_order.py`, `frontiers.py`, `stopping_rules.py`)
 with fixed seeds; every decimal number of the paper is cross-checked against
 their output by `check_numbers_v3.py` and `check_all_numbers_v3.py`. Version 1
-([`paper_en.pdf`](paper/paper_en.pdf), [`paper_ru.pdf`](paper/paper_ru.pdf),
-`analysis.py`, `validate.sh`) is kept unchanged; for details see
+([`paper_en_v1.pdf`](paper/paper_en_v1.pdf), [`paper_ru_v1.pdf`](paper/paper_ru_v1.pdf),
+`analysis.py`, `validate_v1.sh`) is kept as an archive; for details see
 [`paper/README.en.md`](paper/README.en.md).
 
 ## Repository layout
@@ -57,11 +58,11 @@ their output by `check_numbers_v3.py` and `check_all_numbers_v3.py`. Version 1
 |---|---|
 | `src/`, `native/`, `benches/`, `build.rs` | the searcher: sieve, trial factoring, P−1, PRP |
 | `config/default.toml` | pipeline parameters, with a rationale for every value |
-| `paper/paper_en_v3.tex`, `paper/paper_en_v3.pdf` | the paper, version 3, English |
-| `paper/paper_ru_v3.tex`, `paper/paper_ru_v3.pdf` | the paper, version 3, Russian |
+| `paper/paper_en.tex`, `paper/paper_en.pdf` | the paper, version 3, English |
+| `paper/paper_ru.tex`, `paper/paper_ru.pdf` | the paper, version 3, Russian |
 | `paper/analysis_v2.py` | version 3 analysis → `results_v2.txt`, `figs_v2/` |
 | `paper/lpw_second_order.py`, `frontiers.py`, `stopping_rules.py` | Section 9, Section 4.5, Table 5 of version 3 → `results_v3.txt` |
-| `paper/paper_ru.tex`, `paper/paper_en.tex` | the paper, version 1 |
+| `paper/paper_ru_v1.tex`, `paper/paper_en_v1.tex` | the paper, version 1 (archive) |
 | `paper/analysis.py` | version 1 analysis → `results.txt`, `figs/` |
 | `paper/data/` | OEIS b-files (OEIS license, see below) |
 | `paper/verify/` | independent exhaustive recomputation up to n < 10⁴ — **the appendix of the paper rests on it** |

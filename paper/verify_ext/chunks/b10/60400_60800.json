@@ -1,0 +1,80 @@
+{
+ "base": 10,
+ "k_min": 60400,
+ "k_max": 60800,
+ "prp_exponents": [],
+ "note": "PRP, не доказательство простоты — требуется ECPP/Primo",
+ "complete": true,
+ "primes_checked": 36,
+ "factored_small": 12,
+ "factored_gpu": 10,
+ "factored_pm1": 0,
+ "prp_tests": 14,
+ "prp_secs_sum": 396.34,
+ "wall_secs": 46.0,
+ "double_check_ratio": 0.0,
+ "double_checked": 0,
+ "double_check_mismatches": 0,
+ "gpu_false_positives": 0,
+ "searcher": "repunit-hunt 2.0.0",
+ "extra_args": "",
+ "finished": "2026-09-24 17:25:55",
+ "prp_timings": [
+  [
+   201462,
+   22.161
+  ],
+  [
+   201383,
+   22.5335
+  ],
+  [
+   201728,
+   22.6413
+  ],
+  [
+   200805,
+   23.7501
+  ],
+  [
+   201429,
+   28.0425
+  ],
+  [
+   201104,
+   28.2151
+  ],
+  [
+   201509,
+   29.3826
+  ],
+  [
+   201343,
+   29.9378
+  ],
+  [
+   201748,
+   31.0833
+  ],
+  [
+   200685,
+   31.574
+  ],
+  [
+   201270,
+   31.2385
+  ],
+  [
+   201828,
+   31.6204
+  ],
+  [
+   201409,
+   32.1488
+  ],
+  [
+   201004,
+   32.0064
+  ]
+ ]
+}

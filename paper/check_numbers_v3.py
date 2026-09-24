@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Сверка ключевых чисел paper_ru_v3.tex (и paper_en_v3.tex, если он есть) с выводом
+"""Сверка ключевых чисел paper_ru.tex и paper_en.tex (версия 3) с выводом
 analysis_v2.py (results_v2.txt) и results_v3.txt.
 
 Каждая проверка: (регулярное выражение по выводу, номер группы, формат, подпись).
@@ -16,7 +16,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 RES = (HERE / "results_v2.txt").read_text(encoding="utf-8") + \
     (HERE / "results_v3.txt").read_text(encoding="utf-8")
-PAPERS = [("ru", HERE / "paper_ru_v3.tex", "{,}"), ("en", HERE / "paper_en_v3.tex", ".")]
+PAPERS = [("ru", HERE / "paper_ru.tex", "{,}"), ("en", HERE / "paper_en.tex", ".")]
 
 N = r"(-?\d+\.\d+)"
 CHECKS = [

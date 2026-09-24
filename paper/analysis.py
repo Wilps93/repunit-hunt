@@ -1156,7 +1156,7 @@ def figures(seqs, bases, kB, ciB):
     (FIGS / "en").mkdir(exist_ok=True)
     M0, S0, B0 = pooled(bases)
 
-    # Рисунки строятся дважды: paper_ru.tex берёт их из figs/, paper_en.tex --
+    # Рисунки строятся дважды: paper_ru_v1.tex берёт их из figs/, paper_en_v1.tex --
     # из figs/en/. Данные считаются один раз, различается только текст на осях
     # и в легендах.
     TXT = {

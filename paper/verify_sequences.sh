@@ -15,7 +15,10 @@ set -u
 # промежуточном состоянии — получится мнимый «пропущенный член». Ровно это
 # и случилось однажды: убитый по таймауту прогон оставил живого потомка,
 # который несколько часов продолжал переписывать результаты.
-exec 9>"${TMPDIR:-/tmp}/rh-verify.lock"
+LOCKF="${TMPDIR:-/tmp}/rh-verify.lock"
+# Замок может принадлежать другому пользователю (например, root в WSL): тогда
+# открываем его на чтение — flock работает и с таким дескриптором.
+if [ -e "$LOCKF" ] && [ ! -w "$LOCKF" ]; then exec 9<"$LOCKF"; else exec 9>>"$LOCKF"; fi
 if ! flock -n 9; then
   echo "ОШИБКА: пересчёт уже выполняется другим процессом." >&2
   echo "Дождитесь его окончания или снимите: pkill -f verify_sequences.sh" >&2
@@ -31,7 +34,7 @@ export RUSTUP_HOME=/opt/rust/rustup
 export CARGO_TARGET_DIR=${CARGO_TARGET_DIR:-$HOME/rh-target}
 BIN="$CARGO_TARGET_DIR/release/repunit-hunt"
 
-REPO=/mnt/c/Users/Dokuchaev_ts/Downloads/repunit-hunt
+REPO=$(cd "$(dirname "$0")/.." && pwd)
 WORK=$HOME/rh-verify
 mkdir -p "$WORK"
 OUTDIR="$REPO/paper/verify"

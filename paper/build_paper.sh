@@ -1,13 +1,14 @@
 #!/bin/bash
 # Сборка статьи в обеих версиях: paper_ru.tex (ГОСТ Р 7.0.7-2021) и
-# paper_en.tex (международный формат). Рисунки общие и должны быть созданы
-# заранее: python3 analysis.py
+# paper_en.tex (международный формат), версия 3. Рисунки должны быть созданы
+# заранее: python3 analysis_v2.py (figs_v2/). Архив версии 1:
+#   bash build_paper.sh paper_ru_v1 paper_en_v1   (рисунки figs/, python3 analysis.py)
 #
 #   bash build_paper.sh            обе версии
 #   bash build_paper.sh paper_en   только указанную
 set -e
 cd "$(dirname "$0")"
-[ -f figs/fig_kappa.pdf ] || { echo "нет рисунков — запустите analysis.py"; exit 1; }
+[ -f figs_v2/fig_kappa.pdf ] || { echo "нет рисунков — запустите analysis_v2.py"; exit 1; }
 
 TARGETS=("$@")
 [ ${#TARGETS[@]} -eq 0 ] && TARGETS=(paper_ru paper_en)

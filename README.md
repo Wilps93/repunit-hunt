@@ -22,8 +22,8 @@ Gerbicz–Li).
 Ленстры — Померанса — Вагстаффа».
 
 **Текущая версия — 3:**
-- по-русски: [`paper_ru_v3.pdf`](paper/paper_ru_v3.pdf), оформление по ГОСТ Р 7.0.7-2021;
-- по-английски: [`paper_en_v3.pdf`](paper/paper_en_v3.pdf).
+- по-русски: [`paper_ru.pdf`](paper/paper_ru.pdf), оформление по ГОСТ Р 7.0.7-2021;
+- по-английски: [`paper_en.pdf`](paper/paper_en.pdf).
 
 Что изменилось по сравнению с версией 1, описано в [`paper/CHANGES_v3.md`](paper/CHANGES_v3.md).
 
@@ -43,11 +43,12 @@ R_b(p) (в среднем 0,67). С ней при n > 10 оценка равна
 усечении и ЛПВ не отвергается (p = 0,62–0,73) — § 9 статьи.
 
 Числа и рисунки версии 3 воспроизводят `paper/analysis_v2.py`,
-`lpw_second_order.py`, `cb_empirical.py`, `frontiers.py` и `stopping_rules.py`
+`make_results_v3.sh` (`lpw_second_order.py`, `cb_empirical.py`, `cb_theory.py`,
+`sim_second_order.py`, `frontiers.py`, `stopping_rules.py`)
 при фиксированных зёрнах; каждое десятичное число статьи сверяется с их выводом
 скриптами `check_numbers_v3.py` и `check_all_numbers_v3.py`. Версия 1
-([`paper_ru.pdf`](paper/paper_ru.pdf), [`paper_en.pdf`](paper/paper_en.pdf),
-`analysis.py`, `validate.sh`) сохранена без изменений; подробности — в
+([`paper_ru_v1.pdf`](paper/paper_ru_v1.pdf), [`paper_en_v1.pdf`](paper/paper_en_v1.pdf),
+`analysis.py`, `validate_v1.sh`) сохранена как архив; подробности — в
 [`paper/README.md`](paper/README.md).
 
 ## Структура репозитория
@@ -56,11 +57,11 @@ R_b(p) (в среднем 0,67). С ней при n > 10 оценка равна
 |---|---|
 | `src/`, `native/`, `benches/`, `build.rs` | искатель: сито, trial factoring, P−1, PRP |
 | `config/default.toml` | параметры конвейера с обоснованием каждого значения |
-| `paper/paper_ru_v3.tex`, `paper/paper_ru_v3.pdf` | статья, версия 3, русская |
-| `paper/paper_en_v3.tex`, `paper/paper_en_v3.pdf` | статья, версия 3, английская |
+| `paper/paper_ru.tex`, `paper/paper_ru.pdf` | статья, версия 3, русская |
+| `paper/paper_en.tex`, `paper/paper_en.pdf` | статья, версия 3, английская |
 | `paper/analysis_v2.py` | анализ версии 3 → `results_v2.txt`, `figs_v2/` |
 | `paper/lpw_second_order.py`, `frontiers.py`, `stopping_rules.py` | § 9, § 4.5, таблица 5 версии 3 → `results_v3.txt` |
-| `paper/paper_ru.tex`, `paper/paper_en.tex` | статья, версия 1 |
+| `paper/paper_ru_v1.tex`, `paper/paper_en_v1.tex` | статья, версия 1 (архив) |
 | `paper/analysis.py` | анализ версии 1 → `results.txt`, `figs/` |
 | `paper/data/` | b-файлы OEIS (лицензия OEIS, см. ниже) |
 | `paper/verify/` | независимый сплошной пересчёт до n < 10⁴ — **на нём основано приложение статьи** |

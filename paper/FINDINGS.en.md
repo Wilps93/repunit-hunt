@@ -1,5 +1,7 @@
 *[Русская версия](FINDINGS.md) · English*
 
+> This note refers to **version 1** of the paper. Changes and checks of version 3 are in [`CHANGES_v3.md`](CHANGES_v3.md).
+
 # Report: reproducing and checking the paper
 
 Date: 27 August 2026.

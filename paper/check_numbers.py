@@ -3,7 +3,7 @@
 """Сверка ключевых чисел статьи с выводом analysis.py.
 
 Каждое утверждение задано парой (что искать в results.txt, что должно стоять
-в paper_ru.tex). Скрипт возвращает 1, если хоть одно расходится, — годится для CI.
+в paper_ru_v1.tex; относится к версии 1). Скрипт возвращает 1, если хоть одно расходится, — годится для CI.
 
 Запуск:  python3 check_numbers.py
 """
@@ -15,8 +15,8 @@ HERE = Path(__file__).resolve().parent
 # Обе версии статьи сверяются с одним и тем же выводом analysis.py. Русская
 # пишет дробную часть через запятую (1{,}9648), английская — через точку
 # (1.9648); в остальном числа обязаны совпадать.
-TEX_RU = (HERE / "paper_ru.tex").read_text(encoding="utf-8")
-TEX_EN = (HERE / "paper_en.tex").read_text(encoding="utf-8")
+TEX_RU = (HERE / "paper_ru_v1.tex").read_text(encoding="utf-8")
+TEX_EN = (HERE / "paper_en_v1.tex").read_text(encoding="utf-8")
 VERSIONS = (("ru", TEX_RU, "{,}"), ("en", TEX_EN, "."))
 RES = (HERE / "results.txt").read_text(encoding="utf-8")
 
