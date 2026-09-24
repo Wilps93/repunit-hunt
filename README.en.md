@@ -19,23 +19,34 @@ sequences found.
 ## The paper
 
 The directory `paper/` contains the work "The observation scheme in the
-statistics of generalized repunit primes: calibrating the pooled test of the
-Lenstra–Pomerance–Wagstaff constant" — in Russian
-([`paper_ru.pdf`](paper/paper_ru.pdf), laid out per GOST R 7.0.7-2021) and in
-English ([`paper_en.pdf`](paper/paper_en.pdf), international format).
+statistics of generalized repunit primes: an exact conditional test of the
+Lenstra–Pomerance–Wagstaff constant".
+
+**The current version is 3:**
+- English: [`paper_en_v3.pdf`](paper/paper_en_v3.pdf);
+- Russian: [`paper_ru_v3.pdf`](paper/paper_ru_v3.pdf), laid out per GOST R 7.0.7-2021.
+
+Changes since version 1 are listed in [`paper/CHANGES_v3.md`](paper/CHANGES_v3.md) (in Russian).
 
 In brief: the LPW conjecture predicts the density of repunit primes with a
 universal constant e^γ ≈ 1.781. Estimates published since 1993 sat about 10%
 above it — and that excess turns out to be an artifact of the observation
-scheme. The conditional likelihood is derived for the scheme "observe until the
-N-th event", whereas the search runs to a fixed frontier with a random number
-of finds. Under the actual scheme the correct pooled estimator is (M−B)/S, not
-(M−1)/S:
+scheme. The search runs to an unrecorded frontier with a random number of
+finds. The position of the last find is sufficient for the frontier, and
+conditionally on it N_b − 1 ~ Poisson(λ_b D_b) exactly (a Neyman–Scott problem:
+one event per base). The correct pooled estimator is (M−B)/S, not (M−1)/S:
 
-    κ̂ = 1.838   95% CI [1.61, 2.13]   p = 0.64 against e^γ
+    κ̂ = 1.838   exact 95% CI [1.594, 2.109]   p = 0.672 against e^γ
 
-Every number and figure in the paper is reproduced by a single run of
-`paper/analysis.py` with a fixed generator seed; for details see
+The LPW heuristic itself predicts a finite-n intensity (κ/ln b)(1 + c_b/t).
+With this second-order term LPW fits the data and the truncation trend of the
+estimate disappears (Section 9 of the paper).
+
+The numbers and figures of version 3 are reproduced by `paper/analysis_v2.py`,
+`lpw_second_order.py`, `frontiers.py` and `stopping_rules.py` with fixed seeds,
+and cross-checked by `check_numbers_v3.py`. Version 1
+([`paper_en.pdf`](paper/paper_en.pdf), [`paper_ru.pdf`](paper/paper_ru.pdf),
+`analysis.py`, `validate.sh`) is kept unchanged; for details see
 [`paper/README.en.md`](paper/README.en.md).
 
 ## Repository layout
@@ -44,9 +55,12 @@ Every number and figure in the paper is reproduced by a single run of
 |---|---|
 | `src/`, `native/`, `benches/`, `build.rs` | the searcher: sieve, trial factoring, P−1, PRP |
 | `config/default.toml` | pipeline parameters, with a rationale for every value |
-| `paper/paper_ru.tex`, `paper/paper_ru.pdf` | the paper, Russian edition |
-| `paper/paper_en.tex`, `paper/paper_en.pdf` | the paper, English edition |
-| `paper/analysis.py` | the whole analysis: numbers, simulations, figures → `results.txt`, `figs/` |
+| `paper/paper_en_v3.tex`, `paper/paper_en_v3.pdf` | the paper, version 3, English |
+| `paper/paper_ru_v3.tex`, `paper/paper_ru_v3.pdf` | the paper, version 3, Russian |
+| `paper/analysis_v2.py` | version 3 analysis → `results_v2.txt`, `figs_v2/` |
+| `paper/lpw_second_order.py`, `frontiers.py`, `stopping_rules.py` | Section 9, Section 4.5, Table 5 of version 3 → `results_v3.txt` |
+| `paper/paper_ru.tex`, `paper/paper_en.tex` | the paper, version 1 |
+| `paper/analysis.py` | version 1 analysis → `results.txt`, `figs/` |
 | `paper/data/` | OEIS b-files (OEIS license, see below) |
 | `paper/verify/` | independent exhaustive recomputation up to n < 10⁴ — **the appendix of the paper rests on it** |
 | `paper/verify_32k/` | a later run carried to k_max = 32000 |
