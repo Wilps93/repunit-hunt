@@ -1,5 +1,5 @@
 #!/bin/bash
-# Сборка results_v3.txt из вывода скриптов версии 3 (теги [S13]-[S25]).
+# Сборка results_v3.txt из вывода скриптов версии 3 (теги [S13]-[S30]).
 #
 #   bash make_results_v3.sh          калибровка c_b [S19] берётся из кэша
 #                                    results_S19.txt, если он есть
@@ -19,7 +19,8 @@ fi
 
 {
   echo "# results_v3.txt — вывод lpw_second_order.py, cb_empirical.py, cb_theory.py,"
-  echo "# sim_second_order.py, frontiers.py и stopping_rules.py (версия 3 статьи)."
+  echo "# sim_second_order.py, frontiers.py, stopping_rules.py, lpw_prime_sum.py и"
+  echo "# robust_extra.py и revision_v32.py (версия 3.2 статьи с правками по рецензиям)."
   echo "# Собирается командой: bash make_results_v3.sh"
   echo
   "$PY" lpw_second_order.py
@@ -33,5 +34,11 @@ fi
   "$PY" frontiers.py
   echo
   "$PY" stopping_rules.py 20000
+  echo
+  "$PY" lpw_prime_sum.py 10000
+  echo
+  "$PY" robust_extra.py
+  echo
+  "$PY" revision_v32.py
 } > results_v3.txt
 echo "results_v3.txt собран ($(wc -l < results_v3.txt) строк)" >&2

@@ -25,7 +25,7 @@ bash fetch_extra.sh         # b = 21..26, robustness of the selection bound
 
 # 2. Every number in the paper + the figures
 python3 analysis_v2.py      # [S0]-[S12] -> results_v2.txt, figs_v2/  (about a minute)
-bash make_results_v3.sh     # [S13]-[S25] -> results_v3.txt  (about 5 minutes;
+bash make_results_v3.sh     # [S13]-[S30] -> results_v3.txt  (about 5 minutes;
                             #   --full recomputes the c_b calibration, 10 more minutes)
 
 # 3. The paper
@@ -79,7 +79,10 @@ Windows, TinyTeX with `babel-russian`, `cyrillic`, `lh`, `cm-super`,
 | `cb_empirical.py` → `results_S19.txt` | [S19] calibration of c_b from the divisibility of R_b(p) |
 | `cb_theory.py` | [S23] first-principles prediction of c_b and paired comparison |
 | `sim_second_order.py` | [S24]–[S25] uncertainty of c_b, simulation check of the method |
-| `make_results_v3.sh` → `results_v3.txt` | assembles the output [S13]–[S25] |
+| `lpw_prime_sum.py` | [S26]–[S28] second-order term with the exposure summed over the primes; simulation check with a prime-level generator; §7 intercept under the heuristic |
+| `robust_extra.py` | [S29] robustness checks from the review: truncation profile under schemes A/B, common frontier 2·10⁵, choice of origin, base 18, power thresholds for a deficit, Figure 4 |
+| `revision_v32.py` | [S30] computations for the editor's decision (version 3.2): the family (M−Bm)/S, sensitivity to gaps, the synchronous b=2 frontier, the Poisson-binomial law, covariance of the bases, selection on the number of finds, regression through the origin, Bayes factors, C₀, ρ₁ and Newey–West, bootstrap of model (23), truncation profile with N_b ≥ 1, Dirichlet null under scheme A, κ* under two frontier rules |
+| `make_results_v3.sh` → `results_v3.txt` | assembles the output [S13]–[S30] |
 | `check_all_numbers_v3.py`, `check_numbers_v3.py` | numbers of the paper against the output, exit code 1 on a disagreement |
 | `check_stability_v3.py` | seed robustness |
 | `check_gost.py` | GOST R 7.0.7-2021 (argument: file name, default `paper_ru.tex`) |

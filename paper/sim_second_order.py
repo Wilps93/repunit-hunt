@@ -5,6 +5,9 @@
       c_b ~ N(c_b_hat, se_b^2) the exact conditional inference is recomputed; the
       combined 95% interval is the envelope that mixes the Poisson (Garwood) and the
       c_b uncertainty: kappa = G / S(c), G ~ Gamma(K + 1/2, 1) (Jeffreys) with c drawn.
+      NOTE (version 3.2): this is the integral exposure of the previous version and the
+      Jeffreys-type envelope, which is narrower than Garwood; the paper now quotes the
+      Garwood-mixture interval with the prime-sum exposure, lpw_prime_sum.py [S26].
       Also reported: kappa with the first-principles prediction c_b^th of cb_theory.py.
 
 [S25] Monte Carlo check of the method on synthetic data with KNOWN kappa = e^gamma and

@@ -632,23 +632,26 @@ def figures(seqs, bases, rows, kB, ciB, trunc, sameerr):
     K0 = M0 - B0
     TXT = {
         "ru": dict(base="основание $b$", A=r"схема A: $(M-1)/S$", B=r"схема B: $(M-B)/S$",
-                   Bc=r"схема B, $c=\ln 2$: $K/S(c)$ (§9)", trunc="нижнее усечение по $n$",
+                   Bc=r"схема B, откалибр. $c_b$: $K/S_\Sigma(c)$ (§9)", trunc="нижнее усечение по $n$",
                    none="нет", mers="только Мерсенн ($K=%d$)", pool="объединение ($K=%d$)",
                    power="мощность", band="5--95% симуляций", med="медиана"),
         "en": dict(base="base $b$", A=r"scheme A: $(M-1)/S$", B=r"scheme B: $(M-B)/S$",
-                   Bc=r"scheme B, $c=\ln 2$: $K/S(c)$ (§9)", trunc="lower truncation in $n$",
+                   Bc=r"scheme B, measured $c_b$: $K/S_\Sigma(c)$ (§9)", trunc="lower truncation in $n$",
                    none="none", mers="Mersenne only ($K=%d$)", pool="pooled ($K=%d$)",
                    power="power", band="5--95% of simulations", med="median"),
     }
-    # усечение с членом второго порядка c = ln 2
+    # усечение с членом второго порядка: откалиброванные c_b, экспозиция -- сумма по
+    # простым (lpw_prime_sum.py, тег [S26]); интеграл (1 + c/t) dt её завышает при малых n
+    import lpw_prime_sum as lps
+    # Последняя точка (n > 10^4) -- строго согласованный вариант N_b >= 1 (подпись
+    # таблицы усечения): отбор N_b >= 2 есть отбор по K_b >= 1 и смещает оценку вверх.
     kc = []
-    for tr in (None, 10, 100, 1000, 10000):
-        bs = v1.build(seqs, truncate=tr, min_events=2)
-        K = sum(bd.N - 1 for bd in bs)
-        Sc = sum((bd.D + math.log(2) * math.log(bd.t[-1] / bd.t0)) / bd.lnb for bd in bs)
-        kc.append(K / Sc)
-    ka = [r[1] for r in trunc[:5]]
-    kb = [r[2] for r in trunc[:5]]
+    for tr, me in ((None, 2), (10, 2), (100, 2), (1000, 2), (10000, 1)):
+        bs = lps.build(lps.load(lps.SEQ), truncate=tr, min_events=me)
+        kc.append(sum(bd.K for bd in bs) / lps.S_sum(bs, lps.CB_EMP))
+    rows_fig = trunc[:4] + [trunc[5]]
+    ka = [r[1] for r in rows_fig]
+    kb = [r[2] for r in rows_fig]
     rs = np.linspace(1.0, 1.8, 161)
     b2 = [bd for bd in bases if bd.b == 2][0]
     pw_m = [power(b2.expo, r) for r in rs]
@@ -656,12 +659,19 @@ def figures(seqs, bases, rows, kB, ciB, trunc, sameerr):
     t, t0, N = sameerr
     lam = (N - 1) / (t[-1] - t0)
     r_obs = np.arange(N) - lam * (t - t0)
+    # Полоса -- под тем же нулевым законом, что и §7.1 (s9): N-1 равномерных точек на
+    # (t0, ln X_ver], lambda по последней из них; остаток -- СТУПЕНЧАТАЯ функция
+    # r(t) = #{событий <= t} - lambda (t - t0), как и наблюдённая траектория.
     rng = np.random.default_rng(SEED + 41)
-    grid = np.linspace(t0, t[-1], 200)
+    T = math.log(GIMPS_XVER)
+    grid = np.linspace(t0, t[-1], 400)
     sims = np.empty((4000, grid.size))
     for i in range(4000):
-        tt = np.concatenate([[t0], np.sort(rng.uniform(t0, t[-1], N - 1))])
-        sims[i] = np.interp(grid, tt, np.arange(N) - (N - 1) / (tt[-1] - t0) * (tt - t0))
+        tt = np.concatenate([[t0], np.sort(rng.uniform(t0, T, N - 1))])
+        cnt = np.searchsorted(tt, grid, side="right") - 1
+        sims[i] = cnt - (N - 1) / (tt[-1] - t0) * (grid - t0)
+    i_max = int(np.argmax(np.abs(r_obs)))
+    g_max = int(np.argmin(np.abs(grid - t[i_max])))
 
     for lang, out in (("ru", FIGS), ("en", FIGS / "en")):
         T = TXT[lang]
@@ -722,7 +732,10 @@ def figures(seqs, bases, rows, kB, ciB, trunc, sameerr):
         fig.savefig(out / "fig_resid_bridge.pdf")
         plt.close(fig)
     say("")
-    say("  [рисунки] записаны в %s и %s; kappa(c=ln2) по усечению: %s"
+    say("  [рис. 4] ступенчатая полоса при t = %.2f (наибольшее отклонение r = %.3f): 5%%-квантиль %.2f, "
+        "медиана %.2f" % (grid[g_max], r_obs[i_max], np.percentile(sims[:, g_max], 5),
+                          np.median(sims[:, g_max])))
+    say("  [рисунки] записаны в %s и %s; kappa(откалибр. c_b, сумма по простым) по усечению: %s"
         % (FIGS.name, (FIGS / "en").relative_to(HERE), ", ".join("%.4f" % v for v in kc)))
 
 
