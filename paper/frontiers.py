@@ -76,6 +76,21 @@ def main():
     lo, hi = garwood(K, S)
     print("  K=%d S=%.4f kappa=%.4f 95%% [%.4f; %.4f] p=%.3f" % (K, S, K / S, lo, hi, p_two(K, KAPPA * S)))
 
+    # Version 3.2: the b=10 frontier was reported two months after a find, so its
+    # window may not be independent of the finds; the variant with b=2 alone.
+    print("\n[S18] hybrid estimator, main set, full likelihood for b=2 [tested once] only")
+    K = 0
+    S = 0.0
+    for b, (nmin, nmax, P, L) in MAIN.items():
+        if b == 2:
+            K += P - 1
+            S += math.log(L / nmin) / math.log(b)
+        else:
+            K += P - 2
+            S += math.log(nmax / nmin) / math.log(b)
+    lo, hi = garwood(K, S)
+    print("  K=%d S=%.4f kappa=%.4f 95%% [%.4f; %.4f] p=%.3f" % (K, S, K / S, lo, hi, p_two(K, KAPPA * S)))
+
     print("\n[S18] base 5 with the 2024 PRPs 4939471, 5154509 (range above 3300593 NOT certified)")
     K5, S5 = 203 + 2, 110.4423 + math.log(5154509 / 3300593) / math.log(5)
     lo, hi = garwood(K5, S5)

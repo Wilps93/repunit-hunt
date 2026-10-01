@@ -13,6 +13,23 @@
 % seed, tags [S0]-[S12]; stopping_rules.py, lpw_second_order.py,
 % frontiers.py and cb_empirical.py, tags [S13]-[S22], output in
 % results_v3.txt).
+%
+% Version 3.1 (revision of 30 September 2026, after the editorial report and
+% three referee reports) mirrors the same changes of paper_ru.tex: the exposure
+% of the second-order term is SUMMED OVER THE PRIMES (lpw_prime_sum.py,
+% tags [S26]-[S28]); additional robustness checks (robust_extra.py, [S29]);
+% base 18, the independence remark, the caption of Figure 4, the null law of
+% sec:sameerror, power thresholds for a deficit, the GIMPS frontier after
+% 4 September 2026.
+%
+% Version 3.2 (revision of 1 October 2026, after the editor's decision of major
+% revision) mirrors paper_ru.tex: conditional framing of the abstract, of items 4-5
+% of the contributions and of the conclusions; the m-family (M-Bm)/S, Table
+% tab:mfamily; partial violations of (A1) in Table tab:stop; Remark rem:weaker
+% (actual versus published frontier);
+% asynchronous frontiers as lower bounds; Poisson-binomial law; Garwood-mixture
+% interval; sensitivity to gaps; PRP status; attribution in tab:verify; the
+% double-check protocol (revision_v32.py, tag [S30]; stopping_rules.py, [S13]).
 \documentclass[11pt,a4paper]{article}
 
 % cmap MUST precede fontenc: it embeds ToUnicode tables in the PDF, without
@@ -64,7 +81,7 @@ Lenstra--Pomerance--Wagstaff constant}
 E-mail: \texttt{timofei93@yandex.ru}. ORCID:
 \url{https://orcid.org/0009-0006-0510-5225}.}}
 % Fixed date: \today would change on every rebuild.
-\date{24 September 2026}
+\date{1 October 2026}
 
 \begin{document}
 \maketitle
@@ -72,27 +89,28 @@ E-mail: \texttt{timofei93@yandex.ru}. ORCID:
 \begin{abstract}
 \noindent The Lenstra--Pomerance--Wagstaff (LPW) heuristic predicts
 $\#\{n\le x: (b^n-1)/(b-1)\ \text{prime}\}\sim(e^{\gamma}/\ln b)\ln x$, tested
-since 1993 via a ``normalized occurrence frequency''. The suspected
-censoring bias of this frequency does not exist: the endpoint form and the OLS
-slope are unbiased exactly or up to an exponentially small term. The real defect:
-forms of the estimator disagree by up to $29.5\%$.
+since 1993 via a ``normalized occurrence frequency''. Censoring does
+not bias this frequency: the endpoint form and the OLS
+slope are unbiased. The real defect: forms of the estimator disagree by up to
+$29.5\%$.
 
-The main result pools $B=15$ bases ($M=218$ events). The search
-frontiers are not recorded; they are Neyman--Scott nuisance parameters, and the
-profile estimator $M/S$ is inconsistent. The position $D_b$ of the last find is
-sufficient for the frontier, and conditionally on it
-$N_b-1\sim\Pois(\lambda_bD_b)$ exactly. This gives the estimator $(M-B)/S$ with
-closed-form intervals: $\hat\kappa=1.838$, exact $95\%$ interval
-$[1.59,\,2.11]$, $p=0.67$ against $e^{\gamma}\approx1.781$. The reported
-ten-percent excess comes mainly from the observation scheme; the old test rejects
-a true hypothesis in $11$--$17\%$ of cases.
+We pool $B=15$ bases ($M=218$ events). The search frontiers are not
+recorded; they are Neyman--Scott nuisance parameters, and the profile estimator
+$M/S$ is inconsistent. If the frontier ignored the finds
+(condition (A1)), the position $D_b$ of the last find is sufficient for the
+frontier, and conditionally on it $N_b-1\sim\Pois(\lambda_bD_b)$ exactly. This
+gives $(M-B)/S=1.838$, exact $95\%$ interval $[1.59,\,2.11]$, $p=0.67$ against
+$e^{\gamma}\approx1.781$; the old test rejects a true hypothesis in $11$--$17\%$
+of cases. Under (A1) the ten-percent excess over LPW comes mainly from the
+observation scheme. Without (A1), agreement with LPW persists for any mean gap between the last find
+and the frontier from $0$ to $3.2$ mean spacings ($2.8$ at second
+order).
 
-This assumes that the frontier was chosen without regard to the finds; four
-documented frontiers show no violation in the dangerous direction. The heuristic
-itself gives a finite-$n$ intensity $(\kappa/\ln b)(1+c_b/t)$. We measure $c_b$
-directly from the divisibility of $R_b(p)$ (mean $0.67$); with it, for $n>10$ the
-estimate is $1.69$--$1.71$ at every truncation, LPW is not rejected
-($p=0.62$--$0.73$), and the ``slow convergence from below'' is explained. The
+LPW at finite $n$ is tested via the heuristic's second-order term:
+$R_b(p)$ is prime with probability $e^{\gamma}\ln(a_bp)/(p\ln b)$. Measuring
+$c_b=\langle\ln a_b\rangle$ from the divisibility of $R_b(p)$ and
+summing over the primes, under (A1) we obtain $1.78$ ($1.66$--$1.78$ at every truncation,
+$p\ge0.598$), explaining the ``slow convergence from below''. The
 homogeneity test ($p=0.935$) detects only spreads of $\kappa_b$ with coefficient
 of variation above $0.37$.
 \end{abstract}
@@ -153,8 +171,10 @@ sufficient statistic is distributed as $\Gam(N,\lambda_b)$
 normalized frequency is biased: both the endpoint form $D/(N\ln b)$ and the OLS
 slope are exactly unbiased under scheme~A, and unbiased up to the factor
 $1-(1+\mu)e^{-\mu}$ under scheme~B (Proposition~\ref{prop:unbiased},
-Table~\ref{tab:mc}); at the observed $\mu\approx N_b\ge7$ the deficit does not
-exceed $0.73\%$ for the endpoint form and $2.3\%$ for OLS without the origin.
+Table~\ref{tab:mc}); the plug-in $\mu\approx N_b\ge7$ puts the deficit at
+$0.73\%$ for the endpoint form and $2.3\%$ for OLS without the origin (an
+estimate, not a bound: at the lower $95\%$ bound $\mu=3.29$ for $N_b=7$ the
+deficit is $16.0\%$).
 Only the reciprocal $\hat\kappa=1/\hat G$ is biased, by the factor $N/(N-1)$
 (under scheme~A; under scheme~B its expectation is infinite), and that is
 Jensen's inequality, not censoring. Unbiased estimators of $\kappa$
@@ -169,7 +189,9 @@ interpreted substantively; for two of the fifteen bases the choice of form
 weighs more than their entire deviation from the LPW prediction. Under the
 endpoint form base~18 is the third ``unluckiest'' of fifteen, and under OLS it
 is the tenth, below the median. The label describes the choice of estimator, not
-a property of the primes (\S\ref{sec:instability}).
+a property of the primes (\S\ref{sec:instability}). The size of the discrepancy
+for base~18, however, is created by a single anomalous gap after an origin
+$n_{\min}=2$ fixed by arithmetic.
 
 \item\textbf{Main result: an exact conditional likelihood for scheme~B.} The
 pivot $\kappa S\sim\Gam(M,1)$ is exact under the scheme ``observe until the
@@ -188,42 +210,59 @@ Andersen~\cite{andersen1970}, exactly conditionally unbiased; it is also
 obtained by integrating over $W_b$ against the measure $dW_b$
 (Remark~\ref{rem:integrated}). No moment approximations, no exponentially small
 remainders and no simulation-based inversion of intervals are required
-(\S\ref{sec:scheme}). The distinction between the schemes is itself classical,
-and the unbiasedness of $(N-1)/D$ under scheme~A is a textbook fact; we lay no
-claim to either. What is new is that the frontier is \emph{undocumented}, so the
-exposure must be reconstructed from the finds themselves, and the correction
-turns out to be proportional to the number of bases
-(Remark~\ref{rem:priority}).
+(\S\ref{sec:scheme}). Exactness refers to the Poisson model~\eqref{eq:lam}: if
+the heuristic is read literally, as Bernoulli trials at the prime indices, the
+conditional law is Poisson-binomial and the Poisson intervals are conservative or
+practically exact (\S\ref{sec:second}). The distinction between the schemes is itself classical,
+and the unbiasedness of $(N-1)/D$ under scheme~A and the loss of one observation
+per stratum are textbook facts; we lay no claim to them. What is new is the
+setting: the frontier is \emph{undocumented}, so the exposure must be
+reconstructed from the finds themselves, and the correction turns out to be
+proportional to the number of bases (Remark~\ref{rem:priority}).
 
-\item\textbf{Numerical consequence.} The exact conditional inference gives
-$\hat\kappa=1.838$ with a $95\%$ interval $[1.594,\,2.109]$ and $p=0.672$: the
-excess over LPW shrinks from $10.3\%$ to a statistically insignificant $3.2\%$.
-Under scheme~B the old Gamma pivot rejects a true
-hypothesis in $11$--$17\%$ of cases (\S\ref{sec:calib}); the spread depends on
+\item\textbf{Numerical consequence and its condition.} Under (A1) the exact
+conditional inference gives $\hat\kappa=1.838$ with a $95\%$ interval
+$[1.594,\,2.109]$ and $p=0.672$: the excess over LPW shrinks from $10.3\%$ to a
+statistically insignificant $3.2\%$. Under scheme~B the old Gamma pivot rejects a
+true hypothesis in $11$--$17\%$ of cases (\S\ref{sec:calib}); the spread depends on
 how far the frontier has advanced, which is precisely why it is reported as a
-range.
+range. Without (A1) the stopping rule enters the inference through a single
+number---the mean gap $m$ between the last find and the frontier in units of the
+mean spacing: by Wald's identity $(M-Bm)/S$ is unbiased in the sense of
+expectations, and with $m$ known the shifted Poisson test approximately keeps its
+level ($0.043$--$0.056$) under every stopping rule considered, partial violations of
+(A1) included (Table~\ref{tab:stop}). The conclusion ``LPW is not rejected'' is
+robust: it holds for every $m$ from $0$ (stopping exactly at a find) to $3.2$, and
+to $2.8$ with the second-order term (Table~\ref{tab:mfamily}); this covers drought
+$g=2$ as well ($\bar m=2.14$). LPW is not rejected from above for any
+$m\ge0$; it would be rejected from below only for a mean gap exceeding $3.2$
+($2.8$) mean spacings. Only the residual
+excess depends on $m$: $10.8\%$ at $m=0$, $3.2\%$ under (A1), and zero at
+$m=1.42$.
 
 \item\textbf{Key assumption about the frontiers and its cost.} Besides the
 Poisson model and contiguous coverage of the search (\S\ref{sec:data}), the
-inference about the observation scheme rests on condition (A1): the frontier was
-chosen without regard to the finds. The
-estimators $(M-1)/S$ and $(M-B)/S$ are built on the same statistics $(N_b,D_b)$
-and differ by $6.9\%$; which of them is right is determined not by the data but
-by how the data were collected. Without (A1) only an \emph{upper} bound holds
-rigorously: by Wald's identity $\mathbb E[M]\ge\kappa\,\mathbb E[S]$ under any
-stopping rule. There is no lower bound: the rule ``stop the search after a long
-stretch without finds'' biases even $(M-B)/S$ upward
-(Remark~\ref{rem:bracket}, Table~\ref{tab:stop}). An attempt to sidestep the
-choice by assembling the estimate from per-base pieces that are unbiased by
-construction fails (\S\ref{sec:noescape}). Four documented frontiers
-($b=2,10,22,26$) provide the first empirical check of (A1). The frontiers turn
-out to lie closer to the last finds than (A1) predicts ($p=0.10$). If there is a
-deviation, it is more likely toward $m_b<1$; then $(M-B)/S$ understates $\kappa$
-and the correct estimate moves toward $(M-1)/S=1.965$, although both are
-consistent with LPW. Small values of $\lambda_b\delta_b$ may also reflect the
-moment at which the frontier was published rather than a stopping rule
-(\S\ref{sec:frontiers}). The only radical remedy is to publish the frontiers
-$L_b$.
+conclusion that the excess is created by the observation scheme rests on
+condition (A1): the frontier was chosen without regard to the finds (the
+condition concerns the actual search horizon, not the published bound;
+Remark~\ref{rem:weaker}). The estimators $(M-1)/S$ and
+$(M-B)/S$ are built on the same statistics $(N_b,D_b)$ and differ by $6.9\%$;
+which of them is right is determined not by the data but by how the data were
+collected. Without (A1) only an \emph{upper} bound in the sense of expectations
+holds rigorously: by Wald's identity $\mathbb E[M]\ge\kappa\,\mathbb E[S]$ under
+any stopping rule. There is no lower bound: the rule ``stop the search after a
+long stretch without finds'' biases even $(M-B)/S$ upward
+(Remark~\ref{rem:bracket}, Table~\ref{tab:stop}); it cannot produce a rejection
+of LPW from above: the true $\kappa$ is then lower still, and a rejection from below
+would require a very long drought (\S\ref{sec:pooled}). An attempt to sidestep
+the choice by assembling the estimate from per-base pieces that are unbiased by
+construction fails (\S\ref{sec:noescape}). The four documented frontiers
+($b=2,10,22,26$) do not settle (A1): three of them predate the data snapshot and
+give only lower bounds on the gap for it, the moment of publication may itself be
+tied to the finds, and the bases with a published frontier are not a random
+sample. Only the $b=2$ frontier is synchronous with the snapshot, and it is
+consistent with (A1) (\S\ref{sec:frontiers}). The only radical remedy is to
+publish the frontiers $L_b$.
 
 \item\textbf{Lucky bases: what the test cannot do.} Conditioning on $K=M-B$
 makes the null distribution of the homogeneity test exact (multinomial), with
@@ -238,24 +277,30 @@ exist''.
 LPW heuristic predicts not a constant intensity but
 $\lambda_b(t)=(\kappa/\ln b)(1+c_b/t)$: the divisors of $\Rb(p)$ are at least
 $2p+1$. The exact conditional inference carries over to this model in closed
-form (\S\ref{sec:second}). The positions of the finds barely determine $c_b$, so
+form (\S\ref{sec:second}), but the exposure must be summed over the prime indices
+rather than integrated with density $1/\ln n$: for origins $n_{\min}=2$--$19$ the
+integral overstates it by $1.04$ in $t$ per base on average (the constant $E$ of
+Mertens' first theorem) and understates the estimate by $9.0\%$ on the full
+sample. The positions of the finds determine $c_b$ only weakly, so
 we measure it directly from the divisibility of $\Rb(p)$: $c_b=0.43$--$1.11$,
 with mean $0.67$, stable with respect to the threshold; Wagstaff's device gives
 values twice as large. These values are predicted from first principles---from
 the primality of the numbers $2kp+1$ and the quadratic character of $b$
 (correlation $0.976$)---so that $c_b$ depends only on the squarefree part of
-$b$. The method has been validated on simulated data: it is unbiased and attains
-nominal coverage, whereas the constant-intensity model overstates $\kappa$ by
-$9$--$13\%$. With the calibrated $c_b$ the estimate of $\kappa$ drops by
-$6$--$9\%$ at $n>10$ (by $12\%$ on the full sample), that is, comparably to the
-cost of the choice of observation scheme. At $n>10$ one obtains
-$\hat\kappa\approx1.69$--$1.71$ at every truncation level, LPW is not rejected
-($p=0.62$--$0.73$), and the same term explains the folklore ``slow convergence
-from below''.
+$b$. The method has been validated on data generated by the heuristic itself at
+the level of prime indices: it is unbiased and attains nominal coverage, whereas
+the constant-intensity model overstates $\kappa$ by $3$--$8\%$. With the
+calibrated $c_b$ the estimate of $\kappa$ drops by $3.2\%$ on the full sample and
+by $5.0$--$5.8\%$ under truncation, that is, comparably to the cost of the
+choice of observation scheme. Under (A1), at every lower truncation level one
+obtains
+$\hat\kappa\approx1.66$--$1.78$, LPW is not rejected ($p\ge0.598$), and the
+same term explains the folklore ``slow convergence from below''.
 
 \item\textbf{An explicit power calculation.} With a two-sided test the pooled
-sample resolves deviations from $\eg$ of at least $21.3\%$; the Mersenne
-sequence alone, at least $45.5\%$ (\S\ref{sec:power}). The test convention is
+sample resolves an excess over $\eg$ of at least $21.3\%$ and a deficit of at
+least $19.2\%$; the Mersenne sequence alone, $45.5\%$ and $37.4\%$ respectively
+(\S\ref{sec:power}). The test convention is
 stated explicitly, since the one-sided variant gives a noticeably different
 threshold ($18.7\%$).
 \end{enumerate}
@@ -269,25 +314,66 @@ guise.
 \section{Model and data}\label{sec:data}
 
 \subsection{The Poisson model}
-Put $t=\ln n$. The heuristic~\eqref{eq:LPW} is equivalent to the statement that
-the indices of generalized repunit primes to base~$b$ form a homogeneous Poisson
-point process on the $t$-axis with constant intensity
+Put $t=\ln n$. To leading order the heuristic~\eqref{eq:LPW} leads to a model in
+which the indices of generalized repunit primes to base~$b$ form a homogeneous
+Poisson point process on the $t$-axis with constant intensity
 \begin{equation}\label{eq:lam}
 \lambda_b=\frac{\kappa}{\ln b},\qquad \text{LPW:}\ \ \kappa=\eg=1.781072\ldots
 \end{equation}
 Universality is the assertion that a single parameter $\kappa$ governs all
-bases. The Poisson idealization here is a working assumption, not a theorem:
-even for the ordinary primes the Poisson law in short intervals has been
-established only conditionally, under the Hardy--Littlewood conjectures, and it
-is known to break down as the scale grows~\cite{jha2026}. We adopt~\eqref{eq:lam}
+bases. The form $\kappa/\ln b$ with a common $\kappa$ follows from the structure
+of the divisors of $\Rb(p)$. Let $p$ be an odd prime with $p\nmid b-1$. If a prime
+$q\nmid b-1$ divides $\Rb(p)$, then $b$ has order $p$ modulo~$q$, whence
+$q\equiv1\pmod p$, and since $\Rb(p)$ is odd, $q\equiv1\pmod{2p}$; and if
+$q\mid b-1$, then $\Rb(p)\equiv p\not\equiv0\pmod q$. Hence no prime $q<2p+1$
+divides $\Rb(p)$ for any such~$b$: $\Rb(p)$ has no base-dependent local factors at leading
+order, of the kind of a Bateman--Horn singular series, and the gain
+$\eg\ln(2p)$ from the absence of small divisors is the same for all bases
+(\S\ref{sec:second}). The base enters the leading term only through the size of
+the number, that is, through $1/\ln b$; dependence on $b$ appears only at second
+order, through the symbol $(b/q)$ for $q=2kp+1$, and is accounted for
+in~\S\ref{sec:second}. The Poisson idealization rests on the Cram\'er model of
+independent trials and on pairwise coprimality:
+$\gcd\bigl(\Rb(p),\Rb(p')\bigr)=\Rb\bigl(\gcd(p,p')\bigr)=1$ for distinct primes
+$p,p'$. It is a working assumption, not a theorem: even for the ordinary primes
+the Poisson law in short intervals has been derived only conditionally, from the
+Hardy--Littlewood conjectures~\cite{gallagher1976}; on scales $(\ln x)^{A}$, $A>1$,
+the Cram\'er model is known to fail~\cite{maier1985}; and refinements of the
+Poisson picture in short intervals remain conjectural~\cite{jha2026}. At finite
+$n$ the heuristic itself specifies not a homogeneous Poisson process but
+Bernoulli trials at the prime indices with a slowly varying probability; this is
+accounted for in~\S\ref{sec:second}. We adopt~\eqref{eq:lam}
 as a model and treat $\kappa$ throughout as a quantity to be estimated; this
 reduces the question ``is LPW true?'' to a one-parameter one and makes the bases
-poolable.
+poolable. The word ``exact'' in this paper refers to inference in
+model~\eqref{eq:lam} and its inhomogeneous generalization: in the Bernoulli-trial
+model the conditional law of the number of events is Poisson-binomial rather than
+Poisson, and the Poisson intervals are conservative or practically exact
+(\S\ref{sec:second}, Remark~\ref{rem:indep}).
 
 \subsection{Admissible bases}\label{sec:bases}
-Bases that are perfect powers are excluded: for $b=c^{m}$ with $m>1$ the number
-$\Rb(n)$ admits an algebraic factorization and the process does not have the
-assumed form. Bases $4,8,9,16$ are therefore omitted. Within the declared range
+Bases that are perfect powers are excluded: for $b=c^{m}$ with $m>1$ and a prime
+$n\nmid m$ the number $R_c(n)>1$ divides $\Rb(n)$, so there are only finitely many
+primes $\Rb(n)$ (the index $n$ must divide $m$), and there is no process of finds
+at all. Bases $4,8,9,16$ are therefore omitted. For prime $n$ the bases $b\le26$
+have no other infinite algebraic families: for prime $n$ we have
+$\Rb(n)=\Phi_n(b)$, and of the known algebraic factorizations of a cyclotomic
+polynomial at a $b$ that is not a perfect power only the Aurifeuillean one, at
+$n=s$, applies (see below). The arithmetic of small indices has a few further finite
+effects. We note separately one \emph{infinite arithmetic} family of forced
+composites: if $q=2p+1$ is prime, $q\nmid b-1$ (which certainly holds when
+$2p+1\ge b$) and $(b/q)=+1$, then $q\mid\Rb(p)$ (the
+generalization of the Euler--Lagrange theorem for $M_p$ with $p\equiv3\pmod4$),
+and $\Rb(p)$ is composite except when $\Rb(p)=q$ ($b=2$, $p=3$).
+It acts at every $p$ with density of order $1/\ln p$ and is not excluded but
+enters the second-order term (\S\ref{sec:second}, the case $k=1$
+in~\eqref{eq:cbth}). If $p\mid b-1$, then $\Rb(p)\equiv p\pmod{b-1}$ is divisible
+by~$p$ and hence composite. If $p=s$, where $s\equiv1\pmod4$ is the squarefree
+part of $b$, the Aurifeuillean factorization applies ($b=5,13,17,20$). Finally,
+$\Rb(2)=b+1$ is prime exactly for $b=2,6,10,12,18$, so for these five bases the
+origin $n_{\min}=2$ is fixed by arithmetic, not by chance. In the main set all
+these finite effects concern only $n\le19$; their influence is examined in~\S\ref{sec:robust} and
+accounted for in~\S\ref{sec:second}. Within the declared range
 the selection does not depend on the results: we take \emph{all} bases
 $2\le b\le20$ that are not perfect powers, which gives $B=15$; no base was
 excluded or added on the strength of its estimate. Each of them has at least
@@ -299,8 +385,10 @@ criterion continues to hold beyond it (A127996 for $b=21$ has eight terms,
 A127997 for $b=22$ has nine) and first fails at $b=23$ (A204940, six terms). To
 make sure the limit does not look chosen after the fact, we tested its influence
 directly. Extending the set to all bases $b\le26$ that are not perfect powers
-(this adds $b=21,22,23,24,26$; $b=25=5^2$ is excluded algebraically) gives
-$B=20$, $M=253$ and
+(this adds $b=21,22,23,24,26$; $b=25=5^2$ is excluded algebraically; for $b=22$
+the origin $n_{\min}=2$ is also fixed by arithmetic, $R_{22}(2)=23$, and for
+$b=24$ the condition $p\mid b-1$ makes $R_{24}(23)$ composite, that is, it
+concerns the index $23>19$) gives $B=20$, $M=253$ and
 \[
   \frac{M-1}{S}=1.9776,\qquad \frac{M-B}{S}=1.8285,
 \]
@@ -313,16 +401,18 @@ it as pre-declared.
 
 \begin{remark}[Selection on the number of finds]\label{rem:selection}
 Formally the limit $b\le20$ was declared in advance, but it was chosen in a
-world where the numbers of known terms had already been published, and this deserves
-to be checked not rhetorically but through the sign of the shift. The
-conditional inference of \S\ref{sec:scheme} conditions on $N_b\ge1$---which is
-harmless, since every base has finds; conditioning on $N_b\ge7$, by contrast,
-would not be harmless and would bias $\hat\kappa$ \emph{upward}. Lifting the
-limit to $b\le26$ adds, in particular, the base $b=23$ with six terms, and shifts
-the estimate \emph{downward}, from $1.8381$ to $1.8285$. The sign of the shift
-is the one predicted by selection on the number of finds, and its size is an
-order of magnitude smaller than the price of the observation scheme. We regard
-this as sufficient evidence that the limit does not drive the conclusion.
+world where the numbers of known terms had already been published, and the size
+of the threat should be stated. The conditional inference of \S\ref{sec:scheme}
+conditions on $N_b\ge1$---which is harmless: under scheme~B with the frontier
+$W_b=N_b/\lambda_b$ the bias of $(M-B)/S$ is $+0.04\%$. Were a base admitted only
+with $N_b\ge7$, the estimate would be biased \emph{upward} by $3.1\%$ (tag~[S30]),
+that is, by an amount of the same order as the residual excess of $3.2\%$. What
+protects the conclusion from such selection is not the sign of any shift but the
+fact that the rule $b\le20$ does not depend on the number of finds, together with
+a direct check: lifting the limit to $b\le26$ adds, in particular, the base
+$b=23$ with six terms and shifts the estimate \emph{downward}, from $1.8381$ to
+$1.8285$---in the direction predicted by selection on the number of finds, and by
+an order of magnitude less than the price of the observation scheme.
 \end{remark}
 
 \subsection{The data and their status}
@@ -330,10 +420,14 @@ Table~\ref{tab:data} lists the sequences used, retrieved on 27 August 2026
 (cross-check: Appendix~\ref{app:data}). Four caveats matter.
 
 \paragraph{Probable primes.} For large indices most of the entries are probable
-primes established by a Fermat or strong Fermat test after trial division. The
-count is biased upward only if a Fermat pseudoprime has been mistaken for a
-prime, which for numbers of this size is practically unheard of. Sensitivity is
-examined in~\S\ref{sec:robust}.
+primes established by a Fermat or strong Fermat test after trial division. PRP
+status begins far below one million: according to the OEIS entries, from
+$18\,743$ for $b=13$ (A016054), from $19\,697$ for $b=14$ (A006032), after
+$57\,917$ for $b=3$ (A028491), from $201\,359$ for $b=5$ (A004061). The count is
+biased upward only if a Fermat pseudoprime has been mistaken for a prime, which
+for numbers of this size is practically unheard of; the opposite risk, a missed
+find (below), is more real. Sensitivity to both is examined
+in~\S\ref{sec:robust}.
 
 \paragraph{Verification frontiers.} For $b=2$ the GIMPS project~\cite{gimps}
 publishes two frontiers: all exponents below $X_{\mathrm{ver}}=81\,648\,221$
@@ -348,7 +442,11 @@ Both frontiers are moving quantities, so we fix the moment of reading: the
 PrimeNet Milestones report, 27 August 2026. No conclusion depends on the exact
 value of $X_{\mathrm{ver}}$: it suffices that it lies between
 $M_{50}=77\,232\,917$ and $M_{51}=82\,589\,933$, and this holds for every value
-the report has taken during 2026.
+the report has taken from the start of 2026 to 4 September 2026. Once
+double-checking below $M_{51}$ was complete the frontier moved past it
+($83\,200\,483$ on 30 September 2026); the slice of double-checked exponents then
+includes $M_{51}$ as well, but the computations of~\S\ref{sec:sameerror} use the
+snapshot of 27 August 2026, and the pooled analysis does not depend on this slice.
 
 \paragraph{The status of entry A000043.} On the retrieval date (27 August 2026)
 the DATA section of that entry contained $50$ terms and stopped at
@@ -380,7 +478,8 @@ $(t_0,\ln L_b]$ \emph{contiguously}. If the sieved ranges contain gaps---a commo
 occurrence in distributed searching---then $M$ is understated relative to the
 exposure and $\hat\kappa$ is biased downward, that is, in the same direction as
 our main conclusion. In general, completeness of coverage cannot be checked from
-published data. That such gaps are real is shown by base~$5$. In 2024 the
+published data; how large such a gap would have to be to change the conclusion
+is assessed in~\S\ref{sec:robust}. That such gaps are real is shown by base~$5$. In 2024 the
 probable primes $R_5(4\,939\,471)$ and $R_5(5\,154\,509)$ were found
 (R.~Propper); they are not in the OEIS, and summary tables mark the range
 $3\,300\,593$--$4\,939\,471$ as not searched contiguously. For the conditional
@@ -441,7 +540,14 @@ G_b=\frac{1}{\kappa},\qquad\text{LPW:}\ \ G_b=\emg=0.5614595\ldots
 Several variants are in circulation---ordinary OLS with an intercept, regression
 through the origin, and the endpoint form $\hat G_b=D_b/(N_b\ln b)$ with
 $D_b=t_{N_b}-t_0$. All of them share one structural feature: the fitting
-interval ends at the largest known index.
+interval ends at the largest known index. Regression through the origin is
+understood in two ways. The line through the point $(0,t_0)$, that is, OLS of
+$t_k-t_0$ on $k$ without an intercept, has weights $w_k=k/\sum_jj^2$ with
+$\sum_kw_kk=1$ and is unbiased under scheme~A by the same argument as
+Proposition~\ref{prop:unbiased}. The line through the literal origin of the
+$(k,\ln n_k)$ plane is biased: $\mathbb E[\hat\beta]=1/\lambda+3t_0/(2N+1)$, which
+is from $5.2\%$ ($b=2$) to $25.4\%$ ($b=19$) of $1/\lambda$ (tag~[S30]); this
+variant is not considered below.
 
 \subsection{The exact distribution}
 
@@ -457,9 +563,20 @@ uniform variables on $(t_0,t_0+d)$.
 \begin{proof}
 The waiting times $t_1-t_0,\dots,t_N-t_{N-1}$ are independent
 $\mathrm{Exp}(\lambda)$ variables, and a sum of $N$ of them is
-$\Gam(N,\lambda)$. Conditional uniformity is the order-statistics property of
-the Poisson process, applied to $(t_0,t_0+d)$.
+$\Gam(N,\lambda)$. The joint density of $(t_1,\dots,t_N)$ on
+$t_0<t_1<\dots<t_N$ is the product of the densities of the spacings, that is,
+$\lambda^Ne^{-\lambda(t_N-t_0)}$. Dividing by the $\Gam(N,\lambda)$ density at
+$d=t_N-t_0$ gives the conditional density $(N-1)!/d^{\,N-1}$ of the first $N-1$
+events on $t_0<t_1<\dots<t_{N-1}<t_0+d$, which is the density of the order
+statistics of $N-1$ independent uniform variables.
 \end{proof}
+
+\noindent In the data $t_0=\ln n_{\min}$ is the position of the first find for
+ten of the fifteen bases, and is fixed by arithmetic for five ($b=2,6,10,12,18$,
+\S\ref{sec:bases}). This does no harm: the time of the first event is a stopping
+time, and by the strong Markov property the process to its right is again Poisson
+with the same intensity. The same applies to
+Propositions~\ref{prop:unbiased}--\ref{prop:delta} and to~\eqref{eq:condinhom}.
 
 \begin{corollary}[Bias of the reciprocal]\label{cor:kappa}
 The maximum-likelihood estimator of $\lambda$ based on $D$ alone is
@@ -563,8 +680,9 @@ of percent.
 \begin{table}[t]
 \centering
 \caption{Monte Carlo check of Proposition~\ref{prop:unbiased}, $60\,000$
-replications per row (seed fixed, see \texttt{analysis\_v2.py}, tag~[S1]).
-Target values: $N/(N-1)$ for $\mathbb E[\hat\lambda]/\lambda$; the column
+replications per row (seed fixed, see \texttt{analysis\_v2.py}, tag~[S1]); the
+Monte Carlo standard error is about $0.002$ at $N=7$ and $0.0006$ at $N=51$
+(tag~[S29]), so the fourth digit is noise. Target values: $N/(N-1)$ for $\mathbb E[\hat\lambda]/\lambda$; the column
 ``theory'' and \eqref{eq:BunbiasedOLS} for the scheme~B columns; $1.0000$ for
 the rest. In the right-hand part $\mu=\lambda W$; the column ``theory'' gives the factor
 $1-(1+\mu)e^{-\mu}$ of~\eqref{eq:BunbiasedB} for $\hat G$. The scheme~B column
@@ -627,6 +745,17 @@ median $0.4904$, so it has become ``lucky''. The label flips without a single
 new prime, purely from a change in the form of the estimator: the base moves
 from third place to tenth.
 
+We must add, however, that so large a discrepancy for base~18 is created by a
+single feature of the data. The origin $n_{\min}=2$ is fixed here by arithmetic
+($R_{18}(2)=19$, \S\ref{sec:bases}), and the next index, $25\,667$, lies
+$70.8\%$ of the whole window in $t$ away from it. For conditionally uniform
+interior points the probability that the largest of seven gaps is at least this
+long is $0.0043$ (about $6\%$ after a Bonferroni correction for fifteen bases).
+Measured from $25\,667$, the two forms give $0.2250$ and $0.2135$, a discrepancy
+of only $-5.1\%$ (tag~[S29]). The general point---the label describes the choice
+of estimator---stands, but its quantitative illustration rests on one anomalous
+gap.
+
 To this is added a second, technical difficulty with OLS: its standard errors
 are wrong in this problem. The residuals are deviations of order statistics and
 are strongly autocorrelated; for $b=2$ we obtain $\rho_1=0.825$, and the
@@ -665,9 +794,29 @@ Strictly this fails at small indices: seventeen index values occur in more than
 one base, and $n=3$ occurs in nine bases, since $\Rb(3)=b^2+b+1$ is prime for
 many~$b$. All such coincidences lie at $n\le317$. More important than coinciding
 indices (the numbers $\Rb(n)$ for different $b$ are distinct) is the possible
-sharing of algebraic divisors; both affect only small~$n$, whereas $D_b$ is
-determined by the upper end of the range. Subsection~\ref{sec:robust} confirms that
-discarding all indices below~$10^3$ leaves the conclusion unchanged. We note that
+sharing of divisors. It affects neither only small~$n$ nor only the upper end of
+the range: $D_b=t_{N_b}-t_0$ depends also on the origin, which for eleven of the
+fifteen bases lies at $n_{\min}\in\{2,3\}$, that is, precisely in the zone of
+coincidences. There is also a structural dependence at every~$n$: for a given $p$
+the candidate divisors $2kp+1$ are common to all bases, and bases with the same
+squarefree part (the pairs $2$ and $18$, $3$ and $12$, $5$ and $20$) also share
+the quadratic character $(b/q)$, hence the same second-order term
+(\S\ref{sec:second}). This covariance can be estimated within the same
+heuristic. Take a crude model in which the primality of $q=2p+1$ is a random
+variable common to all bases: if $q$ is prime and $(b/q)=+1$, then $\Rb(p)$ is
+composite, otherwise a Bernoulli trial takes place. Then for $p>10$ the covariance
+of the event counts is $0.146$ for the pair $2$ and $18$, $0.072$ for $3$ and $12$
+and $0.068$ for $5$ and $20$, and all $105$ pairs together increase
+$\operatorname{Var}(K)$ by $3.0\%$. This is offset by the opposite effect: in the
+Bernoulli-trial model the variance is below the Poisson one. In the same model
+(primes $p>10$ in the windows, without conditioning on $D_b$) the ratio
+$\operatorname{Var}(K)/\mathbb E[K]$ is $0.961$ without the covariance and $0.990$
+with it (tag~[S30]), so the Poisson law is practically exact. At small $n$ the issue is not stochastic
+dependence at all but deterministic arithmetic: the primality of $b+1$ and
+$b^2+b+1$ is given, not random, and the right response is to move the origin above
+that zone. Subsection~\ref{sec:robust} shows that discarding all indices
+below~$10^3$, moving the origin, and excluding any single base leave the
+conclusion unchanged. We note that
 this remark bears more strongly on the conditional multinomial test of
 \S\ref{sec:homog} than on the pooled estimate: dependence distorts not the mean
 but the null distribution of the statistic; the same truncation check covers
@@ -703,14 +852,17 @@ see~\cite{sengupta2009}); the same argument applies conditionally on $D_b$.
 Proposition~\ref{prop:cond} does not contradict this: it gives exact
 unbiasedness of an estimator of the \emph{intensity}.
 
-What we regard as new is something else. In the classical setting the moment at
+The mathematical apparatus is classical as well: law~\eqref{eq:condlaw} and the
+loss of one event per stratum follow from the general theory of conditional
+likelihood with nuisance parameters (Remark~\ref{rem:neymanscott}). What is new
+lies in the setting and the application. In the classical setting the moment at
 which the test is stopped is \emph{known}: the time $T$ is set by the
 experimenter. Here, in the main set, the frontier $L_b$ is documented only for
 $b=2$ and $b=10$ (\S\ref{sec:frontiers}), so the full exposure cannot be read off a protocol and
 must instead be reconstructed---via the memorylessness of the process---from the
-finds themselves. That is where a correction \emph{per base}, rather than one for
-the sample as a whole, comes from: there are as many unknown frontiers as there
-are bases. A survey of the biases generated by the edge of the observation
+finds themselves. Hence the correction is needed \emph{per base}, rather than for
+the sample as a whole: there are as many unknown frontiers as there are
+bases. A survey of the biases generated by the edge of the observation
 window, though in a nonparametric setting and for the shape of the interevent
 distribution rather than for the intensity, is given in~\cite{kivela2015}.
 
@@ -788,7 +940,7 @@ factorizes:
 \begin{equation}\label{eq:factor}
 p(n,d)=\underbrace{e^{-\lambda_bd}\frac{(\lambda_bd)^{n-1}}{(n-1)!}}_{\text{kernel of the conditional law}}
 \;\cdot\;
-\underbrace{\lambda_b\int_{[d,\infty)}e^{-\lambda_b(w-d)}\,\pi_b(dw)}_{\text{density of }D_b},
+\underbrace{\lambda_b\int_{[d,\infty)}e^{-\lambda_b(w-d)}\,\pi_b(dw)}_{\text{(defective) density of }D_b},
 \end{equation}
 so that for fixed $\lambda_b$ the statistic $D_b$ is sufficient for $W_b$ (and
 for the whole distribution $\pi_b$).
@@ -817,7 +969,8 @@ $e^{-\lambda_bd}\frac{(\lambda_bd)^{n-1}}{(n-1)!}\cdot\lambda_b\Delta\cdot
 e^{-\lambda_b(w-d)}+o(\Delta)$, and for $d>w$ it is zero. By (A1), averaging
 over $w\sim\pi_b$ affects only the last factor and gives~\eqref{eq:factor}.
 Summation over $n\ge1$ shows that the second factor in~\eqref{eq:factor} is the
-marginal density of $D_b$.
+marginal density of $D_b$; it is defective: its total mass is $\Pr(N_b\ge1)<1$,
+since $D_b$ is defined only when there are finds.
 (ii) Divide~\eqref{eq:factor} by the marginal density of $D_b$.
 (iii) A sum of independent Poisson variables is Poisson; the conditional
 log-likelihood $\ell_{\mathrm B}(\kappa)=\sum_b\bigl[K_b\ln\kappa-\kappa D_b/\ln b\bigr]
@@ -843,9 +996,14 @@ truncation $\delta_b\le W_b$), and $dW_b$ is the invariant measure of the
 translation group. Third, for $\pi_b(dw)=dw$ the
 marginal factor in~\eqref{eq:factor} equals
 $\lambda_b\int_d^\infty e^{-\lambda_b(w-d)}dw=1$ and does not depend on
-$\lambda_b$. Hence, when the frontier is unknown, the factor discarded by
-conditioning carries no information about $\kappa$ that could be used without
-specifying $\pi_b$.
+$\lambda_b$. Strictly speaking, $D_b$ is not $S$-ancillary: the marginal
+density $h(d)$ in~\eqref{eq:factor} is subject to a constraint---the function
+$h(d)e^{-\lambda_bd}=\lambda_b\int_{[d,\infty)}e^{-\lambda_bw}\,\pi_b(dw)$ is
+non-increasing in $d$---and this constraint depends on $\lambda_b$. Hence the
+factor discarded by conditioning carries some information about $\kappa$, but
+only through a shape constraint, which with a single value of $D_b$ per base is
+practically worthless and cannot be used without specifying $\pi_b$ (compare the
+optimality conditions for the conditional estimator in~\cite{lindsay1980}).
 \end{remark}
 
 \begin{remark}[Connection with the Neyman--Scott problem]\label{rem:neymanscott}
@@ -918,6 +1076,27 @@ sufficiently long stretch without finds, then the stopping itself carries
 information about the process before $D_b$, and law~\eqref{eq:condlaw} no longer
 holds (Remark~\ref{rem:bracket}).
 
+\begin{remark}[Actual and published frontier]\label{rem:weaker}
+Condition (A1) concerns the actual search horizon $T_b$---the bound up to which the
+sieving has really been carried as of the snapshot---and not a number that someone
+has published. If $T_b$ satisfies (A1) and all finds on $(t_0,\ln T_b]$ have been
+published by the snapshot date, then $(N_b,D_b)$ are determined by the search on
+that window, and law~\eqref{eq:condlaw} holds however the published bound $L_b$,
+$\ln L_b\in[t_0+D_b,\,\ln T_b]$, is chosen: it may be reported soon after a find, rounded,
+or left unchanged for years. The published gap $\ln L_b-t_{N_b}$ is then only a
+lower bound on the true $\delta_b$. Condition (A1) itself, on the other hand,
+cannot be weakened within the class of stopping times to, say, ``the stopping
+density depends on the finds only through the position of the last of them''. Let
+$Q(w)=q(w,d(w))$, where $d(w)$ is the last find before $w$. Insert an extra find at
+a point $s$ between neighbouring finds $d_i<s<d_{i+1}$. The normalization
+$\int Q\,dw=1$ must hold for both configurations, whence
+$\int_s^{d_{i+1}}[q(w,s)-q(w,d_i)]\,dw=0$; varying the position of $d_{i+1}$ gives
+the same for every upper limit $x>s$, that is, $q(w,s)=q(w,d_i)$ for almost all
+$w$: the density does not depend on the finds, which is (A1) again.
+The rules ``stop at the next find'' and ``stop after a drought'' depend on the
+configuration and violate law~\eqref{eq:condlaw} (Remark~\ref{rem:bracket}).
+\end{remark}
+
 \subsection{What ignorance of the frontier costs}\label{sec:cost}
 
 Besides Remark~\ref{rem:neymanscott}, the size of the correction is explained by
@@ -928,7 +1107,8 @@ the basis for the analysis of violations of (A1) in Remark~\ref{rem:bracket}.
 Suppose that under scheme~B the search for base~$b$ covered $(t_0,\ln L_b]$,
 that the window width $W_b=\ln L_b-t_0$ is fixed (under (A1), conditionally on
 $W_b$), and let $\delta_b=\ln L_b-t_{N_b}$ be the distance from the frontier to
-the last event found (with $\delta_b=W_b$ when $N_b=0$). Then
+the last event found (with $D_b=0$ and $\delta_b=W_b$ when $N_b=0$, so that
+always $D_b+\delta_b=W_b$). Then
 \begin{equation}\label{eq:delta}
 \Pr(\delta_b>x)=e^{-\lambda_b x}\ \ (0\le x<W_b),\qquad
 \Pr(\delta_b=W_b)=e^{-\lambda_b W_b},
@@ -967,9 +1147,10 @@ event \emph{per base}---whereas formula~\eqref{eq:mle} subtracts one event
 \frac{M-1}{S}=1.9648\qquad\text{versus}\qquad\frac{M-B}{S}=1.8381 .
 \end{equation}
 The remainder $\sum_b e^{-\lambda_b W_b}$ dropped in~\eqref{eq:EBd} is the
-expected number of bases for which the search produced no find at all; in our
-data $\lambda_bW_b\approx N_b\ge7$, so it does not exceed $3\cdot10^{-3}$
-against $B=15$. We stress that in the exact formulation~\eqref{eq:condlaw} this
+expected number of bases for which the search produced no find at all. The
+plug-in $\lambda_bW_b\approx N_b\ge7$ estimates it by $\sum_be^{-N_b}$, about
+$2\cdot10^{-3}$ against $B=15$; this is an estimate, not a bound, since the
+$\lambda_bW_b$ are unknown. We stress that in the exact formulation~\eqref{eq:condlaw} this
 remainder does not arise at all: the moment calculation is needed here only for
 interpretation.
 
@@ -1012,31 +1193,54 @@ None of the violations of (A1) creates an excess over LPW that the data would
 require explaining. But without documented frontiers the size of the
 uncertainty is not bounded from below: this is a stronger argument for
 publishing $L_b$ than the one given previously.
+
+The unknown stopping rule nevertheless reduces to a single number. Put
+$m=\sum_bm_b/B$. By Wald's identity $\mathbb E[M]=\kappa\,\mathbb E[S]+Bm$ under
+any rule, so $(M-Bm)/S$ is unbiased in the sense of expectations. The two
+right-hand columns of Table~\ref{tab:stop} show that with $m$ known this also holds
+for the means of the ratio ($0.999$--$1.001$), and that the level of the Poisson
+test for $M-Bm$ stays close to nominal, $0.043$--$0.056$, under every rule, including drought
+$g=2$, where test~\eqref{eq:pivotB} errs in $18\%$ of cases. A partial violation
+of (A1)---stopping ``at a find'' for only a fraction $q$ of the bases---shifts
+$(M-B)/S$ downward almost linearly in $q$, by $1.8\%$, $3.4\%$ and $4.9\%$ at
+$q=0.25$, $0.5$ and $0.75$, and raises the level of test~\eqref{eq:pivotB} to
+$0.056$, $0.080$ and $0.117$. Therefore \S\ref{sec:pooled} states the inference as
+a function of $m$ (Table~\ref{tab:mfamily}).
 \end{remark}
 
 \begin{table}[t]
 \centering
-\caption{Scheme~B under various stopping rules: relative mean of the two pooled
-estimators, the ratio $\mathbb E[M]/(\kappa\mathbb E[S])$ (at least $1$ under every
-rule by Wald's identity), and the type~I error of the exact two-sided Poisson
-test~\eqref{eq:pivotB} at the $5\%$ level. Budget $W^0_b=N_b/\lambda_b$;
-``drought $g$'': after the budget is spent the search continues until
-$g/\lambda_b$ passes without a find. $20\,000$ replications per row, accuracy
-about $\pm0.05\%$ for the means and $\pm0.003$ for the level (script
-\texttt{stopping\_rules.py}, tag~[S13], seed $20260924$).}
+\caption{Scheme~B under various stopping rules: the mean gap
+$\bar m=\langle\lambda_b\delta_b\rangle$; the relative means of the pooled
+estimators $r_1=\mathbb E[(M-1)/S]/\kappa$ and $r_B=\mathbb E[(M-B)/S]/\kappa$; the
+ratio $r_W=\mathbb E[M]/(\kappa\mathbb E[S])$ (at least $1$ under every rule by Wald's
+identity); the type~I error $\alpha_B$ of the exact two-sided Poisson
+test~\eqref{eq:pivotB} at the $5\%$ level; the same quantities for the estimator
+$(M-B\bar m)/S$ and the test shifted by $B\bar m$ events, $r_m$ and $\alpha_m$.
+Budget $W^0_b=N_b/\lambda_b$; ``drought $g$'': after the budget is spent the
+search continues until $g/\lambda_b$ passes without a find; ``mixture $q$'': each
+base stops at the next find with probability $q$ and at $W^0_b$ otherwise.
+$20\,000$ replications per row, accuracy about $\pm0.05\%$ for the means and
+$\pm0.003$ for the level (script \texttt{stopping\_rules.py}, tag~[S13], seed
+$20260924$).}
 \label{tab:stop}
 \small
-\begin{tabular}{lrrrr}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrrr}
 \toprule
-Stopping rule & $\mathbb E[(M{-}1)/S]/\kappa$ & $\mathbb E[(M{-}B)/S]/\kappa$
-& $\dfrac{\mathbb E[M]}{\kappa\mathbb E[S]}$ & type~I error\\
+Stopping rule & $\bar m$ & $r_1$ & $r_B$ & $r_W$ & $\alpha_B$ & $r_m$ & $\alpha_m$\\
 \midrule
-(A1): frontier $=W^0_b$ & 1.0688 & 0.9999 & 1.0737 & 0.046\\
-(A1): frontier $=UW^0_b$, $U\sim\mathrm U(0.5,\,2)$ & 1.0551 & 1.0000 & 1.0582 & 0.043\\
-stop at a find & 0.9963 & 0.9362 & 1.0003 & 0.165\\
-drought $g=0.5$ & 1.0762 & 1.0074 & 1.0811 & 0.050\\
-drought $g=1$ & 1.0923 & 1.0250 & 1.0973 & 0.063\\
-drought $g=2$ & 1.1227 & 1.0667 & 1.1277 & 0.178\\
+(A1): frontier $=W^0_b$ & 0.996 & 1.0688 & 0.9999 & 1.0737 & 0.046 & 1.0002 & 0.046\\
+(A1): frontier $=UW^0_b$, $U\sim\mathrm U(0.5,2)$ & 0.997 & 1.0551 & 1.0000 & 1.0582 & 0.043 & 1.0002 & 0.043\\
+stop at a find & 0.000 & 0.9963 & 0.9362 & 1.0003 & 0.165 & 1.0006 & 0.045\\
+drought $g=0.5$ & 1.105 & 1.0762 & 1.0074 & 1.0811 & 0.050 & 0.9997 & 0.050\\
+drought $g=1$ & 1.366 & 1.0923 & 1.0250 & 1.0973 & 0.063 & 0.9987 & 0.050\\
+drought $g=2$ & 2.136 & 1.1227 & 1.0667 & 1.1277 & 0.178 & 0.9986 & 0.056\\
+\midrule
+mixture $q=0.25$ & 0.749 & 1.0489 & 0.9824 & 1.0534 & 0.056 & 1.0003 & 0.045\\
+mixture $q=0.5$ & 0.499 & 1.0304 & 0.9661 & 1.0346 & 0.080 & 1.0006 & 0.047\\
+mixture $q=0.75$ & 0.250 & 1.0127 & 0.9506 & 1.0168 & 0.117 & 1.0005 & 0.049\\
+mixture with drought $g=1$, $q=0.5$ & 1.183 & 1.0821 & 1.0139 & 1.0870 & 0.053 & 1.0006 & 0.050\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1079,7 +1283,9 @@ A (control) & 0.0492 & --- & ---\\
 \end{table}
 
 Three conclusions follow from Table~\ref{tab:calib}. First, under scheme~B a
-nominal $5\%$ test rejects a true hypothesis in $11$--$17\%$ of cases: the
+nominal $5\%$ test rejects a true hypothesis in $11$--$17\%$ of cases (in the
+table $0.114$--$0.163$; for the first row with $6\cdot10^5$ replications
+$0.167\pm0.0005$, tag~[S29]): the
 claimed precision of the intervals is overstated two- to threefold, and the more
 so the closer the frontier is to the last find. Second, the estimator $(M-1)/S$
 is biased upward by $4$--$7\%$ under all rules, whereas $(M-B)/S$ is unbiased
@@ -1091,7 +1297,7 @@ of Table~\ref{tab:calib} place the frontier without regard to the finds, that
 is, they satisfy (A1); rules that violate (A1) are analyzed in
 Remark~\ref{rem:bracket} and Table~\ref{tab:stop}.
 
-\subsection{Documented frontiers: an empirical check of (A1)}\label{sec:frontiers}
+\subsection{Documented frontiers and the check of (A1)}\label{sec:frontiers}
 
 A dated and attributed frontier above the last find could be found for four
 bases (checked on 24 September 2026):
@@ -1116,39 +1322,74 @@ Remark~\ref{rem:bracket}). The observed values are $0.143$ ($b=2$ with
 $X_{\mathrm{ver}}$; $0.093$ with $X_{\mathrm{ft}}$), $0.215$ ($b=10$), $0.737$
 ($b=22$) and $0.722$ ($b=26$). Their mean is $0.44$--$0.45$ against an expected
 value of one. The probability of so small a sum under (A1) is $0.10$--$0.11$
-(tag~[S18]).
+(tag~[S18]). These values are computed at $\lambda_b=\eg/\ln b$, that is, under
+$H_0$: $\kappa=\eg$; at $\kappa=\hat\kappa_{\mathrm B}$ every $\lambda_b\delta_b$ is
+larger by the factor $1.032$, and the probability is $0.11$--$0.12$ (tag~[S29]);
+the conclusion does not change.
 
-The conclusions must be cautious: there are four observations, the $b=2$
-frontier moves continuously, and two of the bases enter only the extended set.
-Nevertheless this is the first check of (A1) against data, and its result is
-informative about the \emph{direction}. The documented frontiers lie not farther
-from but closer to the last finds than (A1) predicts. The violation that is
-dangerous for the conclusion of agreement with LPW---stopping ``after a
-drought'', which biases $(M-B)/S$ upward---is not supported by the data: the
-upper-tail probability is $0.89$--$0.90$. A caveat: small values of
-$\lambda_b\delta_b$ may also reflect the moment at which the frontier was
-reported rather than a stopping rule (for $b=10$ the frontier was published two
-months after the find). If (A1) is violated in the opposite direction, that is,
-$m_b\le1$ for all $b$, then
+These numbers cannot, however, be read as a check of (A1) for our data snapshot,
+for three reasons. First, the frontiers for $b=10$ (2021) and for $b=22$ and
+$b=26$ (2012) predate the snapshot of 27 August 2026. If the search continued
+without finds after publication, the true gap at the snapshot date exceeds the
+published one, so the observed $\lambda_b\delta_b$ are only lower bounds. Small
+published values are therefore no evidence of stopping at a find as of the
+snapshot, the lower tail $0.10$ does not apply to it, and such values do not prove
+the absence of a ``drought'': the true
+gap may be arbitrarily large. Second, the moment at which a frontier is published
+may be tied to a find (for $b=10$ it was reported two months after the find); by
+Remark~\ref{rem:weaker} this does not violate law~\eqref{eq:condlaw}, but it makes
+$\lambda_b\delta_b$ small. Third, the bases with a published frontier are not a
+random sample: frontiers are reported where a particular participant does so, and
+nothing can be inferred from them about the other bases. Only the GIMPS frontier
+for $b=2$ is synchronous with the snapshot and not tied to a find; for it
+$\lambda_2\delta_2=0.143$ ($0.093$ with $X_{\mathrm{ft}}$), and the probability of
+a value no larger under (A1) is $0.133$ ($0.089$; tag~[S30])---a single
+observation, consistent with (A1).
+
+Thus the documented frontiers neither confirm nor refute (A1). We therefore state
+the conclusion that the excess is created by the observation scheme conditionally,
+under (A1), and the conclusion of agreement with LPW for the whole family of
+stopping rules (\S\ref{sec:pooled}, Table~\ref{tab:mfamily}). Recall the
+direction. Stopping ``after a drought'' ($m>1$) only lowers the true $\kappa$
+(Remark~\ref{rem:bracket}): it creates no excess over LPW, and a rejection from
+below would require a mean gap exceeding $3.2$ mean spacings
+(Table~\ref{tab:mfamily}; drought $g=2$ gives $\bar m=2.14$). The attribution
+of the excess would be weakened by the opposite deviation, $m<1$: then
 $\mathbb E[M-B]\le\kappa\,\mathbb E[S]\le\mathbb E[M]$, and in the sense of
-moments $\kappa$ lies between $(M-B)/S$ and $M/S$. The data ($p=0.10$) merely
-point to this direction; they do not prove it.
+expectations $\kappa$ lies between $(M-B)/S$ and $M/S$.
 
 The documented frontiers can also be used directly. For bases with a known
 frontier the full likelihood applies: $N_b\sim\Pois(\lambda_bW_b)$ with all
 events and the full window. For the others the conditional
-law~\eqref{eq:condlaw} applies. The sum is again exactly Poisson. The hybrid
-estimate with the known frontiers for $b=2$ ($X_{\mathrm{ft}}$) and $b=10$ is
-$\hat\kappa=1.853$ with an exact $95\%$ interval $[1.608,\,2.125]$ and
-$p=0.588$ against $\eg$. It differs from $(M-B)/S=1.838$ by $0.8\%$, and the
-main conclusion does not change.
+law~\eqref{eq:condlaw} applies. The sum is again exactly Poisson. A frontier
+known only as a lower bound will do: the window $(t_0,\ln L_b]$ has then been
+covered completely, and all that is required is that the published bound was not
+chosen by the finds. For $b=10$ this is doubtful: the frontier was reported two
+months after a find. We therefore take as the main one the hybrid estimate with
+the known frontier of a single base, $b=2$ ($X_{\mathrm{ft}}$): $\hat\kappa=1.846$
+with an exact $95\%$ interval $[1.602,\,2.118]$ and $p=0.626$ against $\eg$; adding
+$b=10$ gives $1.853$, $[1.608,\,2.125]$, $p=0.588$ (tag~[S18]). Both differ from
+$(M-B)/S=1.838$ by less than $1\%$, and the main conclusion does not change.
+
+One more control needs neither documented frontiers nor conditioning. Every
+$n_{\max}$ exceeds $T=2\cdot10^5$, so under contiguous search the window
+$(n_{\min},T]$ has been covered for all fifteen bases, its width is known, and the
+full Poisson likelihood with all events of the window applies. We obtain
+$M=163$, $S=86.233$, $\hat\kappa=M/S=1.890$ with an exact $95\%$ interval
+$[1.611,\,2.204]$ and $p=0.468$ (tag~[S29]). Condition (A1) is needed here only
+in a weak form: the decision to take the search up to $2\cdot10^5$ did not depend
+on the finds below that bound. The estimate lies between $(M-B)/S$ and $(M-1)/S$
+and is consistent with LPW.
 
 \subsection{The data do not choose the scheme for us}\label{sec:noescape}
 
 We stress that $(M-1)/S$ and $(M-B)/S$ are functions of the same sufficient
-statistics $(N_b,D_b)$. No processing of the finds themselves will say which of
-them is right: the choice is determined by how the data were collected, and its
-price is $6.9\%$---twice the entire residual gap with LPW ($3.2\%$).
+statistics $(N_b,D_b)$. In principle the schemes are distinguishable: under
+scheme~A one expects $N_b\approx\kappa D_b/\ln b$, under scheme~B one more. But a
+difference of one event per base drowns in the Poisson scatter of each base, so
+the finds themselves practically cannot choose the scheme: the choice is
+determined by how the data were collected, and its price is $6.9\%$---twice the
+entire residual gap with LPW ($3.2\%$).
 
 The natural attempt to sidestep the choice is to build the pooled estimate out
 of pieces that are unbiased by construction. The per-base estimator
@@ -1164,13 +1405,19 @@ $\lambda_b$ but
   \mathbb E[\tilde\lambda_b]=\lambda_b-\frac{\Pr(N_b=1)}{W_b}
   =\lambda_b\Bigl(1-e^{-\lambda_bW_b}\Bigr),
 \]
-that is, the same exponentially small deficit: for $\lambda_bW_b\approx N_b\ge7$
-it does not exceed $0.1\%$.
+that is, the same exponentially small deficit: the plug-in
+$\lambda_bW_b\approx N_b\ge7$ puts it at $0.1\%$ or less.
 
 Nevertheless, the weighted mean
 $$\kappa_\ast=\sum\nolimits_b(N_b-2)\tilde\kappa_b\Big/\sum\nolimits_b(N_b-2)$$
-with inverse-variance weights has a bias of $0.0\%$ under scheme~A but
-$+7.5\%$ under scheme~B, that is, practically the same as $(M-1)/S$. The reason
+with weights inversely proportional to the variance under scheme~A
+($\operatorname{Var}\tilde\kappa_b=\kappa^2/(N_b-2)$; under scheme~B the
+unconditional variance of $\tilde\kappa_b$ is infinite, since $\Pr(N_b=2)>0$ and
+for $N_b=2$ we have $D_b/W_b\sim\mathrm{Beta}(2,1)$ and
+$\mathbb E[D_b^{-2}]=\infty$) has a bias of $0.0\%$ under scheme~A but $+7.5\%$
+under scheme~B with the frontier $W_b=N_b/\lambda_b$ ($+3.9\%$ with the frontier
+$W_b=2D_b$; tag~[S30]), that is, practically the same as $(M-1)/S$ under the same
+rules (Table~\ref{tab:calib}). The reason
 is that the weights---the event counts themselves---are random under scheme~B
 and positively correlated with the estimates; unbiasedness of each summand does
 not carry over to a ratio of sums. The correct way to pool is not to weight the
@@ -1190,7 +1437,8 @@ the relevant search projects.
 \begin{table}[t]
 \centering
 \caption{Per-base estimates. $\hat G_b=D_b/(N_b\ln b)$ is the endpoint form;
-$\hat G_b^{\mathrm{OLS}}$ is the OLS slope of $\ln n_k$ on $k$ divided by $\ln b$;
+$\hat G_b^{\mathrm{OLS}}$ is the OLS slope of $\ln n_k$ on $k$ over all known
+indices including $n_{\min}$ ($k=0,\dots,N_b$), divided by $\ln b$;
 both are unbiased (Proposition~\ref{prop:unbiased}).
 $\hat\kappa_b=K_b/(D_b/\ln b)$ is the scheme~B conditional estimator with the
 exact Garwood interval~\eqref{eq:garwood} from $\Pois(\kappa D_b/\ln b)$. The last
@@ -1261,16 +1509,56 @@ heuristic. On moving to scheme~B the excess falls to $3.2\%$, and the $p$-value
 rises from $0.14$ to $0.67$.
 
 We hold that scheme~B is closer to the way the data were obtained, and therefore
-regard~\eqref{eq:resB} as the main result. Estimate~\eqref{eq:resA} corresponds
-to stopping the search exactly at a find; under any stopping rule $\kappa$ is
-bounded from above in the sense of moments by $M/S=1.974$, only $0.5\%$ larger
-than~\eqref{eq:resA} (Remark~\ref{rem:bracket}). Under stopping ``after a
-drought'' the true value lies below~\eqref{eq:resB}. (A1) cannot be checked from
-the finds themselves; for the four bases with documented frontiers this is done
-in~\S\ref{sec:frontiers}. Both estimates are consistent with LPW; they differ in
-whether the data call for an explanation of a residual excess. We conclude that
-they do not; moreover, the remainder is explained by the second-order term of
-the heuristic itself (\S\ref{sec:second}). The overall picture is shown in
+regard~\eqref{eq:resB} as the main result under (A1). Estimate~\eqref{eq:resA}
+corresponds to stopping the search exactly at a find; under any stopping rule
+$\kappa$ is bounded from above in the sense of expectations by $M/S=1.974$, only
+$0.5\%$ larger than~\eqref{eq:resA} (Remark~\ref{rem:bracket}). Under stopping
+``after a drought'' the true value lies below~\eqref{eq:resB}.
+
+Without (A1) the unknown stopping rule enters the pooled estimate through a single
+number---the mean gap $m$ between the last find and the frontier in units of the
+mean spacing (Remark~\ref{rem:bracket}): $(M-Bm)/S$ is unbiased in the sense of
+expectations, and with $m$ known the Poisson test for $M-Bm$ approximately keeps
+its level under every rule of Table~\ref{tab:stop}. Table~\ref{tab:mfamily} gives the inference as a function of
+$m$. Under (A1) $m\approx1$ and one obtains~\eqref{eq:resB}; stopping exactly at a
+find gives $m=0$; stopping ``after a drought'' gives $m>1$. LPW is not rejected
+for any $m$ from $0$ to $3.2$; the estimate equals $\eg$ at $m=1.42$. With the
+second-order term (\S\ref{sec:second}) LPW is not rejected for $m$ from $0$ to
+$2.8$, and equality with $\eg$ is reached at $m=0.99$, that is, exactly under
+(A1). Thus the conclusion of agreement with LPW is robust to violations of (A1): it holds
+for every stopping rule with a mean gap up to $3.2$ ($2.8$) mean spacings, drought
+$g=2$ included, whereas the conclusion that the excess is created by the
+observation scheme does depend on it: at
+$m=0$ the residual excess is $10.8\%$. (A1) cannot be checked from the finds
+themselves, and the documented frontiers do not settle it
+(\S\ref{sec:frontiers}). Under (A1) the remainder is moreover explained by the
+second-order term of the heuristic itself (\S\ref{sec:second}).
+
+\begin{table}[t]
+\centering
+\caption{The pooled estimate as a function of the unknown mean gap $m$ between the
+last find and the frontier (in mean spacings): $(M-Bm)/S$, the excess over $\eg$, the
+Garwood interval and the exact two-sided $p$ for $K_m=M-Bm\sim\Pois(\kappa S)$ in the
+constant-rate model; the two right columns give the same with the calibrated
+second-order term and the exposure $S_\Sigma(c)$ (\S\ref{sec:second}). $m=1$ is (A1),
+$m=0$ is stopping exactly at a find, $m>1$ is stopping after a drought. The shifted
+test is exact under (A1) and, with $m$ known, approximately keeps its level
+($0.043$--$0.056$) under every rule of Table~\ref{tab:stop}. Tag~[S30].}
+\label{tab:mfamily}
+\small
+\begin{tabular}{lrrlrrr}
+\toprule
+$m$ & $(M-Bm)/S$ & excess, \% & 95\% CI (Garwood) & $p$ & $K_m/S_\Sigma(c)$ & $p$\\
+\midrule
+$0$ (at a find) & 1.974 & $+10.8$ & [1.721, 2.254] & 0.142 & 1.911 & 0.314\\
+$0.4$ & 1.920 & $+7.8$ & [1.670, 2.196] & 0.292 & 1.859 & 0.553\\
+$1$ (A1) & 1.838 & $+3.2$ & [1.594, 2.109] & 0.672 & 1.780 & 1.000\\
+$1.4$ & 1.784 & $+0.1$ & [1.543, 2.051] & 1.000 & 1.727 & 0.699\\
+$2$ & 1.702 & $-4.4$ & [1.468, 1.964] & 0.564 & 1.648 & 0.303\\
+$3$ & 1.566 & $-12.1$ & [1.342, 1.818] & 0.094 & 1.517 & 0.034\\
+\bottomrule
+\end{tabular}
+\end{table} The overall picture is shown in
 Figure~\ref{fig:kappa}: the confidence interval of every base covers $\eg$ as
 well as both pooled estimates.
 
@@ -1302,12 +1590,20 @@ to $\chi^2_{B-1}$ asymptotics. We obtain $\Lambda=7.127$, exact $p=0.935$
 ($2\cdot10^6$ multinomial replications, $\pm0.0003$ at the $95\%$ level); the
 asymptotic
 approximation gives $p=0.930$ on $14$ degrees of freedom, that is, it works well
-in this case.
+in this case. An exact null law exists under scheme~A as well: there, under
+$H_0$, the quantities $\kappa s_b$ are independent $\Gam(N_b,1)$ variables, so the
+vector $s_b/S$ is Dirichlet with parameters $N_b$ and does not depend on
+$\kappa$; the analogue of statistic~\eqref{eq:LR} with $N_b$ in place of $K_b$ is
+$\Lambda_{\mathrm A}=7.395$ with exact $p=0.923$ ($\chi^2$: $0.918$;
+tag~[S30]).
 
 But a non-rejection is informative exactly to the extent that the test is
 powerful, and here one must apply to oneself the same requirement one applies to
 the literature. We simulated alternatives in which the $\kappa_b$ are lognormally
-scattered about $\eg$ with coefficient of variation $cv$:
+scattered with mean $\eg$ and coefficient of variation $cv$ (that is, $\ln\kappa_b$
+has variance $\ln(1+cv^2)$), conditionally on the observed $K$:
+$(K_b)\mid K\sim\mathrm{Multinomial}\bigl(K;\,\kappa_bs_b/\sum_{b'}\kappa_{b'}s_{b'}\bigr)$;
+the critical value is the $95\%$ quantile of the exact null law:
 
 \begin{center}
 \small
@@ -1320,7 +1616,11 @@ power & 0.059 & 0.097 & 0.184 & 0.326 & 0.484 & 0.645 & 0.774 & 0.851 & 0.948\\
 \end{center}
 
 The test attains $80\%$ power only at $cv\approx0.37$ ($12\,000$ replications
-per grid point, power accurate to about $\pm0.004$). Hence $p=0.935$ means: the
+per grid point, power accurate to about $\pm0.004$). The centre of the
+distribution of $\kappa_b$ (mean or median) does not affect the power: the
+multinomial probabilities $\kappa_bs_b/\sum_{b'}\kappa_{b'}s_{b'}$ do not change
+when all $\kappa_b$ are multiplied by the same number, and only the spread
+matters. Hence $p=0.935$ means: the
 data do not require base-dependent frequencies, but neither do they exclude a
 spread of $\kappa_b$ with a coefficient of variation of up to a third. The
 statement ``lucky bases do not exist'' does not follow from the available data;
@@ -1333,21 +1633,43 @@ probability below $80\%$''.
 \paragraph{Lower truncation.} We varied the lower truncation point in order to
 probe the asymptotic regime (the heuristic~\eqref{eq:LPW} is asymptotic, whereas
 the constant-intensity model starts at $n=2$). The results are in
-Table~\ref{tab:trunc}. The scheme~A estimate grows from $1.965$ to $2.099$---not
-strictly monotonically (at $n>10^{2}$ it retreats from $2.019$ to $2.012$) but
-systematically: the growth is $6.8\%$, and all five values come from nested
-subsamples of the same data. This is a trend, not noise. The scheme~B estimate
-shows no upward trend and stays close to $\eg$, within $1.789$--$1.871$ (under
-the weaker dropout criterion $N_b\ge1$, within $1.757$--$1.871$), and its
+Table~\ref{tab:trunc}. The scheme~A estimate grows from $1.965$ to $2.085$ in the
+strictly consistent variant $N_b\ge1$ (to $2.099$ with the selection
+$N_b\ge2$)---not strictly monotonically (at $n>10^{2}$ it retreats from $2.019$ to
+$2.012$) but systematically: the growth is $6.1\%$ ($6.8\%$), and all values come
+from nested subsamples of the same data. It is not, however, a significant trend:
+simulating the data on the same origins and event counts (under scheme~B with the
+frontier $W_b=N_b/\lambda_b$, the rule ``$\mathbb E[\#]$ = observed'' of
+Table~\ref{tab:calib}), a rise of the scheme~A estimate by at least $6.1\%$ occurs
+with probability $0.219$ under scheme~A and $0.615$ under scheme~B (with the
+selection $N_b\ge2$, for a rise of $6.8\%$: $0.196$ and $0.597$; tags~[S29],
+[S30]). The scheme~B estimate
+shows no upward trend and stays close to $\eg$, within $1.757$--$1.871$ in the
+strictly consistent variant $N_b\ge1$ (with the selection $N_b\ge2$,
+$1.789$--$1.871$), and its
 $p$-values lie between $0.53$ and $1.00$ at all truncation levels. The reason is
 visible from~\eqref{eq:pivotB}: truncation reduces $M$ but not $B$, whereas
-scheme~A subtracts one regardless of the sample size. We regard this as
-confirmation of the diagnosis of \S\ref{sec:scheme}: the upward trend was a
-property of the estimator, not of the data. From $n>10$ onwards the scheme~B
-estimate, on the contrary, \emph{decreases} monotonically ($1.871\to1.789$). This
-is exactly what the second-order term of the heuristic itself requires, and once
-that term is taken into account the decrease disappears (\S\ref{sec:second}).
-Both curves are shown in Figure~\ref{fig:trunc}.
+scheme~A subtracts one regardless of the sample size; the difference of the two
+estimates is $(B-1)/S$ and grows mechanically, since $S$ falls under truncation
+from about $110$ to~$42$. The truncation profile is therefore consistent with
+the diagnosis of \S\ref{sec:scheme} and weakly favours scheme~B (a likelihood
+ratio of about three), but it is not an independent confirmation. From $n>10$
+onwards the scheme~B estimate decreases ($1.871\to1.757$, by $6.1\%$, in the
+strictly consistent variant; to $1.789$ with the selection $N_b\ge2$); this too is
+within the noise of nested subsamples: under scheme~B with the same frontier a fall
+from $n>10$ to $n>10^4$ at least as large as the observed one occurs with
+probability $0.229$, and a fall from the full sample to $n>10^4$ at least as large
+as the observed one ($4.4\%$) with probability $0.306$ (with the selection
+$N_b\ge2$, for a fall of $2.7\%$, $0.308$; tags~[S29], [S30]).
+The second-order term does not remove this decrease (\S\ref{sec:second}). The
+curves are shown in Figure~\ref{fig:trunc}.
+
+The result does not depend on where the origin is placed either. With the origin
+at the truncation point itself (the first surviving event is then not lost), the
+scheme~B estimate is $1.891$, $1.867$, $1.906$ and $1.891$ at $n>10$, $10^2$,
+$10^3$, $10^4$ ($p=0.43$--$0.60$). If for the five bases whose origin
+$n_{\min}=2$ is fixed by arithmetic (\S\ref{sec:bases}) the origin is moved to
+the second index, then $(M-B)/S=1.882$ with $p=0.457$ (tag~[S29]).
 
 \begin{table}[t]
 \centering
@@ -1382,9 +1704,11 @@ $n>10^4$, $N_b\ge1$ & 15 & 90 & 2.0848 & 1.7569 & [1.382, 2.202] & 0.966 & 0.128
 \centering
 \includegraphics[width=.75\textwidth]{fig_truncation.pdf}
 \caption{The pooled estimate under lower truncation: $(M-1)/S$ (scheme~A),
-$(M-B)/S$ (scheme~B) and $K/S(c)$ with the second-order term $c=\ln2$
-(\S\ref{sec:second}). The upward trend of scheme~A disappears under scheme~B; the
-residual decline of scheme~B disappears once the second-order term is included.}
+$(M-B)/S$ (scheme~B) and $K/S_\Sigma(c)$ with the measured second-order term and
+the exposure summed over the primes (\S\ref{sec:second}). The last point
+($n>10^4$) is the strictly consistent variant $N_b\ge1$ (Table~\ref{tab:trunc}).
+The upward trend of scheme~A disappears under scheme~B. All curves come from nested subsamples, and
+their changes under truncation are within the noise (\S\ref{sec:robust}).}
 \label{fig:trunc}
 \end{figure}
 
@@ -1395,13 +1719,21 @@ $[0.49,\,0.85]$; no single base determines the conclusion.
 
 \paragraph{Status of the data.} Restricting base~2 to the fifty double-checked
 exponents moves the scheme~B estimate from $1.838$ to $1.834$ (scheme~A: from
-$\tilde\kappa=1.965$, $p=0.142$ to $\tilde\kappa=1.961$, $p=0.151$). Excluding
-all indices $n>10^6$, where the entries have PRP status, gives $M=182$ and
-$(M-B)/S=1.800$ ($\tilde\kappa=1.951$). In the worst case, when the last known
-PRP of some base turns out to be composite, the largest shift comes from
-$b=17$: $(M-B)/S=1.848$ ($\tilde\kappa=1.977$). All variants lie inside both
-interval~\eqref{eq:resA} and interval~\eqref{eq:resB}, so possible pseudoprimes
-do not affect the conclusion.
+$\tilde\kappa=1.965$, $p=0.142$ to $\tilde\kappa=1.961$, $p=0.151$). PRP status
+begins far below one million for most terms (\S\ref{sec:data}), so the next
+variant tests not PRP status as such but the most recent and least re-checked
+finds: excluding all indices $n>10^6$ gives $M=182$ and $(M-B)/S=1.800$
+($\tilde\kappa=1.951$). In the worst case, when the last known PRP of some base
+turns out to be composite, the largest shift comes from $b=17$: $(M-B)/S=1.848$
+($\tilde\kappa=1.977$). All variants lie inside both interval~\eqref{eq:resA} and
+interval~\eqref{eq:resB}, so possible pseudoprimes do not affect the conclusion.
+More important than spurious finds are missed ones (\S\ref{sec:data}): a miss
+lowers $K$ at unchanged $S$ and biases the estimate downward, in the direction of
+the main conclusion. For LPW to be rejected from above, at least $23$ finds would
+have to be missing inside the windows, $1.5$ per base, and at least $30$ with the
+second-order term (tag~[S30]). The two 2024 finds for base~5 do not fall inside
+the windows: they lie above $n_{\max}$, beyond an unsearched gap
+(\S\ref{sec:data}).
 
 \section{Statistical power}\label{sec:power}
 
@@ -1437,10 +1769,12 @@ $\kappa/\eg$ & Mersenne only & pooled & Mersenne only & pooled\\
 
 At $80\%$ power the Mersenne sequence alone detects only deviations of $45.5\%$
 and above; pooling fifteen bases lowers that threshold to $21.3\%$ (one-sided
-variant: to $18.7\%$). Attaining $80\%$ power against a $10\%$ deviation requires
+variant: to $18.7\%$). Table~\ref{tab:power} concerns an excess; for a deficit
+of the constant the thresholds of the same two-sided test differ: $37.4\%$ for
+base~2 alone and $19.2\%$ for the pooled sample (tag~[S29]). Attaining $80\%$ power against a $10\%$ deviation requires
 an exposure $S\approx470$, that is, $K\approx837$ conditional events
-($M\approx852$) at $\kappa=\eg$ (if the true constant is $10\%$ larger, there
-will be $\approx921$ events); against $5\%$, $S\approx1823$ and $K\approx3246$.
+($M\approx852$) at $\kappa=\eg$ (if the true constant is $10\%$ larger, one
+expects $K\approx921$ conditional events, that is, $M\approx936$ finds); against $5\%$, $S\approx1823$ and $K\approx3246$.
 The power function of a discrete test is not monotone in $S$ (it is
 saw-toothed), so the values given are those beyond which the power no longer
 drops below $80\%$ (found by an exhaustive scan over $S$ with step $0.01$).
@@ -1469,8 +1803,8 @@ This yields a rule for reading this literature. A report that the data agree wit
 to within a few percent is not evidence for LPW at the level of a few percent;
 it is compatible with a constant that is wrong by a factor of one and a half.
 The pooled analysis does, however, establish a genuine bound: the universal
-constant, if it exists, lies roughly in $[1.59,\,2.11]$ in the
-constant-intensity model and in $[1.47,\,1.98]$ with the measured second-order
+constant, if it exists, lies under (A1) roughly in $[1.59,\,2.11]$ in the
+constant-intensity model and in $[1.52,\,2.06]$ with the measured second-order
 term at $n>10$ (\S\ref{sec:second}); no base deviates from it detectably.
 
 \section{The same error in a different guise}\label{sec:sameerror}
@@ -1483,8 +1817,11 @@ with an OLS standard error of $0.4469$---apparently significant, and suggestive
 of a secondary term in~\eqref{eq:LPW}. Nothing of the sort.
 
 Two defects compound. The residuals of the cumulative count are strongly
-autocorrelated, here $\rho_1=0.825$; the Newey--West covariance estimator with
-eight lags raises the standard error to $0.7315$. More importantly, the
+autocorrelated, here $\rho_1=0.825$ (the sample correlation of adjacent
+residuals; the sample autocorrelation function gives $0.751$); the Newey--West
+estimator with the Bartlett kernel and eight lags, without a degrees-of-freedom
+correction, raises the standard error to $0.7315$ (with the correction $n/(n-k)$,
+to $0.7466$; tag~[S30]). More importantly, the
 regression uses only the event points and thereby discards the empty interval
 between the last exponent and the search frontier. The correct null model holds
 the interval $[t_0,T]$ fixed, where $T=\ln X_{\mathrm{ver}}$, and conditions on
@@ -1494,12 +1831,17 @@ order-statistics property of the Poisson process given the number of events
 uniform points on $(t_0,T]$. Over $60\,000$ such replications the intercept has
 median $-1.529$ and a $5$--$95\%$ range of $[-5.99,\,2.20]$, giving a two-sided
 $p=0.570$ for the observed value. The secondary term is an artifact of
-conditioning.
+conditioning. Note that even the correct null distribution is not centred at
+zero. The count vanishes at $t_0=\ln2$, while the intercept is measured at
+$t=0$, and this alone shifts it by about $-\hat\lambda\ln2$, that is, by almost
+$-1.9$. Comparing $-2.96$ with zero is thus doubly wrong: because of the
+understated standard error, and because the null expectation is not zero.
 
 \subsection{Three consequences of one and the same conditioning}
 
 \paragraph{(i) The bootstrap does not help.} The natural reaction to a
-suspiciously small OLS standard error is to bootstrap over the event points. On
+suspiciously small OLS standard error is a nonparametric pairs bootstrap over the
+event points. On
 the base-2 data, a bootstrap over $20\,000$ resamples gives median $-2.948$,
 standard deviation $0.385$ and a $95\%$ interval $[-3.809,\,-2.300]$ lying
 entirely below zero; the proportion of negative values is $100\%$. This is not a
@@ -1517,13 +1859,21 @@ $\max_i|r_i|=6.347$, where $r_i=i-\hat\lambda(t_i-t_0)$, with a simulation of an
 function is ``smoother than Poisson''. Against the correct null
 distribution---conditioning on $N-1$ events and estimating $\lambda$ from the
 last of them---the median is $5.117$ and the two-sided significance level is
-$0.529$. The observation is entirely ordinary.
+$0.529$. The observation is entirely ordinary. An unnormalized supremum is
+insensitive near the pinned ends, so we also checked the version standardized by
+the bridge variance, $\max_i|r_i|/\sqrt{(N-1)u_i(1-u_i)}$ with
+$u_i=(t_i-t_0)/(t_{N-1}-t_0)$ over the interior events, under the same null law:
+it gives $3.45$ with $p=0.194$, again an ordinary value (tag~[S29]).
 
 \paragraph{(iii) The ``mid-range deficit''.} Estimating $\lambda$ from the last
 event forces the residual $r$ to vanish at both ends ($r(t_0)=r(t_N)=0$ under
 the correct numbering), turning its trajectory into an analogue of a Brownian
-bridge, for which a negative excursion in the middle of the range arises of its
-own accord. The observed mean excursion over the middle half of the range is
+bridge. Pinning the ends sets the typical size of an excursion in the middle of
+the range, but not its sign: the bridge is asymptotically symmetric (with
+$N-1=49$ the asymmetry is negligible), and a negative excursion is no more likely
+than a positive one of the same size. The observed mean of the residuals $r_i$ at
+the events in the middle half of the $t$-axis, that is, with
+$u_i\in[1/4,3/4]$, is
 $-3.13$ against a simulation median of $-0.012$ and $p=0.272$; the proportion of
 replications with a negative mean excursion is $0.502$, so there is no
 systematic deficit. The trajectory of the residual process itself, together with
@@ -1532,9 +1882,16 @@ the simulation band, is shown in Figure~\ref{fig:bridge}.
 \begin{figure}[t]
 \centering
 \includegraphics[width=.78\textwidth]{fig_resid_bridge.pdf}
-\caption{The residual process $r(t)$ for base $b=2$ together with the
-$5$--$95\%$ quantile band of the simulations and the simulation median. The
-trajectory stays inside the band.}
+\caption{The residual process $r(t)$ for base $b=2$ together with the pointwise
+$5$--$95\%$ quantile band and the median of the simulations. The band is built for
+the same step function $r(t)=\#\{t_i\le t\}-\hat\lambda(t-t_0)$ under the null law of
+\S\ref{sec:sameerror}: $49$ uniform points on $(t_0,\ln X_{\mathrm{ver}}]$,
+$\hat\lambda$ from the last of them. The trajectory leaves the band near
+$t\approx16.9$, where $r=-6.35$ against a pointwise $5\%$ quantile of $-3.85$ (the
+band drawn; an independent simulation~[S29] gives $-3.81$). A
+pointwise exit says nothing about significance: for the whole trajectory the
+standardized supremum gives $p=0.194$, the plain one $p=0.529$
+(\S\ref{sec:sameerror}, tag~[S29]).}
 \label{fig:bridge}
 \end{figure}
 
@@ -1544,7 +1901,7 @@ Base~2 is one of the two bases of the main set with a published frontier (the
 other is $b=10$, \S\ref{sec:frontiers}); for it a scheme~B analysis is possible
 \emph{using the full exposure} rather than only the conditional one. With
 $T=\ln X_{\mathrm{ver}}$ we obtain
-$\hat\lambda=N/(T-t_0)=2.7960$ against $\eg/\ln2=2.5695$, that is,
+$\hat\lambda=(N-1)/(T-t_0)=2.7960$ against $\eg/\ln2=2.5695$, that is,
 $\hat\kappa_2=1.9381$ with an exact $95\%$ Garwood interval $[1.434,\,2.562]$
 and a Poisson $p$-value of $0.593$ (doubled tail; under the mid-$p$ convention,
 $0.545$---the convention must be stated here, since the difference is
@@ -1577,14 +1934,23 @@ $\sum_{p\le x}1/p=\ln\ln x+\mathfrak M+o(1)$ gives
 C_0=\frac{\eg}{\ln2}\bigl(E+c_2\mathfrak M\bigr).
 \]
 With the measured $c_2=0.96$ (\S\ref{sec:second}) we get $C_0=-2.78$; direct
-summation over $p\le10^8$ gives the same value. Allowing for the numbering of
-events from zero ($-1$) and for the linear approximation of the term
-$c_2\ln\ln x$ over the same $50$ points ($+1.80$), the expected intercept is
-close to $-1.98$---of the same sign as the observed one (tag~[S22]). Moreover,
-the value of $C_0$ is determined by small $p$, where the heuristic does not
-apply. Therefore what bears on the structure is not the sign of $C_1$ but only
-the correct null distribution (\S\ref{sec:sameerror}, $p=0.57$): the intercept
-$C_1$ is a parameter of the fit and calls for no substantive interpretation.
+summation over $p\le10^8$ gives the same value. The constant $C_0$ itself depends
+strongly on the treatment of small $p$, where probability~\eqref{eq:probp}
+exceeds one: with the probabilities capped at one it becomes $C_0=-5.05$
+(tag~[S30]). The intercept of the regression is even less $C_0$: it depends in
+addition on the numbering of events, on the linearization of the term
+$c_2\ln\ln x$ and on the conditioning on the number of events. A direct check is
+more reliable. Let the heuristic itself generate the Mersenne
+exponents---Bernoulli trials over the primes $p\le X_{\mathrm{ver}}$ with
+probability~\eqref{eq:probp} at the measured $c_2$---and condition on $50$
+events. The intercept of the same regression then has median $-2.52$ and a
+$5$--$95\%$ range of $[-5.20,\,-0.15]$, and the observed $-2.963$ lies at its
+quantile $0.385$; with Wagstaff's refinement ($a=2$ or $6$) the median is
+$-2.32$ and the quantile $0.343$ (tag~[S28]). The second-order heuristic predicts
+a negative intercept of the same size as the observed one. What bears on the
+structure is not the sign of $C_1$ but only the correct null distribution
+(\S\ref{sec:sameerror}, $p=0.57$): the intercept $C_1$ is a parameter of the fit
+and calls for no substantive interpretation.
 
 \section{Structural corrections}\label{sec:struct}
 
@@ -1606,8 +1972,19 @@ $\ell_{\mathrm B}=\sum_b\bigl[K_b\ln\mu_b-\mu_b-\ln K_b!\bigr]$ with
 $\mu_b=\kappa C_b D_b/\ln b$; the previous version used the scheme~A
 likelihood~\eqref{eq:loglik}, which is incompatible with \S\ref{sec:scheme}. The
 results are in Table~\ref{tab:struct}. No parametrization gives a significant
-improvement; the BIC-based Bayes factors at $n=K=203$ overwhelmingly support the
-base model.
+improvement; the BIC-based Bayes factors at $n=K=203$ strongly support the base
+model against models~II and~IV ($112$ and $1112$) and moderately against~III
+($10.6$; at $n=15$, $2.9$; tag~[S30]).
+
+Models~II--IV formalize the folklore notion of ``lucky'' bases through the
+divisors of $b\pm1$, after the pattern of a Hardy--Littlewood singular series.
+Theory predicts no such factor: for an odd prime $p\nmid b-1$ the primes
+$q\mid b-1$ and $q\mid b+1$ do not divide $\Rb(p)$, since $\Rb(p)\equiv p$ and $\Rb(p)\equiv1\pmod q$ respectively, but all
+primes $q<2p+1$ behave in the same way for every~$b$ (\S\ref{sec:data}), and this
+gain is already part of the common factor $\eg\ln(2p)$. The heuristic predicts
+$C_b\equiv1$, so this section tests the folklore rather than the theory; the
+substantive second-order dependence on the base is analysed
+in~\S\ref{sec:second}.
 
 \begin{table}[t]
 \centering
@@ -1674,10 +2051,14 @@ to the unknown frontier (Remark~\ref{rem:inhom}; the likelihood of the count
 alone is inadmissible here: it discards the positions of the events, which are
 the only thing that determines $c_1,c_2$). The result: $\hat\kappa=1.748$,
 $\hat c_1=0.75$, $\hat c_2=-1.44$; the likelihood ratio against $c_1=c_2=0$ is
-$2.03$ on two degrees of freedom, $p=0.36$ (tag~[S17]). There is no significant
-improvement. The estimate $\hat c_1$ is strongly correlated with $\hat c_2$ here
+$2.03$ on two degrees of freedom, $p=0.36$ (tag~[S17]). Since $\hat c_1$ and
+$\hat c_2$ are strongly correlated, the $\chi^2_2$ asymptotics are not guaranteed
+here, and we calibrated them by a parametric bootstrap of the conditional model:
+$p=0.366$ from $10\,000$ replications, $95\%$ quantile $5.93$ against $5.99$ for
+$\chi^2_2$ (tag~[S30]). There is no significant improvement. The estimate $\hat c_1$ is strongly correlated with $\hat c_2$ here
 and is not informative on its own: the one-parameter model~\eqref{eq:lam2} on the
-same data gives $\hat c=-0.40$ (\S\ref{sec:second}).
+same data gives $\hat c=-0.40$ in the integral form and $1.03$ with the exposure
+summed over the primes (\S\ref{sec:second}).
 
 \section{The second-order term of the heuristic itself}\label{sec:second}
 
@@ -1685,7 +2066,7 @@ So far we have tested the constant-intensity model~\eqref{eq:lam}. But the LPW
 heuristic itself predicts an intensity that is \emph{not} constant at
 finite~$n$, and this changes the meaning of comparing $\hat\kappa$ with $\eg$.
 
-\paragraph{Derivation.} Let $p$ be prime, $p\nmid b-1$, and let $q$ be a prime
+\paragraph{Derivation.} Let $p$ be an odd prime, $p\nmid b-1$, and let $q$ be a prime
 divisor of $\Rb(p)$. Then $b$ has order $p$ modulo $q$, whence $q\equiv1\pmod p$,
 and since $\Rb(p)$ is odd, $q\equiv1\pmod{2p}$. Hence $\Rb(p)$ has no prime
 divisors below $2p+1$, and by Mertens' theorem the probability of primality is
@@ -1696,8 +2077,9 @@ of~\cite{wagstaff1983,t5k}:
 \Pr\bigl(\Rb(p)\ \text{prime}\bigr)\approx\frac{\eg\ln(a_bp)}{p\ln b}.
 \end{equation}
 Wagstaff's refinement for $b=2$ takes into account that $q\equiv\pm1\pmod8$ and
-gives $a=2$ for $p\equiv3\pmod4$ and $a=6$ for $p\equiv1\pmod4$.
-Multiplying~\eqref{eq:probp} by the density of primes $1/\ln n$ and passing to
+gives $a=2$ for $p\equiv3\pmod4$ and $a=6$ for $p\equiv1\pmod4$. In the
+continuous approximation, multiplying~\eqref{eq:probp} by the density of primes
+$1/\ln n$ and passing to
 $t=\ln n$, we get
 \begin{equation}\label{eq:lam2}
 \lambda_b(t)=\frac{\kappa}{\ln b}\Bigl(1+\frac{c_b}{t}\Bigr),\qquad
@@ -1787,32 +2169,59 @@ the difference; $31\,598$ primes $p\in[2\cdot10^4,\,4\cdot10^5)$, $Y=1000p$.}
 \toprule
 $b$ & 2 & 3 & 5 & 6 & 7 & 10 & 11 & 12 & 13 & 14 & 15 & 17 & 18 & 19 & 20\\
 \midrule
-calibration & 0.96 & 0.44 & 1.06 & 0.59 & 0.49 & 0.55 & 0.47 & 0.43 & 0.67 & 0.53 & 0.54 & 0.76 & 0.86 & 0.54 & 1.10\\
+calibration & 0.96 & 0.44 & 1.06 & 0.59 & 0.49 & 0.55 & 0.47 & 0.43 & 0.67 & 0.53 & 0.54 & 0.76 & 0.86 & 0.54 & 1.11\\
 prediction & 0.84 & 0.46 & 1.01 & 0.50 & 0.51 & 0.52 & 0.53 & 0.46 & 0.75 & 0.51 & 0.52 & 0.71 & 0.84 & 0.54 & 1.01\\
 $z$ & $+2.6$ & $-0.4$ & $+1.1$ & $+2.0$ & $-0.5$ & $+0.7$ & $-1.3$ & $-0.8$ & $-1.8$ & $+0.4$ & $+0.3$ & $+1.0$ & $+0.4$ & $-0.1$ & $+2.0$\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Exact conditional inference for a given $c$.} By
+\paragraph{Conditional inference for a given $c$.} By
 Remark~\ref{rem:inhom}, conditionally on $D_b$ the interior events form a
-Poisson process of intensity~\eqref{eq:lam2} on $(t_0,t_0+D_b)$. Since
-$\int_{t_0}^{t_0+D_b}(1+c/t)\,dt=D_b+c\ln\bigl((t_0+D_b)/t_0\bigr)$,
-Proposition~\ref{prop:cond} carries over verbatim:
+Poisson process with the same intensity on $(t_0,t_0+D_b)$. But the
+heuristic~\eqref{eq:probp} assigns a probability not on the $t$-axis but to each
+prime index, and the expected number of events in the window is a \emph{sum over
+the primes}. Proposition~\ref{prop:cond} therefore carries over in the form
 \begin{equation}\label{eq:pivotc}
-K\mid(D_b)_b\sim\Pois\bigl(\kappa S(c)\bigr),\qquad
-S(c)=\sum_b\frac{D_b+c_b\ln\bigl((t_0+D_b)/t_0\bigr)}{\ln b},
+K\mid(D_b)_b\sim\Pois\bigl(\kappa S_\Sigma(c)\bigr),\qquad
+S_\Sigma(c)=\sum_b\frac{1}{\ln b}\sum_{\substack{n_{\min}<p<n_{\max}\\ p\ \text{prime}}}
+\frac{\ln p+c_b}{p},
 \end{equation}
-the estimator is $K/S(c)$, and the Garwood interval~\eqref{eq:garwood} applies
-with $S$ replaced by $S(c)$.
+where the inner sum omits the deterministically composite cases $p\mid b-1$ and
+$p=s$ (Aurifeuillean, \S\ref{sec:bases}). The estimator is $K/S_\Sigma(c)$, and
+the Garwood interval~\eqref{eq:garwood} applies with $S$ replaced by
+$S_\Sigma(c)$. The Poisson law~\eqref{eq:pivotc} is exact for a Poisson process
+with intensity~\eqref{eq:lam2}. If the heuristic is read literally, as Bernoulli
+trials at the prime indices with probabilities~\eqref{eq:probp} capped at one,
+conditioning on the last find remains valid (the trials before it are independent
+of that event), but the conditional law of $K$ becomes Poisson-binomial:
+$\operatorname{Var}(K\mid D)/\mathbb E[K\mid D]=0.934$ on the full sample and
+$0.973$ at $n>10$ (tag~[S30]). The Poisson intervals and $p$-values are therefore
+conservative: the standard deviation is overstated by $3.5\%$ and $1.4\%$. A
+crude allowance for the primality of the numbers $2p+1$, which is common to all
+bases, brings the variance-to-mean ratio back close to one (Remark~\ref{rem:indep}). The continuous approximation~\eqref{eq:lam2} replaces this sum by
+an integral:
+\begin{equation}\label{eq:pivotcint}
+S(c)=\sum_b\frac{D_b+c_b\ln\bigl((t_0+D_b)/t_0\bigr)}{\ln b}.
+\end{equation}
+It is exact only asymptotically. By Mertens' first theorem
+$\sum_{p\le x}\ln p/p=\ln x+E+o(1)$ with $E=-1.3326\ldots$, and for origins
+$n_{\min}=2$--$19$ the integral overstates the exposure of a base by
+$0.39$--$1.42$ in $t$, $1.04$ on average; under lower truncation $n>10^2$ the
+difference is below one percent (tag~[S26]). The previous version used
+form~\eqref{eq:pivotcint}, which on the full sample and at $n>10$ understated the
+estimate by $9.0\%$ and $3.8\%$ respectively; below, form~\eqref{eq:pivotc} is
+taken as the main one.
 
 \begin{table}[t]
 \centering
-\caption{Exact conditional inference for several values of the second-order
-term~\eqref{eq:lam2}: the estimate $\hat\kappa=K/S(c)$ from~\eqref{eq:pivotc} and the
-exact two-sided $p$ against $\kappa=\eg$. ``Meas.'' are the measured $c_b$
-(tag~[S19]); ``W'' is Wagstaff's device. Truncation as in Table~\ref{tab:trunc}.
-Tags~[S16], [S20].}
+\caption{Conditional inference with the second-order term: the estimate
+$\hat\kappa$ and the exact two-sided $p$ against $\kappa=\eg$. ``$c{=}0$'' is the
+constant-rate model; ``meas., $\int$'' are the measured $c_b$ (tag~[S19]) with the
+integral exposure~\eqref{eq:pivotcint} of the previous version; ``meas., $\Sigma$''
+are the same $c_b$ with the exposure~\eqref{eq:pivotc} summed over the primes (the
+main variant); ``W, $\Sigma$'' is Wagstaff's device with the same sum. Truncation
+as in Table~\ref{tab:trunc}. Tags~[S20], [S26].}
 \label{tab:second}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -1820,13 +2229,16 @@ Tags~[S16], [S20].}
 \toprule
 & & \multicolumn{4}{c}{$\hat\kappa$} & \multicolumn{3}{c}{$p$}\\
 \cmidrule(lr){3-6}\cmidrule(l){7-9}
-truncation & $K$ & $c{=}0$ & $c{=}\ln2$ & meas. & W & $c{=}0$ & meas. & W\\
+truncation & $K$ & $c{=}0$ & meas., $\int$ & meas., $\Sigma$ & W, $\Sigma$
+& $c{=}0$ & meas., $\Sigma$ & W, $\Sigma$\\
 \midrule
-none & 203 & 1.838 & 1.625 & 1.620 & 1.453 & 0.672 & 0.185 & 0.003\\
-$n>10$ & 177 & 1.871 & 1.712 & 1.710 & 1.578 & 0.531 & 0.618 & 0.111\\
-$n>10^2$ & 141 & 1.830 & 1.704 & 1.703 & 1.595 & 0.771 & 0.632 & 0.201\\
-$n>10^3$ & 110 & 1.823 & 1.715 & 1.713 & 1.620 & 0.832 & 0.729 & 0.344\\
-$n>10^4$ & 75 & 1.789 & 1.695 & 1.690 & 1.612 & 1.000 & 0.702 & 0.421\\
+none & 203 & 1.838 & 1.620 & 1.780 & 1.618 & 0.672 & 1.000 & 0.178\\
+$n>10$ & 177 & 1.871 & 1.710 & 1.777 & 1.644 & 0.531 & 1.000 & 0.303\\
+$n>10^2$ & 141 & 1.830 & 1.703 & 1.724 & 1.615 & 0.771 & 0.740 & 0.261\\
+$n>10^3$ & 110 & 1.823 & 1.713 & 1.720 & 1.626 & 0.832 & 0.760 & 0.366\\
+$n>10^4$ & 75 & 1.789 & 1.690 & 1.693 & 1.614 & 1.000 & 0.712 & 0.429\\
+\midrule
+$n>10^4$, $N_b\ge1$ & 75 & 1.757 & 1.660 & 1.663 & 1.585 & 0.966 & 0.598 & 0.340\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1834,65 +2246,94 @@ $n>10^4$ & 75 & 1.789 & 1.695 & 1.690 & 1.612 & 1.000 & 0.702 & 0.421\\
 \paragraph{Results.} Table~\ref{tab:second} and the simulation check yield five
 conclusions.
 
-\emph{(i) Within the sequences the second-order term is barely determined.} The
-profile MLE of a common $c$ from the conditional likelihood~\eqref{eq:condinhom}
-on all the data is $-0.40$ with a $95\%$ interval $[-0.69,\,0.44]$ (the left end
-is the admissibility boundary $1+c/t_0>0$). This interval excludes $c=\ln2$
-(likelihood-ratio test, $p=0.017$), but the result is driven by the indices
-$n\le10$; see~(iii). Already at $n>10$ the interval widens to $[-1.68,\,2.48]$,
-and at $n>10^3$ to $[-5.3,\,20]$ (tag~[S16]): a shift in $c$ is compensated by a
-shift in $\kappa$. Therefore $c_b$ has to be taken from outside---from theory
-or, as here, from the calibration~\eqref{eq:cbemp}.
+\emph{(i) Within the sequences the second-order term is only weakly determined,
+but it does not contradict the calibration.} The profile MLE of a common $c$
+from the conditional likelihood with the exposure~\eqref{eq:pivotc} on all the
+data is $1.03$ with a $95\%$ interval $[-0.18,\,3.25]$: against $c=0$ we obtain
+$p=0.111$, against $c=\ln2$, $p=0.654$. At $n>10$ the estimate is $0.82$, close to
+the mean of the measured $c_b$ ($0.67$), but the interval widens to
+$[-1.15,\,5.19]$, and
+at $n>10^3$ the information practically vanishes (tag~[S26]): a shift in $c$ is
+compensated by a shift in $\kappa$. Therefore $c_b$ has to be taken from
+outside---from theory or, as here, from the calibration~\eqref{eq:cbemp}. In the
+previous version the same profile estimate with the integral
+form~\eqref{eq:pivotcint} gave $-0.40$, and the interval $[-0.69,\,0.44]$
+excluded $c=\ln2$ ($p=0.017$, tag~[S15]). That was an artifact of the
+approximation: near the lower end of the window the integral overstates the
+exposure, and the fit compensated with a negative~$c$.
 
-\emph{(ii) The inference about $\kappa$ depends on it more strongly than on the
-observation scheme.} At $n>10$, moving from $c=0$ to the measured $c_b$ lowers
-the estimate by $6$--$9\%$ (by $8.6\%$ at $n>10$ and by $5.5\%$ at $n>10^4$), and
-on the full sample by $11.9\%$. This is comparable to the price of the choice of
-observation scheme ($6.9\%$, \S\ref{sec:cost}) and exceeds the residual gap
-between $(M-B)/S$ and $\eg$ ($3.2\%$ on the full sample, $5.1\%$ at $n>10$).
-Comparing the constant-intensity estimate with $\eg$ is not a test of LPW at
-finite $n$: LPW itself predicts that such an estimate lies \emph{above} $\eg$.
+\emph{(ii) The inference about $\kappa$ depends on the second-order term as
+strongly as on the observation scheme.} Moving from the constant-intensity model
+to the measured $c_b$ lowers the estimate by $3.2\%$ on the full sample and by
+$5.0$--$5.8\%$ under truncation (tag~[S26]). This is comparable to the price of
+the choice of observation scheme ($6.9\%$, \S\ref{sec:cost}) and not smaller
+than the residual gap between $(M-B)/S$ and $\eg$ ($3.2\%$ on the full sample,
+$5.1\%$ at $n>10$). Comparing the constant-intensity estimate with $\eg$ is not a
+test of LPW at finite $n$: LPW itself predicts that such an estimate lies
+\emph{above} $\eg$, by $3$--$8\%$ (see~(v)).
 
 \emph{(iii) LPW with its own measured second-order term is consistent with the
-data.} With the measured $c_b$ and $n>10$ the exact $p$ lies within
-$0.62$--$0.73$; on the full sample it is $0.185$. With Wagstaff's inflated values
-one obtains $0.11$--$0.42$ at $n>10$ and $0.003$ on the full sample. The full
-sample includes $n\le10$, where expansion~\eqref{eq:lam2} is meaningless: at
-$n=2$ the factor $1+c/t$ equals $2$ already for $c=\ln2$, and the indices
-$2,3,5,7$ themselves are dictated by the arithmetic of small numbers. We
-therefore regard the inference at $n>10$ as the main one.
+data.} With the measured $c_b$ the exact $p$ lies within $0.598$--$1.000$ at every
+truncation level. With Wagstaff's inflated values one obtains $0.26$--$0.43$ at
+$n>10$ and $0.178$ on the full sample. The full sample includes $n\le10$, where
+for small $b$ the probability~\eqref{eq:probp} exceeds one (at $b=2$ for $p=3$,
+$5$ and $7$), and the indices $2,3,5,7$ themselves are dictated by the arithmetic of
+small numbers. We therefore regard the inference at $n>10$ as the main one; with
+the sum over the primes it practically coincides with the full-sample inference
+($1.777$ and $1.780$).
 
-\emph{(iv) The trend under truncation is explained by the second-order term.}
-For $c=0$ the estimate decreases monotonically as the lower bound grows, from
-$1.871$ at $n>10$ to $1.789$ at $n>10^4$ ($-4.4\%$). This is exactly what one
-expects from~\eqref{eq:lam2}: the mean of $1/t$ over the exposure falls as $t_0$
-grows. With the measured $c_b$ the same four estimates lie within
-$1.690$--$1.713$ (a range of $1.4\%$). The subsamples are nested, so this observation is illustrative
-rather than a separate test.
+\emph{(iv) The decrease under truncation is not explained by the second-order
+term.} For $c=0$ the estimate decreases as the lower bound grows, from $1.871$ at
+$n>10$ to $1.757$ at $n>10^4$ in the strictly consistent variant ($-6.1\%$; with
+the selection $N_b\ge2$, to $1.789$, $-4.4\%$). The previous version claimed that this
+decrease is predicted by~\eqref{eq:lam2} and disappears once it is taken into
+account: with the integral exposure~\eqref{eq:pivotcint} the four estimates at
+$n>10$ lay within $1.690$--$1.713$. We withdraw this claim: the levelling was
+produced by the same continuous approximation, which overstates the exposure most
+for small $n_{\min}$. With the sum over the primes the estimates are $1.777$,
+$1.724$, $1.720$ and $1.693$ ($1.663$ in the strictly consistent row $N_b\ge1$);
+from $n>10$ to $n>10^4$ they decrease by $6.4\%$ in the strictly consistent
+variant ($4.7\%$ with the selection $N_b\ge2$)---as much as for $c=0$. If
+the data are generated by the heuristic itself, the constant-intensity model
+overstates $\kappa$ almost uniformly, by $5.7$--$8.3\%$ at $n>10$ (tag~[S27]), so
+the heuristic predicts no decrease. The decrease itself is within the noise of
+nested subsamples: under scheme~B a fall at least as large occurs with probability
+$0.229$ (\S\ref{sec:robust}).
 
 \emph{(v) The uncertainty of $c_b$ and a check of the method on simulated data.}
 The calibration error ($\pm0.045$ per base) has practically no effect on the
 inference: its contribution to the standard deviation of $\hat\kappa$ is
-$0.003$--$0.004$, against the Poisson $0.12$. The joint $95\%$ interval is
-$[1.41,\,1.86]$ on the full sample and $[1.47,\,1.97]$ at $n>10$, nearly the same
-as the Garwood interval. Using the prediction $c^{\mathrm{th}}_b$ instead of the
-calibration gives $\hat\kappa=1.631$ and $1.717$ (tag~[S24]). The method itself
-was checked on simulated data with known $\kappa=\eg$ and $c_b$ (tag~[S25],
-$10\,000$ replications). A process with intensity~\eqref{eq:lam2} was generated
-on the actual $t_0$, with the frontier placed one mean gap beyond the actual last
-find, and the same analysis was applied to it. The estimator $K/S(c)$ is
-unbiased: $\mathbb E[\hat\kappa]/\kappa=0.999$--$1.009$ under truncation up to
-$n>10^3$. The coverage of the Garwood interval is $0.955$--$0.960$. On the same
-data the constant-intensity model overstates $\kappa$ by $13\%$ (by $9\%$ at
-$n>10$), and its $95\%$ interval covers the true value in only $56\%$
-(respectively $78\%$) of cases. At $n>10^4$ the estimator $K/S(c)$ is biased
-upward by $2.6\%$; this is the selection of bases by $N_b\ge2$ that the caption
-of Table~\ref{tab:trunc} warns about.
+$0.003$--$0.004$, against the Poisson $0.12$. The joint $95\%$ interval with the
+exposure~\eqref{eq:pivotc}---a mixture of Garwood intervals over the scatter of
+$c_b$: the lower end solves
+$\langle\Pr(\Gam(K,1)\le L\,S_\Sigma(c))\rangle_c=0.025$, the upper end
+$\langle\Pr(\Gam(K+1,1)\le U\,S_\Sigma(c))\rangle_c=0.975$---is $[1.543,\,2.042]$
+on the full sample and $[1.525,\,2.059]$ at $n>10$, and agrees to the third digit
+with the Garwood interval at fixed $c_b$: the calibration error changes the
+exposure by only $0.21\%$ (tag~[S26]). The previous version quoted a Jeffreys-type
+interval, $[1.546,\,2.036]$; it is narrower than Garwood's, which is wrong for an
+interval that accounts for additional uncertainty. Using the
+prediction $c^{\mathrm{th}}_b$ instead of the calibration gives
+$\hat\kappa=1.789$ and $1.784$ (tag~[S26]). The method was checked on data
+generated by the heuristic itself at the level of prime indices (tag~[S27],
+$10\,000$ replications). Each prime $p>n_{\min}$ produced an event with
+probability~\eqref{eq:probp} at $\kappa=\eg$ and the measured $c_b$; the frontier
+was placed one mean gap beyond the actual last find, and the same analysis was
+applied. The estimator $K/S_\Sigma(c)$ is unbiased:
+$\mathbb E[\hat\kappa]/\kappa=0.995$--$1.009$ under truncation up to $n>10^3$, and
+the coverage of the Garwood interval is $0.955$--$0.961$. On the same data the
+integral form~\eqref{eq:pivotcint} understates $\kappa$ by $9\%$ on the full
+sample (coverage $0.723$) and by $3\%$ at $n>10$. The constant-intensity model
+overstates $\kappa$ by $3$--$8\%$. At $n>10^4$ both estimators with the
+second-order term are biased upward by $2.4$--$2.5\%$; this is the selection of
+bases by $N_b\ge2$ that the caption of Table~\ref{tab:trunc} warns about. The
+earlier check (tag~[S25]) generated data from the continuous
+intensity~\eqref{eq:lam2} and so could not detect the error of the integral form.
 
 \paragraph{Consequence for the folklore.} The term $c_b\ln\ln x$ in the counting
 function also explains the observation with which this work began: the
 normalized frequencies lie below $\emg$ and converge to it slowly from below.
-Under~\eqref{eq:lam2} the slope of $t_k$ against $k$ is
+In the continuous approximation~\eqref{eq:lam2} the slope of $t_k$ against $k$ is
 $\emg\ln b/(1+c_b\langle1/t\rangle)$, so the normalized frequency is depressed by
 the factor $1+c_b\langle1/t\rangle$, where
 $\langle1/t\rangle=\ln(t_N/t_0)/(t_N-t_0)$. With the origin fixed, this decays as
@@ -1906,10 +2347,13 @@ from the heuristic itself, not from~$\kappa\ne\eg$.
 into two: one about the leading term, $\kappa=\eg$, and one about the
 second-order term, $c_b$. The latter is barely determined by the positions of
 the finds, but it can be calibrated from the actual divisibility of
-$\Rb(p)$~\eqref{eq:cbemp}. With the measured $c_b$ and $n>10$ the estimate is
-$\hat\kappa\approx1.69$--$1.71$ ($4$--$5\%$ below $\eg$) with exact
-$p=0.62$--$0.73$, and it does not depend on the lower truncation bound: LPW is
-not rejected. The values of $c_b$ themselves are predicted from first
+$\Rb(p)$~\eqref{eq:cbemp}. The expected number of finds must then be summed over
+the prime indices: at small $n$ the integral with density $1/\ln n$ overstates
+the exposure by the Mertens constant. With the measured $c_b$ the estimate is
+$\hat\kappa\approx1.66$--$1.78$ at every lower truncation ($0.1$--$7\%$ below
+$\eg$) with exact $p\ge0.598$: LPW is not rejected. The decrease of the
+estimate under truncation is not removed by this term and is within the noise.
+The values of $c_b$ themselves are predicted from first
 principles---from the primality of the numbers $2kp+1$ and the quadratic
 character of $b$~\eqref{eq:cbth}---with correlation $0.976$, and the method has
 been validated on simulated data. What remains open is a closed-form expression
@@ -1936,47 +2380,61 @@ and the correct conditional null distribution is $5.6$ times wider than the
 nominal one (\S\ref{sec:sameerror}). The classification of bases into ``lucky''
 and ``unlucky'' flips when the form of the estimator is changed on unchanged
 data; for two of the fifteen bases even the sign of the deviation from $\emg$
-flips.
+flips. The largest discrepancy, for base~18, is created by a single anomalous gap
+after an origin fixed by arithmetic.
 
 \item The main result is the exact conditional likelihood for scheme~B. The
 unrecorded frontiers are Neyman--Scott nuisance parameters, and the profile
 estimator $M/S$ is inconsistent. The position $D_b$ of the last event is
-sufficient for the frontier, and conditionally on it $N_b-1$ is distributed as
-$\Pois(\lambda_bD_b)$ under any rule for choosing the frontier that does not
-depend on the finds. The same result is obtained by integrating over the
+sufficient for the frontier, and conditionally on it $N_b-1$ is distributed in
+the Poisson model as $\Pois(\lambda_bD_b)$ under any rule for choosing the
+frontier that does not depend on the finds; the condition concerns the actual
+search horizon, while the published bound may depend on the finds
+(Remark~\ref{rem:weaker}). The same result is obtained by integrating over the
 frontier against the invariant measure $dW_b$. Hence
 $M-B\mid D\sim\Pois(\kappa S)$: the correct pivot under a fixed frontier is
 Poisson rather than $\Gam(M,1)$, the correct pooled estimator is $(M-B)/S$
 rather than $(M-1)/S$, and confidence intervals are available in closed form
 without simulation-based inversion. The conditional likelihood costs one event
 per base, not one event in total---an exact analogue of the loss of one degree
-of freedom per group in the Neyman--Scott example. Distinguishing such schemes
-goes back to reliability theory; what is new here is the case of an
-undocumented frontier, where the exposure cannot be taken from a protocol and
-has to be reconstructed from the finds (Remark~\ref{rem:priority}).
+of freedom per group in the Neyman--Scott example. The distinction between such
+schemes and the apparatus itself go back to reliability theory and to the theory
+of conditional likelihood; what is new here is the setting with an undocumented
+frontier, where the exposure cannot be taken from a protocol and has to be
+reconstructed from the finds (Remark~\ref{rem:priority}).
 
-\item This gives $\hat\kappa=1.838$ with an exact $95\%$ interval
-$[1.594,\,2.109]$ and $p=0.672$ against $\eg$. The reported ten-percent excess
-over LPW---including our own in an earlier version of this work---comes mainly
-from the observation scheme: moving to scheme~B reduces it to $3.2\%$, and the
-remainder is explained by the second-order term of the heuristic itself
-(item~7). Under scheme~B the old Gamma pivot rejects a true hypothesis in
-$11$--$17\%$ of cases. Moving to scheme~B removes the upward trend of the pooled
-estimate under truncation in $n_{\min}$; the remaining decline
-($1.871\to1.789$ at $n>10$) is removed by the second-order term.
+\item Under (A1) this gives $\hat\kappa=1.838$ with an exact $95\%$ interval
+$[1.594,\,2.109]$ and $p=0.672$ against $\eg$. Under (A1) the reported
+ten-percent excess over LPW---including our own in an earlier version of this
+work---comes mainly from the observation scheme: moving to scheme~B reduces it to
+$3.2\%$, and the remainder is explained by the second-order term of the heuristic
+itself (item~7). Under scheme~B the old Gamma pivot rejects a true hypothesis in
+$11$--$17\%$ of cases. Without (A1) the unknown stopping rule enters through a single parameter---the
+mean gap $m$ between the last find and the frontier---and LPW is not rejected for
+any $m$ from $0$ to $3.2$ ($2.8$ with the second-order term), that is, both under
+stopping at a find and under drought $g=2$; only the residual excess depends on $m$, $10.8\%$ at $m=0$ and
+zero at $m=1.42$. Moving to scheme~B removes the upward trend of the pooled
+estimate under truncation in $n_{\min}$; both that trend and the remaining
+decline ($1.871\to1.757$ from $n>10$ to $n>10^4$; under scheme~B a fall at least as
+large has probability $0.229$) are within the noise of nested subsamples.
 
 \item Besides the Poisson model and contiguous coverage of the search, the
 inference about the observation scheme rests on assumption (A1): the frontier
-was chosen without regard to the finds. It cannot be checked from the finds
-themselves: $(M-1)/S$ and $(M-B)/S$ are functions of the same statistics and
-differ by $6.9\%$. Without (A1) only the upper bound $M/S$ survives rigorously
-(Wald's identity); the rule ``stop after a long stretch without finds'' biases
-even $(M-B)/S$ upward, so there is no two-sided bracket. The four documented
-frontiers allow (A1) to be checked against data and point, if anywhere, to
-stopping close to a find rather than ``after a drought''; under such a deviation
-the correct estimate lies between $(M-B)/S$ and $M/S$, and both bounds are
-consistent with LPW; the hybrid estimate with the known frontiers for $b=2$ and
-$b=10$ is $1.853$. The practical consequence is the need to publish the search
+was chosen without regard to the finds. It can practically not be checked from
+the finds themselves: $(M-1)/S$ and $(M-B)/S$ are functions of the same statistics and
+differ by $6.9\%$. Without (A1) only the upper bound $M/S$ in the sense of
+expectations survives rigorously (Wald's identity); the rule ``stop after a long
+stretch without finds'' biases even $(M-B)/S$ upward, so there is no two-sided
+bracket, but such a violation creates no excess over LPW. The four
+documented frontiers do not settle (A1): three of them predate the data snapshot
+and give only lower bounds on the gap, while the synchronous $b=2$ frontier is
+consistent with (A1). Under a deviation toward stopping close to a find the
+correct estimate lies, in the sense of expectations, between $(M-B)/S$ and $M/S$,
+and both bounds are consistent with LPW; the hybrid estimate with the known
+frontier for $b=2$ is $1.846$ ($1.853$ when $b=10$ is added), and the estimate over the common window
+$n\le2\cdot10^5$, covered with certainty, is $1.890$. Gaps in the search bias the
+estimate downward; for LPW to be rejected from above there would have to be at
+least $23$ of them. The practical consequence is the need to publish the search
 frontiers $L_b$ (and, with them, the protocols of sieving completeness), as
 GIMPS does for $b=2$. The example of base~$5$, where the probable primes found
 in 2024 lie beyond an unsearched gap, shows that this is not a formality.
@@ -1985,21 +2443,25 @@ in 2024 lie beyond an unsearched gap, shows that this is not a formality.
 base-dependent corrections are not required. But both of these are statements
 about the low sensitivity of the tests: the conditional multinomial homogeneity
 test resolves only a spread of $\kappa_b$ with a coefficient of variation of
-order $0.37$, and the pooled test only deviations of the constant of at least
-$21.3\%$ (two-sided variant). Attaining a sensitivity of $10\%$ would require
+order $0.37$, and the pooled test only an excess of the constant of at least
+$21.3\%$ and a deficit of at least $19.2\%$ (two-sided variant). Attaining a sensitivity of $10\%$ would require
 the search frontiers to grow by a factor of about $10^{20}$.
 
 \item The LPW heuristic itself predicts at finite $n$ an intensity
 $(\kappa/\ln b)(1+c_b/t)$, so comparing the constant-intensity estimate with
-$\eg$ is not a test of LPW. The positions of the finds barely determine $c_b$,
-but it can be measured directly from the divisibility of $\Rb(p)$:
+$\eg$ is not a test of LPW. The positions of the finds determine $c_b$ only
+weakly, but it can be measured directly from the divisibility of $\Rb(p)$:
 $c_b=0.43$--$1.11$, with mean $0.67$, whereas Wagstaff's device gives values
-twice as large. With the measured $c_b$ at $n>10$ the estimate is $1.69$--$1.71$
-at every truncation level, LPW is not rejected ($p=0.62$--$0.73$), and the ``slow
-convergence from below'' is explained. The $c_b$ themselves are predicted from
-the primality of the numbers $2kp+1$ and the quadratic character of $b$
-(correlation with the calibration $0.976$) and depend only on the squarefree
-part of $b$; the simulation check confirms that the method is unbiased. A
+twice as large. The exposure must then be summed over the prime indices: at small
+$n$ the integral with density $1/\ln n$ overstates it by the Mertens constant and
+would understate the estimate by $9.0\%$. With the measured $c_b$ the estimate
+under (A1) is $1.66$--$1.78$ at every truncation level, LPW is not rejected
+($p\ge0.598$), and the ``slow convergence from below'' is explained; the
+decrease of the estimate under truncation is not removed by this term. The $c_b$
+themselves are predicted from the primality of the numbers $2kp+1$ and the
+quadratic character of $b$ (correlation with the calibration $0.976$) and depend
+only on the squarefree part of $b$; a simulation check on data generated by the
+heuristic at the level of prime indices confirms that the method is unbiased. A
 closed-form expression for $c_b$ and the correction from higher power-residue
 characters remain open.
 \end{enumerate}
@@ -2026,9 +2488,9 @@ from GIMPS.}
 $b$ & OEIS & primes & $n_{\min}$ & $n_{\max}$ & last addition\\
 \midrule
 2 & A000043 & 52 & 2 & 136\,279\,841 & GIMPS, Oct.\ 2024\\
-3 & A028491 & 23 & 3 & 8\,530\,117 & P.~Bourdelais\\
-5 & A004061 & 19 & 3 & 3\,300\,593 & P.~Bourdelais\\
-6 & A004062 & 17 & 2 & 3\,360\,347 & P.~Bourdelais\\
+3 & A028491 & 23 & 3 & 8\,530\,117 & R.~Propper, 9 Nov.\ 2023\\
+5 & A004061 & 19 & 3 & 3\,300\,593 & R.~Propper, 2 Jan.\ 2022\\
+6 & A004062 & 17 & 2 & 3\,360\,347 & R.~Propper, 30 Oct.\ 2023\\
 7 & A004063 & 10 & 5 & 1\,264\,699 & P.~Bourdelais\\
 10 & A004023 & 11 & 2 & 8\,177\,207 & Propper and Batalov, May 2021\\
 11 & A005808 & 13 & 17 & 1\,868\,983 & P.~Bourdelais\\
@@ -2060,9 +2522,11 @@ independent implementation\footnote{A hybrid CPU/GPU searcher: segmented sieving
 by small divisors, trial factoring in Montgomery arithmetic, PRP testing via GMP
 and GWNUM/IBDWT. The source code and the run logs are in the same repository,
 scripts \texttt{verify\_sequences.sh} and \texttt{compare\_verify.py}.} tested
-\emph{all} indices $n<10^4$ consecutively, not only those listed in OEIS. Every
-negative verdict was recomputed by a second, independent backend (a blanket
-double-check, as in GIMPS) so as to rule out a lost find.
+\emph{all} indices $n<10^4$ consecutively, not only those listed in OEIS.
+Negative verdicts are of two kinds: a divisor found (sieving and trial division;
+a certificate of compositeness) and a negative Fermat test. In the final run every
+verdict of the second kind was recomputed by a second, independent backend (a
+blanket double-check, as in GIMPS) so as to rule out a lost find.
 
 The result: $153$ terms confirmed, none spurious, none missing, no disagreement
 between backends---across all twenty bases. Coverage is uneven across bases
@@ -2070,15 +2534,19 @@ between backends---across all twenty bases. Coverage is uneven across bases
 for $128$ confirmed indices out of $233$ known. Above $10^4$ a complete
 recomputation is computationally out of reach, and there we still rely on OEIS.
 
-We note that this recomputation was not a formality: on the first run the
-independent implementation declared $R_{23}(3181)$ composite, disagreeing with
-A204940. Investigation traced the error to the implementation itself---a spike of
-FFT rounding error on the last iteration, after the last periodic check---and not
-to the OEIS data. After the fix no disagreements remained. We report this episode
-as an illustration of the thesis of \S\ref{sec:data} on completeness of
-coverage: a false ``composite'' is
-invisible without recomputation, and that is exactly why frontiers and
-verification protocols should be published.
+We note that this recomputation was not a formality. The first run used a
+sampled double-check ($5\%$ of verdicts, the default), and the independent
+implementation declared $R_{23}(3181)$ composite, disagreeing with A204940; the
+disagreement was found by the comparison with OEIS, not by the double-check.
+Investigation traced the error to the implementation itself---a spike of FFT
+rounding error on the last iteration, after the last periodic check---and not to
+the OEIS data. After the fix (a rounding-error check after the loop and a
+fall-back to GMP when GWNUM fails) the recomputation was repeated with a blanket
+double-check, and no disagreements remained. We report this episode as an
+illustration of the thesis of \S\ref{sec:data} on completeness of coverage: a
+single negative verdict is unreliable, a false ``composite'' is invisible without
+recomputation, and that is exactly why frontiers and verification protocols
+should be published.
 
 \section*{Declarations}
 
@@ -2133,8 +2601,19 @@ computation), its theoretical prediction by \texttt{cb\_theory.py}
 of the method by \texttt{sim\_second\_order.py} (tags~[S24], [S25]), and the
 check of (A1) against the documented frontiers and the hybrid estimate by
 \texttt{frontiers.py} (tag~[S18]; the sources of the
-frontiers are listed in the script itself). The output of these scripts is saved
-in \texttt{results\_v3.txt}. The scripts \texttt{check\_numbers\_v3.py} and
+frontiers are listed in the script itself). The exposure of the second-order term
+summed over the primes, the profile estimate of a common $c$, the simulation
+check with a generator at the level of prime indices and the simulation of the
+intercept of \S\ref{sec:sameerror} are computed by \texttt{lpw\_prime\_sum.py}
+(tags~[S26]--[S28], seed $20260930$); the additional robustness checks
+(significance of the truncation profile, the common frontier $2\cdot10^5$, the
+choice of origin, base~18, power thresholds for a deficit,
+Figure~\ref{fig:bridge}) by \texttt{robust\_extra.py} (tag~[S29]); the
+computations requested in the editor's decision (the family $(M-Bm)/S$, the
+sensitivity to gaps, the Poisson-binomial law, the covariance of the bases, the
+selection on the number of finds, the bootstrap for model~\eqref{eq:logcorr} and
+others) by \texttt{revision\_v32.py} (tag~[S30], seed $20261001$). The output of
+these scripts is saved in \texttt{results\_v3.txt}. The scripts \texttt{check\_numbers\_v3.py} and
 \texttt{check\_all\_numbers\_v3.py} check all decimal numbers of both versions of
 the paper against it.
 
@@ -2145,8 +2624,8 @@ b-files, returning a non-zero exit code on any disagreement
 (Appendix~\ref{app:data}).
 
 \emph{A caveat on the Monte Carlo quantities.} The main result~\eqref{eq:resB},
-the intervals of Table~\ref{tab:bases}, Table~\ref{tab:trunc} and
-Table~\ref{tab:power} are \emph{deterministic}: they are obtained by exact
+the intervals of Table~\ref{tab:bases}, and Tables~\ref{tab:mfamily},
+\ref{tab:trunc} and~\ref{tab:power} are \emph{deterministic}: they are obtained by exact
 inversion of the Poisson distribution and do not depend on the random number
 generator. Only Tables~\ref{tab:mc}, \ref{tab:calib} and~\ref{tab:stop}, the
 exact $p$-value of the homogeneity test and its power curve, and the null
@@ -2193,8 +2672,8 @@ conjectures}, J. Integer Seq. \textbf{28} (2025), article 25.7.2.
 
 \bibitem{dominguez2026} J.~Dominguez, \emph{Arithmetic bias in the distribution
 of Mersenne prime exponents and the divisor structure of $p-1$}, preprint,
-arXiv:2603.08994 (2026). \url{https://arxiv.org/abs/2603.08994}
-(accessed 27 August 2026).
+arXiv:2603.08994v6 (2026). \url{https://arxiv.org/abs/2603.08994}
+(accessed 1 October 2026).
 
 \bibitem{neymanscott1948} J.~Neyman and E.~L. Scott, \emph{Consistent estimates
 based on partially consistent observations}, Econometrica \textbf{16} (1948),
@@ -2206,6 +2685,15 @@ conditional maximum-likelihood estimators}, J. Roy. Statist. Soc. Ser.~B
 \textbf{32} (1970), no.~2, 283--301.
 \href{https://doi.org/10.1111/j.2517-6161.1970.tb00842.x}{DOI:
 10.1111/j.2517-6161.1970.tb00842.x}.
+
+\bibitem{gallagher1976} P.~X. Gallagher, \emph{On the distribution of primes in
+short intervals}, Mathematika \textbf{23} (1976), no.~1, 4--9.
+\href{https://doi.org/10.1112/S0025579300016442}{DOI:
+10.1112/S0025579300016442}.
+
+\bibitem{maier1985} H.~Maier, \emph{Primes in short intervals}, Michigan Math. J.
+\textbf{32} (1985), no.~2, 221--225.
+\href{https://doi.org/10.1307/mmj/1029003189}{DOI: 10.1307/mmj/1029003189}.
 
 \bibitem{jha2026} A.~Jha, \emph{The Poisson tail conjecture for primes in short
 intervals}, preprint, arXiv:2605.23014 (2026).

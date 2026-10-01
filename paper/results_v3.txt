@@ -1,5 +1,6 @@
 # results_v3.txt — вывод lpw_second_order.py, cb_empirical.py, cb_theory.py,
-# sim_second_order.py, frontiers.py и stopping_rules.py (версия 3 статьи).
+# sim_second_order.py, frontiers.py, stopping_rules.py, lpw_prime_sum.py и
+# robust_extra.py и revision_v32.py (версия 3.2 статьи с правками по рецензиям).
 # Собирается командой: bash make_results_v3.sh
 
 [S14] Wagstaff-type <ln a_b> over primes p in [1e5, 2e5]
@@ -122,14 +123,109 @@
 [S18] hybrid estimator, main set (full likelihood for b=2 [tested once], b=10)
   K=205 S=110.6154 kappa=1.8533 95% [1.6082; 2.1251] p=0.588
 
+[S18] hybrid estimator, main set, full likelihood for b=2 [tested once] only
+  K=204 S=110.4946 kappa=1.8462 95% [1.6016; 2.1177] p=0.626
+
 [S18] base 5 with the 2024 PRPs 4939471, 5154509 (range above 3300593 NOT certified)
   K=205 S=110.7193 kappa=1.8515 95% [1.6067; 2.1231] p=0.597  (sensitivity only)
 
 [S13] R=20000, seed=20260924
-rule             (M-1)/S   (M-B)/S   EM/kES    size
-A1-fixed          1.0688    0.9999   1.0737  0.0455
-A1-random         1.0551    1.0000   1.0582  0.0426
-stop-at-find      0.9963    0.9362   1.0003  0.1653
-drought-0.5       1.0762    1.0074   1.0811  0.0503
-drought-1         1.0923    1.0250   1.0973  0.0633
-drought-2         1.1227    1.0667   1.1277  0.1784
+rule             (M-1)/S   (M-B)/S   EM/kES    size   m_bar  (M-Bm)/S  size_m
+A1-fixed          1.0688    0.9999   1.0737  0.0455   0.996    1.0002  0.0455
+A1-random         1.0551    1.0000   1.0582  0.0426   0.997    1.0002  0.0426
+stop-at-find      0.9963    0.9362   1.0003  0.1653   0.000    1.0006  0.0454
+drought-0.5       1.0762    1.0074   1.0811  0.0503   1.105    0.9997  0.0496
+drought-1         1.0923    1.0250   1.0973  0.0633   1.366    0.9987  0.0499
+drought-2         1.1227    1.0667   1.1277  0.1784   2.136    0.9986  0.0556
+mix-0.25          1.0489    0.9824   1.0534  0.0564   0.749    1.0003  0.0453
+mix-0.5           1.0304    0.9661   1.0346  0.0800   0.499    1.0006  0.0471
+mix-0.75          1.0127    0.9506   1.0168  0.1169   0.250    1.0005  0.0487
+mixdr-0.5         1.0821    1.0139   1.0870  0.0532   1.183    1.0006  0.0496
+
+[S26] exact conditional inference, exposure summed over the primes (sieve to 1.4e8)
+  trunc         B    K | c=0 int/sum     | c=ln2 int/sum   | c=meas int/sum  | meas, sum: 95% Garwood          p | W sum    p(W)
+  none         15  203 | 1.8381 / 1.9835 | 1.6248 / 1.7834 | 1.6200 / 1.7797 | [1.5432; 2.0420]  1.000 | 1.6178  0.178
+              shift of the measured-c prime-sum estimate vs the constant rate (c=0, integral): -3.2%
+  >10          15  177 | 1.8712 / 1.9382 | 1.7118 / 1.7787 | 1.7096 / 1.7767 | [1.5246; 2.0586]  1.000 | 1.6439  0.303
+              shift of the measured-c prime-sum estimate vs the constant rate (c=0, integral): -5.0%
+  >100         15  141 | 1.8299 / 1.8517 | 1.7040 / 1.7251 | 1.7032 / 1.7242 | [1.4513; 2.0334]  0.740 | 1.6154  0.261
+              shift of the measured-c prime-sum estimate vs the constant rate (c=0, integral): -5.8%
+  >1000        15  110 | 1.8231 / 1.8300 | 1.7152 / 1.7219 | 1.7133 / 1.7199 | [1.4135; 2.0729]  0.760 | 1.6264  0.366
+              shift of the measured-c prime-sum estimate vs the constant rate (c=0, integral): -5.7%
+  >10000       14   75 | 1.7889 / 1.7915 | 1.6953 / 1.6978 | 1.6900 / 1.6925 | [1.3313; 2.1216]  0.712 | 1.6142  0.429
+              shift of the measured-c prime-sum estimate vs the constant rate (c=0, integral): -5.4%
+  >10000, N>=1  15   75 | 1.7569 / 1.7594 | 1.6648 / 1.6672 | 1.6601 / 1.6625 | [1.3077; 2.0840]  0.598 | 1.5853  0.340
+  integral vs prime sum (measured c): -9.0% (all), -3.8% (>10); prime-sum estimate from >10 to >10000: -4.7%
+  low-end deficit of the prime sum vs D_b (c=0), all data: from -1.42 to -0.39, mean -1.04
+  first-principles c_b^th (cb_theory.py [S23]), all   kappa = 1.7893
+  first-principles c_b^th (cb_theory.py [S23]), >10   kappa = 1.7843
+  free common c, prime-sum likelihood, all    c_hat = 1.03, 95% profile CI [-0.18; 3.25]; LR p(c=0) = 0.111, p(c=ln2) = 0.654
+  free common c, prime-sum likelihood, >10    c_hat = 0.82, 95% profile CI [-1.15; 5.19]; LR p(c=0) = 0.509, p(c=ln2) = 0.925
+  free common c, prime-sum likelihood, >1000  c_hat = -1.33, 95% profile CI [-5.25; 22.18]; LR p(c=0) = 0.738, p(c=ln2) = 0.633
+  c_b error (se 0.045), all   combined 95% (Garwood mixture) [1.543; 2.042]; Garwood at c fixed [1.543; 2.042]; Jeffreys-type (version 3.1) [1.546; 2.036]; SD of S from c alone 0.2406 (relative 0.0021)
+  c_b error (se 0.045), >10   combined 95% (Garwood mixture) [1.525; 2.059]; Garwood at c fixed [1.525; 2.059]; Jeffreys-type (version 3.1) [1.532; 2.057]; SD of S from c alone 0.1719 (relative 0.0017)
+
+[S27] simulation check with a PRIME-LEVEL generator (10000 replications, kappa = e^gamma, c_b = measured; origin = real n_min, frontier one mean gap beyond the real last find)
+  trunc               const (c=0)          integral S(c)         prime sum S(c)   (mean kappa_hat/kappa, coverage)
+  none           1.0271  0.945          0.9055  0.723          0.9947  0.961   
+  >10            1.0566  0.896          0.9661  0.936          1.0007  0.957   
+  >100           1.0655  0.891          0.9920  0.955          1.0029  0.955   
+  >1000          1.0688  0.898          1.0048  0.957          1.0085  0.956   
+  >10000         1.0825  0.910          1.0240  0.959          1.0254  0.959   
+
+[S28] section 7.3: regression intercept under the heuristic itself (b = 2, prime-level generator, conditioned on 50 exponents below X_ver = 81648221)
+  c_2 = 0.959 (measured)           E[count below X_ver] = 48.91; intercept median -2.522, 5-95% [-5.20; -0.15]; observed -2.9627 at quantile 0.385 (5000 replications)
+  Wagstaff a = 2 or 6 by p mod 4   E[count below X_ver] = 50.25; intercept median -2.315, 5-95% [-4.94; 0.00]; observed -2.9627 at quantile 0.343 (5000 replications)
+
+[S29] additional robustness checks (review of version 3)
+  (a) scheme A: P((M-1)/S rises by >= 6.8%) = 0.196; P((M-B)/S falls by >= 2.7%) = 0.680
+  (a) scheme B: P((M-1)/S rises by >= 6.8%) = 0.597; P((M-B)/S falls by >= 2.7%) = 0.308
+  (b) common frontier T = 2e5 (below every n_max): M = 163, S = 86.233, M/S = 1.8902, 95% [1.611; 2.204], p = 0.468
+  (c) origin at the cut n =    10: K = 192, (M-B)/S = 1.8905, 95% [1.633; 2.178], p = 0.427
+  (c) origin at the cut n =   100: K = 156, (M-B)/S = 1.8666, 95% [1.585; 2.184], p = 0.579
+  (c) origin at the cut n =  1000: K = 125, (M-B)/S = 1.9057, 95% [1.586; 2.271], p = 0.473
+  (c) origin at the cut n = 10000: K = 90, (M-B)/S = 1.8905, 95% [1.520; 2.324], p = 0.600
+  (d) origins n_min = 2 (b = 2,6,10,12,18) moved to the second index: (M-B)/S = 1.8818, (M-1)/S = 2.0149, p = 0.457
+  (e) b = 18: G_end 0.6604, G_OLS 0.4656 (-29.5%); origin at 25667: G_end 0.2250, G_OLS 0.2135 (-5.1%); first gap = 70.8% of the window, P(largest of 7 spacings >= it) = 0.0043
+  (f) 80% power, two-sided exact test, deficit: Mersenne only -37.4%, pooled -19.2%
+  (g) figure 4: largest excursion r = -6.347 at t = 16.86; pointwise 5% quantile of the step r(t) there -3.81, median -0.74, P(r <= observed) = 0.0031; standardized sup 3.45, p = 0.194
+  (h) Table 4, rule 'E[#] = observed', 600000 replications: type I error of the Gamma pivot 0.1666 +- 0.0005
+  (i) frontiers (b=2 verified): lower tail at e^gamma 0.111, at kappa_hat_B = 1.8381 (x 1.0320) 0.121
+  (i) frontiers (b=2 tested once): lower tail at e^gamma 0.103, at kappa_hat_B = 1.8381 (x 1.0320) 0.113
+  (j) Table 2, N = 7: MC standard error 0.0021 for E[lambda^]/lambda, 0.0015 for E[G^]lambda
+  (j) Table 2, N = 51: MC standard error 0.0006 for E[lambda^]/lambda, 0.0006 for E[G^]lambda
+
+[S30] version 3.2: computations for the editor's decision of 01.10.2026
+  (a) m-family (M - B m)/S, M = 218, B = 15, S = 110.4423; second order: S_sum = 114.0670
+      m   (M-Bm)/S  excess%%  95%% Garwood        p    |  K/S_sum   p
+     0.0   1.9739   +10.8  [1.721; 2.254]  0.142 |  1.9112  0.314
+     0.4   1.9196    +7.8  [1.670; 2.196]  0.292 |  1.8586  0.553
+     1.0   1.8381    +3.2  [1.594; 2.109]  0.672 |  1.7797  1.000
+     1.4   1.7837    +0.1  [1.543; 2.051]  1.000 |  1.7271  0.699
+     2.0   1.7022    -4.4  [1.468; 1.964]  0.564 |  1.6482  0.303
+     3.0   1.5664   -12.1  [1.342; 1.818]  0.094 |  1.5167  0.034
+      m at which (M-Bm)/S = e^gamma: 1.42; with the second-order exposure: 0.99
+      c = 0: LPW not rejected for K in [170; 225], i.e. for m in [-0.47; 3.20]
+      calibrated c_b, prime sum: LPW not rejected for K in [176; 232], i.e. for m in [-0.93; 2.80]
+  (b) c = 0: LPW rejected from above only if at least 23 finds (1.5 per base) are missing inside the windows (K = 226)
+  (b) calibrated c_b, prime sum: LPW rejected from above only if at least 30 finds (2.0 per base) are missing inside the windows (K = 233)
+  (c) b = 2, X_ver: lambda*delta = 0.143; P(Exp(1) <= x) = 0.133, P(Exp(1) >= x) = 0.867
+  (c) b = 2, X_ft: lambda*delta = 0.093; P(Exp(1) <= x) = 0.089, P(Exp(1) >= x) = 0.911
+  (d) all   Bernoulli (Poisson-binomial) model: E[K|D] = 202.0, Var/E = 0.934, SD overstated by the Poisson law by 3.5%
+  (d) >10   Bernoulli (Poisson-binomial) model: E[K|D] = 177.4, Var/E = 0.973, SD overstated by the Poisson law by 1.4%
+  (e) covariance through shared divisors 2p+1, primes p > 10: pairs with the same squarefree part 2/18: 0.146, 3/12: 0.072, 5/20: 0.068; all 105 pairs: sum Cov = 2.799 against sum Var = 184.2; Var(K) inflated by a factor 1.030; E[K] = 191.7, Var(K)/E[K] = 0.961 without and 0.990 with the covariance
+  (f) selection by the number of finds (scheme B, frontier W0 = N_b/lambda_b): E[(M-B)/S]/kappa = 1.0004 with N_b >= 1, 1.0308 if a base were admitted only with N_b >= 7 (bias +3.1%)
+  (g) slope through the point (0, 0) of the (k, ln n_k) plane: relative bias 3 t0 lambda/(2N+1) from 5.2% (b=2) to 25.3% (b=11) and 25.4% (b=19); b=2: 5.2%
+  (h) N = 7: one-sided lower 95% bound of mu = 3.29; deficit (1+mu)e^-mu there = 16.0%
+  (i) section 6: at kappa = 1.1 e^gamma and S = 470.15 the expected conditional count is K = 921.1 and the number of finds M = K + 15 = 936.1
+  (j) Table 8, BIC at n = 203: Bayes factor of model I against II, III, IV: 112.4, 10.6, 1111.9
+  (j) Table 8, BIC at n = 15: Bayes factor of model I against II, III, IV: 8.3, 2.9, 22.3
+  (k) section 7.3, c_2 = 0.96, x = 1e8: C_0 = -2.779 with the raw probabilities, -5.053 with the probabilities capped at 1
+  (l) section 7: rho_1 = 0.825 as the correlation of adjacent residuals, 0.751 as the sample ACF; Newey-West SE (Bartlett, 8 lags) 0.7315 without and 0.7466 with the factor n/(n-k) = 50/48
+  (n) selection N_b >= 1, frontier W0 = N_b/lambda_b, scheme A: P((M-1)/S rises by >= 6.1%) = 0.219; P((M-B)/S falls by >= 4.4%) = 0.648; P((M-B)/S falls from n > 10 to n > 10^4 by >= 6.1%) = 0.513
+  (n) selection N_b >= 1, frontier W0 = N_b/lambda_b, scheme B: P((M-1)/S rises by >= 6.1%) = 0.615; P((M-B)/S falls by >= 4.4%) = 0.306; P((M-B)/S falls from n > 10 to n > 10^4 by >= 6.1%) = 0.229
+  (o) homogeneity under scheme A (likelihood (8)): Lambda_A = 7.395; exact Dirichlet null p = 0.923 (400000 replications), chi2_14 p = 0.918
+  (p) derived: (M-1)/S rises from 1.9648 to 2.0848 (N_b >= 1) by +6.1%; (M-B)/S from n > 10 to n > 10^4: c = 0 -6.1% (N_b >= 1), -4.4% (N_b >= 2); calibrated c_b, prime sum: -6.4% (N_b >= 1), -4.7% (N_b >= 2)
+  (q) kappa* (weights N_b - 2), scheme B, frontier W = N_b/lambda_b: bias +7.45% +- 0.01% (400000 replications)
+  (q) kappa* (weights N_b - 2), scheme B, frontier W = 2 D_b: bias +3.86% +- 0.01% (400000 replications)
+  (m) model (23): LR = 2.026 (c1 = 0.75, c2 = -1.44), chi2_2 p = 0.363; parametric bootstrap under the conditional null (10000 replications): p = 0.366, 95% quantile of LR 5.93 (chi2_2: 5.99)
